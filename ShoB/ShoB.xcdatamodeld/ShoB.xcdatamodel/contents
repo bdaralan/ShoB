@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.16" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Contact" representedClassName=".Profile" syncable="YES">
+    <entity name="Contact" representedClassName=".Contact" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="phone" optional="YES" attributeType="String" defaultValueString="N/A"/>
@@ -45,10 +45,10 @@
     </entity>
     <elements>
         <element name="Contact" positionX="-63" positionY="-18" width="128" height="118"/>
-        <element name="Store" positionX="-54" positionY="18" width="128" height="118"/>
         <element name="Customer" positionX="-36" positionY="45" width="128" height="133"/>
-        <element name="SaleItem" positionX="-18" positionY="81" width="128" height="88"/>
-        <element name="OrderItem" positionX="-9" positionY="99" width="128" height="103"/>
         <element name="Order" positionX="0" positionY="108" width="128" height="163"/>
+        <element name="OrderItem" positionX="-9" positionY="99" width="128" height="103"/>
+        <element name="SaleItem" positionX="-18" positionY="81" width="128" height="88"/>
+        <element name="Store" positionX="-54" positionY="18" width="128" height="118"/>
     </elements>
 </model>
