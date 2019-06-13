@@ -53,7 +53,7 @@ class CoreDataStack: NSObject {
         super.init()
         
         // save for later comparison
-        UserDefaults.standard.setValue(userIdentityTokenUUID, forKey: CoreDataStack.kLastUserUbiquityIdetityTokenUUID)
+        UserDefaults.standard.setValue(userIdentityTokenUUID, forKey: kLastUserUbiquityIdetityTokenUUID)
         
         // listen to user identity token changed notitfication
         NotificationCenter.default.addObserver(self, selector: #selector(userIdentifyChanged(_:)), name: .NSUbiquityIdentityDidChange, object: nil)
@@ -63,26 +63,26 @@ class CoreDataStack: NSObject {
         let newUbiquityToken = FileManager.default.ubiquityIdentityToken
         
         let userDefaults = UserDefaults.standard
-        let lastTokenUUID = userDefaults.string(forKey: CoreDataStack.kLastUserUbiquityIdetityTokenUUID)
+        let lastTokenUUID = userDefaults.string(forKey: kLastUserUbiquityIdetityTokenUUID)
         let newTokenUUID = CoreDataStack.getUserIdentityTokenUUID(for: newUbiquityToken)
         
         guard lastTokenUUID != newTokenUUID else { return }
         CoreDataStack.current = CoreDataStack(userIdentityToken: newUbiquityToken)
-        userDefaults.setValue(newTokenUUID, forKey: CoreDataStack.kLastUserUbiquityIdetityTokenUUID)
+        userDefaults.setValue(newTokenUUID, forKey: kLastUserUbiquityIdetityTokenUUID)
     }
 }
 
 
 // MARK: - User Account Token for Local Use
 
+typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
+
+let kUserUbiquityIdentityTokenDict = "CoreDataStack.kUserUbiquityIdentityTokenDict"
+let kNoUserUbiquityIdentityTokenUUID = "CoreDataStack.kNoUserUbiquityIdentityTokenUUID"
+let kLastUserUbiquityIdetityTokenUUID = "CoreDataStack.kLastUserUbiquityIdetityTokenUUID"
+
+
 extension CoreDataStack {
-    
-    typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
-    
-    static let kUserUbiquityIdentityTokenDict = "CoreDataStack.kUserUbiquityIdentityTokenDict"
-    static let kNoUserUbiquityIdentityTokenUUID = "CoreDataStack.kNoUserUbiquityIdentityTokenUUID"
-    static let kLastUserUbiquityIdetityTokenUUID = "CoreDataStack.kLastUserUbiquityIdetityTokenUUID"
-    
     
     static func getUserIdentityTokenUUID(for token: UbiquityIdentityToken?) -> String {
         initializeUserUbiquityIdentityTokenDictionary()
@@ -90,7 +90,9 @@ extension CoreDataStack {
         let userDefaults = UserDefaults.standard
         var tokenDict = userDefaults.value(forKey: kUserUbiquityIdentityTokenDict) as! [String: UbiquityIdentityToken]
         
-        guard let token = token else { return userDefaults.string(forKey: kNoUserUbiquityIdentityTokenUUID)! }
+        guard let token = token else {
+            return userDefaults.string(forKey: kNoUserUbiquityIdentityTokenUUID)!
+        }
         
         // find uuid from the dictionary
         for (tokenUUID, ubiquityToken) in tokenDict where ubiquityToken.isEqual(token) {
