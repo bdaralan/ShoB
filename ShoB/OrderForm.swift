@@ -14,8 +14,6 @@ struct OrderForm: View {
     @ObjectBinding var order: Order
     @State var discountText = "$0.00"
     
-    var title: String = "Order Form"
-    
     
     var body: some View {
         List {
@@ -73,8 +71,8 @@ struct OrderForm: View {
             }
             
         }
-        .navigationBarTitle(Text(title), displayMode: .inline)
         .listStyle(.grouped)
+        .navigationBarTitle(Text("Order Details"), displayMode: .inline)
     }
 }
 

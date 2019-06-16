@@ -18,6 +18,15 @@ struct ContentView : View {
             TabbedView {
                 OrderList()
             }
+            .tabItemLabel(Text("Orders"))
+            .navigationBarTitle(Text("Orders"), displayMode: .large)
+            .navigationBarItems(trailing:
+                PresentationButton(
+                    Image(systemName: "plus")
+                        .imageScale(.large),
+                    destination: Text("Order Form Create Mode")
+                )
+            )
         }
     }
 }

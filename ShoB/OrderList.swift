@@ -14,10 +14,13 @@ struct OrderList: View {
     
     var body: some View {
         List(orders) { order in
-            NavigationButton(destination: OrderForm(order: order, title: "Order Details"), label: {
-                Text("Order with discount: \(order.discount)")
-            })
-        }.navigationBarItem(title: Text("Orders"), titleDisplayMode: .large, hidesBackButton: true)
+            NavigationButton(
+                destination: OrderForm(order: order),
+                label: {
+                    Text("Order with discount: \(order.discount)")
+                }
+            )
+        }
     }
 }
 
