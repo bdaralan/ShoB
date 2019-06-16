@@ -8,9 +8,17 @@
 
 import SwiftUI
 
+
 struct ContentView : View {
+    
+    @ObjectBinding var order = Order(context: CoreDataStack.current.mainContext)
+    
     var body: some View {
-        Text("Hello World")
+        NavigationView {
+            TabbedView {
+                OrderList()
+            }
+        }
     }
 }
 

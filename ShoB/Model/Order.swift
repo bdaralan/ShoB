@@ -7,11 +7,14 @@
 //
 //
 
-import Foundation
 import CoreData
+import SwiftUI
+import Combine
 
 
-class Order: NSManagedObject {
+class Order: NSManagedObject, BindableObject {
+    
+    let didChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var orderDate: Date
     @NSManaged var deliveryDate: Date
@@ -21,14 +24,25 @@ class Order: NSManagedObject {
     @NSManaged var orderItems: Set<OrderItem>
     @NSManaged var customer: Customer?
     @NSManaged var store: Store?
+    
+    var total: Int64 {
+        return orderItems.map({ $0.price * $0.quantity }).reduce(0, +)
+    }
 
+    
     override func awakeFromInsert() {
         super.awakeFromInsert()
         orderDate = Date()
         deliveryDate = Date()
+        deliveredDate = nil
         discount = 0
         note = ""
         orderItems = []
+    }
+    
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        didChange.send(())
     }
 }
 
