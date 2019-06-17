@@ -14,19 +14,11 @@ struct ContentView : View {
     @ObjectBinding var order = Order(context: CoreDataStack.current.mainContext)
     
     var body: some View {
-        NavigationView {
-            TabbedView {
+        TabbedView {
+            NavigationView {
                 OrderList()
             }
             .tabItemLabel(Text("Orders"))
-            .navigationBarTitle(Text("Orders"), displayMode: .large)
-            .navigationBarItems(trailing:
-                PresentationButton(
-                    Image(systemName: "plus")
-                        .imageScale(.large),
-                    destination: Text("Order Form Create Mode")
-                )
-            )
         }
     }
 }

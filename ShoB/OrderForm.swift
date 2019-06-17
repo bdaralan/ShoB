@@ -17,38 +17,37 @@ struct OrderForm: View {
     
     var body: some View {
         List {
+            // MARK: Order Details
             Section(header: Text("ORDER DETAILS"), footer: Text("\n")) {
                 DatePicker($order.orderDate) {
                     Text("Order Date")
                 }
+                
                 DatePicker($order.deliveryDate) {
                     Text("Delivery Date")
                 }
             }
             
+            // MARK: Total
             Section(header: Text("TOTAL"), footer: Text("\n")) {
                 HStack {
                     Text("After Discount")
-                    
                     Spacer()
-                    
                     Text(String(format: "$%.2f", Double(order.total - order.discount)))
                         .multilineTextAlignment(.trailing)
                 }
+                
                 HStack {
                     Text("Before Discount")
-                    
                     Spacer()
-                    
                     Text(String(format: "$%.2f", Double(order.total)))
                         .multilineTextAlignment(.trailing)
                 }
+                
                 HStack {
                     Text("Discount")
                         .multilineTextAlignment(.leading)
-                    
                     Spacer()
-                    
                     TextField($discountText, onEditingChanged: { (bool) in
                         self.order.discount = Int64(self.discountText) ?? Int64(0)
                     }, onCommit: {
@@ -58,12 +57,14 @@ struct OrderForm: View {
                 }
             }
             
+            // MARK: Order Items
             Section(header: Text("ORDER ITEMS"), footer: Text("\n")) {
                 NavigationButton(destination: Text("Item List").navigationBarTitle(Text("Add Item")), label: {
                     Text("Add Item").color(.secondary)
                 })
             }
             
+            // MARK: Note
             Section(header: Text("NOTE")) {
                 TextField($order.note)
                     .frame(minHeight: 200)

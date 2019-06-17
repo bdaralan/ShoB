@@ -21,6 +21,14 @@ struct OrderList: View {
                 }
             )
         }
+        .navigationBarTitle(Text("Orders"), displayMode: .large)
+        .navigationBarItems(trailing:
+            PresentationButton( // add new order button
+                Image(systemName: "plus")
+                    .imageScale(.large),
+                destination: Text("Order Form Create Mode")
+            )
+        )
     }
 }
 
