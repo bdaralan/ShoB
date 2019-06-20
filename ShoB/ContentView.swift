@@ -12,13 +12,20 @@ import SwiftUI
 struct ContentView : View {
     
     @ObjectBinding var order = Order(context: CoreDataStack.current.mainContext)
+    @State private var selectedTab = 0
     
     var body: some View {
-        TabbedView {
+        TabbedView(selection: $selectedTab) {
             NavigationView {
                 OrderList()
             }
-            .tabItemLabel(Text("Orders"))
+            .tabItemLabel(Text("Orders")).tag(0)
+
+            NavigationView {
+                SaleItemList()
+                    .navigationBarTitle(Text("Items"))
+            }
+            .tabItemLabel(Text("Items")).tag(1)
         }
     }
 }

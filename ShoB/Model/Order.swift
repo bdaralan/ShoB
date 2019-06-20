@@ -19,13 +19,13 @@ class Order: NSManagedObject, BindableObject {
     @NSManaged var orderDate: Date
     @NSManaged var deliveryDate: Date
     @NSManaged var deliveredDate: Date?
-    @NSManaged var discount: Int64
+    @NSManaged var discount: Cent
     @NSManaged var note: String
     @NSManaged var orderItems: Set<OrderItem>
     @NSManaged var customer: Customer?
     @NSManaged var store: Store?
     
-    var total: Int64 {
+    var total: Cent {
         return orderItems.map({ $0.price * $0.quantity }).reduce(0, +)
     }
 
@@ -42,7 +42,7 @@ class Order: NSManagedObject, BindableObject {
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
-        didChange.send(())
+        didChange.send()
     }
 }
 

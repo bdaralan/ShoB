@@ -7,14 +7,17 @@
 //
 //
 
-import Foundation
 import CoreData
+import SwiftUI
+import Combine
 
 
-class SaleItem: NSManagedObject {
+class SaleItem: NSManagedObject, BindableObject {
+    
+    let didChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var name: String
-    @NSManaged var price: Int64
+    @NSManaged var price: Cent
     @NSManaged var store: Store?
     
     
@@ -22,6 +25,11 @@ class SaleItem: NSManagedObject {
         super.awakeFromInsert()
         name = ""
         price = 0
+    }
+    
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        didChange.send()
     }
 }
 

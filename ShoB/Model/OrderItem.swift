@@ -14,8 +14,8 @@ import CoreData
 class OrderItem: NSManagedObject {
     
     @NSManaged var name: String
-    @NSManaged var price: Int64
-    @NSManaged var quantity: Int64
+    @NSManaged var price: Cent
+    @NSManaged var quantity: Cent
     @NSManaged var order: Order?
     
     
