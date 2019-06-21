@@ -12,20 +12,47 @@ import SwiftUI
 struct ContentView : View {
     
     @ObjectBinding var order = Order(context: CoreDataStack.current.mainContext)
+    
     @State private var selectedTab = 0
+    
     
     var body: some View {
         TabbedView(selection: $selectedTab) {
+            // MARK: Order List
             NavigationView {
                 OrderList()
+                    .navigationBarTitle(Text("Orders"), displayMode: .large)
             }
-            .tabItemLabel(Text("Orders")).tag(0)
+            .tabItemLabel(
+                VStack {
+                    Image(systemName: "cube.box.fill")
+                    Text("Orders")
+                }
+            ).tag(0)
 
+            // MARK: Sale Item List
             NavigationView {
                 SaleItemList()
-                    .navigationBarTitle(Text("Items"))
+                    .navigationBarTitle(Text("Items"), displayMode: .large)
             }
-            .tabItemLabel(Text("Items")).tag(1)
+            .tabItemLabel(
+                VStack {
+                    Image(systemName: "list.dash")
+                    Text("Items")
+                }
+            ).tag(1)
+            
+            // MARK: Customer List
+            NavigationView {
+                CustomerList()
+                    .navigationBarTitle(Text("Customers"), displayMode: .large)
+            }
+            .tabItemLabel(
+                VStack {
+                    Image(systemName: "rectangle.stack.person.crop.fill")
+                    Text("Customers")
+                }
+            ).tag(2)
         }
     }
 }

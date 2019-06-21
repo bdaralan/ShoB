@@ -19,19 +19,20 @@ struct OrderList: View {
     
     var body: some View {
         List {
+            // MARK: Segment Control
             SegmentedControl(selection: $currentSegment) {
                 ForEach(segments.identified(by: \.self)) { segment in
                     Text(segment.rawValue).tag(segment)
                 }
             }
             
+            // MARK: Order Rows
             ForEach(orders) { order in
                 NavigationButton(destination: OrderForm(mode: .view, order: order), label: {
                     Text("Order with discount: \(order.discount)")
                 })
             }
         }
-        .navigationBarTitle(Text("Orders"), displayMode: .large)
         .navigationBarItems(trailing:
             PresentationButton(destination: NavigationView { OrderForm(mode: .create, order: orders[0]) }, label: {
                 Image(systemName: "plus").imageScale(.large)
