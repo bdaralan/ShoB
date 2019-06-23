@@ -11,8 +11,6 @@ import SwiftUI
 
 struct ContentView : View {
     
-    @ObjectBinding var order = Order(context: CoreDataStack.current.mainContext)
-    
     @State private var selectedTab = 0
     
     

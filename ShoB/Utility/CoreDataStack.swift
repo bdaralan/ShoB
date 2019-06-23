@@ -10,6 +10,9 @@
 import CoreData
 
 
+typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
+
+
 class CoreDataStack: NSObject {
     
     static private(set) var current = CoreDataStack(userIdentityToken: FileManager.default.ubiquityIdentityToken)
@@ -57,6 +60,12 @@ class CoreDataStack: NSObject {
         
         // listen to user identity token changed notitfication
         NotificationCenter.default.addObserver(self, selector: #selector(userIdentifyChanged(_:)), name: .NSUbiquityIdentityDidChange, object: nil)
+    }
+    
+    func newChildContext() -> NSManagedObjectContext {
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.parent = mainContext
+        return context
     }
     
     @objc func userIdentifyChanged(_ notification: Notification) {

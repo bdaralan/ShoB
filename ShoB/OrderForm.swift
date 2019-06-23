@@ -12,8 +12,6 @@ import Combine
 
 struct OrderForm: View {
     
-    let mode: Mode
-    
     @ObjectBinding var order: Order
     
     @State private var discountText: String = "\(Currency(0))"
@@ -22,7 +20,8 @@ struct OrderForm: View {
     
     @State private var orderDeliveredDate = Date()
     
-    var onCommit: ((OrderForm) -> Void)?
+    var onCancel: (() -> Void)?
+    var onCommit: (() -> Void)
 
     
     var body: some View {
@@ -71,7 +70,7 @@ struct OrderForm: View {
             
             // MARK: Order Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationButton(destination: saleItemListView(), label: { Text("Add Item").color(.secondary) })
+                NavigationButton(destination: saleItemList, label: { Text("Add Item").color(.secondary) })
             }
             
             // MARK: Note Section
@@ -82,42 +81,46 @@ struct OrderForm: View {
             }
             
         }
-        .listStyle(.grouped)
         .navigationBarTitle(Text("Order Details"), displayMode: .inline)
-        .navigationBarItems(trailing: Button(action: commitOrder, label: { commitLabel(for: mode) }))
-    }
-    
-    // MARK: - Action
-    
-    func commitOrder() {
-        onCommit?(self)
+        .modifier(NavigationItemsModifier(onCancel: onCancel, onCommit: onCommit))
     }
     
     // MARK: - View
     
-    func saleItemListView() -> some View {
+    var saleItemList: some View {
         SaleItemList { (item, body) in
             print(item)
         }
         .navigationBarTitle(Text("Add Item"))
-    }
-    
-    func commitLabel(for mode: Mode) -> some View {
-        switch mode {
-        case .create:
-            return Text("Place Order")
-        case .view:
-            return Text("Update").color(order.deliveredDate == nil ? nil : .orange)
-        }
     }
 }
 
 
 extension OrderForm {
     
-    enum Mode {
-        case create
-        case view
+    /// Modifier to setup item for navigated or modal mode.
+    struct NavigationItemsModifier: ViewModifier {
+        
+        /// Cancel action.
+        ///
+        /// Set `onCancel` to handle cancelation when using in `Modal`.
+        /// When using with in `NavigationView`, set to `nil` to use the default back navigation item.
+        var onCancel: (() -> Void)?
+        
+        /// The action to perform when finished with the form.
+        var onCommit: (() -> Void)
+        
+        
+        func body(content: Content) -> some View {
+            if let onCancel = onCancel {
+                let cancel = Button(action: onCancel, label: { Text("Cancel") })
+                let placeOrder = Button(action: onCommit, label: { Text("Place Order") })
+                return content.navigationBarItems(leading: cancel, trailing: placeOrder)
+            }
+            
+            let updateOrder = Button(action: onCommit, label: { Text("Update") })
+            return content.navigationBarItems(trailing: updateOrder)
+        }
     }
 }
 
@@ -125,7 +128,7 @@ extension OrderForm {
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static var previews: some View {
-        OrderForm(mode: .view, order: sampleOrders().first!)
+        OrderForm(order: sampleOrders().first!, onCancel: nil, onCommit: { Void() })
     }
 }
 #endif

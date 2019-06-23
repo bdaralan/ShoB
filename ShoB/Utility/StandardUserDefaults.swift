@@ -9,9 +9,6 @@
 import Foundation
 
 
-typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
-
-
 struct StandardUserDefaults {
     
     static let unknownUserIdentityToken = "unknownUserIdentityToken"

@@ -7,15 +7,27 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct OrderList: View {
     
-    @State var orders = sampleOrders()
+    @ObjectBinding var dataSource: FetchedDataSource<Order> = {
+        let dataSource = FetchedDataSource(context: CoreDataStack.current.mainContext, entity: Order.self)
+        let request = dataSource.fetchController.fetchRequest
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
+        dataSource.performFetch()
+        return dataSource
+    }()
 
-    @State private var currentSegment: Segment = .today
+    @State private var currentSegment = Segment.today
     
-    @State private var segments: [Segment] = [.today, .tomorrow, .past7Days]
+    @State private var segments = [Segment.today, .tomorrow, .past7Days]
     
+    @State private var isPlacingOrder = false
+    
+    
+    // MARK: - View
     
     var body: some View {
         List {
@@ -27,17 +39,45 @@ struct OrderList: View {
             }
             
             // MARK: Order Rows
-            ForEach(orders) { order in
-                NavigationButton(destination: OrderForm(mode: .view, order: order), label: {
+            ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
+                NavigationButton(destination: OrderForm(order: order, onCommit: {()}), label: {
                     Text("Order with discount: \(order.discount)")
                 })
             }
         }
-        .navigationBarItems(trailing:
-            PresentationButton(destination: NavigationView { OrderForm(mode: .create, order: orders[0]) }, label: {
-                Image(systemName: "plus").imageScale(.large)
-            })
-        )
+        .navigationBarItems(trailing: placeOrderNavItem)
+        .presentation(isPlacingOrder ? placeOrderForm : nil)
+    }
+    
+    
+    // MARK: - View
+    
+    // Note: if color is not set, the button become disabled after pressed (beta 2)
+    var placeOrderNavItem: some View {
+        let showPlaceOrderForm = { self.isPlacingOrder = true }
+        let icon = { Image(systemName: "plus").imageScale(.large) }
+        return Button(action: showPlaceOrderForm, label: icon).accentColor(.accentColor)
+    }
+    
+    /// Construct an order form.
+    /// - Parameter order: The order to view or pass `nil` get a create mode form.
+    var placeOrderForm: Modal {
+        let childContext = CoreDataStack.current.newChildContext()
+        let newOrder = Order(context: childContext)
+        newOrder.discount = Cent.random(in: 100...500)
+        
+        let cancel = { self.isPlacingOrder = false }
+        
+        let placeOrder = {
+            print(newOrder)
+            try! childContext.save()
+            try! childContext.parent?.save()
+            self.isPlacingOrder = false
+        }
+        
+        let orderForm = OrderForm(order: newOrder, onCancel: cancel, onCommit: placeOrder)
+        
+        return Modal(NavigationView { orderForm }, onDismiss: { self.isPlacingOrder = false })
     }
 }
 
