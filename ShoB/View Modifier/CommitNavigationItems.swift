@@ -14,11 +14,11 @@ struct CommitNavigationItems: ViewModifier {
     
     /// Cancel action.
     ///
-    /// Set `onCancel` to handle cancelation when using in `Modal`.
-    /// When using with in `NavigationView`, set to `nil` to use the default back navigation item.
+    /// Set `onCancel` to handle cancelation when using with `Modal`.
+    /// When using with `NavigationView`, set to `nil` to use the default back navigation item.
     var onCancel: (() -> Void)?
     
-    /// The action to perform when finished with the form.
+    /// The action to perform when commit the form.
     var onCommit: (() -> Void)
 
     let commitTitle: String
