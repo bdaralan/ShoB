@@ -22,7 +22,7 @@ struct OrderForm: View {
     
     var onCancel: (() -> Void)?
     var onCommit: (() -> Void)
-
+    
     
     var body: some View {
         Form {
@@ -82,45 +82,19 @@ struct OrderForm: View {
             
         }
         .navigationBarTitle(Text("Order Details"), displayMode: .inline)
-        .modifier(NavigationItemsModifier(onCancel: onCancel, onCommit: onCommit))
+        .modifier(CommitNavigationItems(
+            onCancel: onCancel,
+            onCommit: onCommit,
+            commitTitle: "Update",
+            modalCommitTitle: "Place Order"
+        ))
     }
-    
-    // MARK: - View
     
     var saleItemList: some View {
         SaleItemList { (item, body) in
             print(item)
         }
         .navigationBarTitle(Text("Add Item"))
-    }
-}
-
-
-extension OrderForm {
-    
-    /// Modifier to setup item for navigated or modal mode.
-    struct NavigationItemsModifier: ViewModifier {
-        
-        /// Cancel action.
-        ///
-        /// Set `onCancel` to handle cancelation when using in `Modal`.
-        /// When using with in `NavigationView`, set to `nil` to use the default back navigation item.
-        var onCancel: (() -> Void)?
-        
-        /// The action to perform when finished with the form.
-        var onCommit: (() -> Void)
-        
-        
-        func body(content: Content) -> some View {
-            if let onCancel = onCancel {
-                let cancel = Button(action: onCancel, label: { Text("Cancel") })
-                let placeOrder = Button(action: onCommit, label: { Text("Place Order") })
-                return content.navigationBarItems(leading: cancel, trailing: placeOrder)
-            }
-            
-            let updateOrder = Button(action: onCommit, label: { Text("Update") })
-            return content.navigationBarItems(trailing: updateOrder)
-        }
     }
 }
 

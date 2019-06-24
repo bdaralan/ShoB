@@ -27,8 +27,6 @@ struct OrderList: View {
     @State private var isPlacingOrder = false
     
     
-    // MARK: - View
-    
     var body: some View {
         List {
             // MARK: Segment Control

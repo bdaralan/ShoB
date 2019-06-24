@@ -27,6 +27,12 @@ struct SaleItemList : View {
                 Button(action: { self.onItemSelected?(item, self) }, label: { Text(item.name) })
             }
         }
+        .modifier(CommitNavigationItems(
+            onCancel: nil,
+            onCommit: {},
+            commitTitle: "Update",
+            modalCommitTitle: "Add"
+        ))
     }
 }
 

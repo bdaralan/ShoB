@@ -12,6 +12,7 @@ struct CustomerList : View {
     
     @State var customers = sampleCustomers()
     
+    
     var body: some View {
         List(customers.identified(by: \.self)) { customer in
             NavigationButton(destination: Text("Customer Info"), label: {
