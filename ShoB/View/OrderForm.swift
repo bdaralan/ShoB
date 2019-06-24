@@ -16,9 +16,11 @@ struct OrderForm: View {
     
     @State private var discountText: String = "\(Currency(0))"
     
-    @State private var isOrderDelivered = false
+    @State private var isDelivering = false
+    @State private var deliveryDate = Date()
     
-    @State private var orderDeliveredDate = Date()
+    @State private var isDelivered = false
+    @State private var deliveredDate = Date()
     
     var onCancel: (() -> Void)?
     var onCommit: (() -> Void)
@@ -32,16 +34,22 @@ struct OrderForm: View {
                     Text("Order Date")
                 }
                 
-                DatePicker($order.deliveryDate) {
-                    Text("Delivery Date")
+                Toggle(isOn: $isDelivering) {
+                    Text("Delivery")
                 }
                 
-                Toggle(isOn: $isOrderDelivered) {
+                if isDelivering {
+                    DatePicker($deliveryDate) {
+                        Text("Delivery Date")
+                    }
+                }
+                
+                Toggle(isOn: $isDelivered) {
                     Text("Delivered")
                 }
                 
-                if isOrderDelivered {
-                    DatePicker($orderDeliveredDate) {
+                if isDelivered {
+                    DatePicker($deliveredDate) {
                         Text("Delivered Date")
                     }
                 }
@@ -84,7 +92,7 @@ struct OrderForm: View {
         .navigationBarTitle(Text("Order Details"), displayMode: .inline)
         .modifier(CommitNavigationItems(
             onCancel: onCancel,
-            onCommit: onCommit,
+            onCommit: commit,
             commitTitle: "Update",
             modalCommitTitle: "Place Order"
         ))
@@ -95,6 +103,12 @@ struct OrderForm: View {
             print(item)
         }
         .navigationBarTitle(Text("Add Item"))
+    }
+    
+    func commit() {
+        order.deliveryDate = isDelivering ? deliveryDate : nil
+        order.deliveredDate = isDelivered ? deliveredDate : nil
+        onCommit()
     }
 }
 

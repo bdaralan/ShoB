@@ -46,13 +46,22 @@ struct OrderRow: View {
         
         let content = VStack(alignment: .leading) {
             Text("Order Date:\t \(formatter.string(from: order.orderDate))")
-            Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate))")
+            
+            if order.deliveryDate == nil {
+                Text("Deliver:\t No")
+            } else {
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
+            }
+            
+            
             if order.deliveredDate == nil {
                 Text("Delivered:\t No")
             } else {
                 Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
             }
+            
             Text("Discount: \(order.discount)")
+            
             Text("Note: \(order.note)")
         }
         

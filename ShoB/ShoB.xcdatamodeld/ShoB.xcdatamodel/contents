@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.16" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.19" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Contact" representedClassName=".Contact" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString="N/A"/>
@@ -16,8 +16,8 @@
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="customers" inverseEntity="Store"/>
     </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
-        <attribute name="deliveredDate" optional="YES" attributeType="Date" defaultDateTimeInterval="582148860" usesScalarValueType="NO"/>
-        <attribute name="deliveryDate" optional="YES" attributeType="Date" defaultDateTimeInterval="582148860" usesScalarValueType="NO"/>
+        <attribute name="deliveredDate" optional="YES" attributeType="Date" defaultDateTimeInterval="-1440932700" usesScalarValueType="NO"/>
+        <attribute name="deliveryDate" optional="YES" attributeType="Date" defaultDateTimeInterval="-1440889500" usesScalarValueType="NO"/>
         <attribute name="discount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="note" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="orderDate" optional="YES" attributeType="Date" defaultDateTimeInterval="582148860" usesScalarValueType="NO"/>

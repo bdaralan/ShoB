@@ -17,7 +17,7 @@ class Order: NSManagedObject, BindableObject {
     let didChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var orderDate: Date
-    @NSManaged var deliveryDate: Date
+    @NSManaged var deliveryDate: Date?
     @NSManaged var deliveredDate: Date?
     @NSManaged var discount: Cent
     @NSManaged var note: String
@@ -33,7 +33,7 @@ class Order: NSManagedObject, BindableObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         orderDate = Date()
-        deliveryDate = Date()
+        deliveryDate = nil
         deliveredDate = nil
         discount = 0
         note = ""
