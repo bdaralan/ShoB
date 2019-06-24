@@ -18,6 +18,13 @@ struct OrderRow: View {
     
     var onUpdated: (Bool) -> Void
     
+    let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
     
     init(order: Order, onUpdated: @escaping (Bool) -> Void) {
         self.context = order.managedObjectContext!.newChildContext()
@@ -36,8 +43,20 @@ struct OrderRow: View {
         }).onAppear {
             self.context.rollback()
         }
-        let label = { Text("Order with discount: \(self.order.discount)") }
-        return NavigationButton(destination: orderForm, label: label)
+        
+        let content = VStack(alignment: .leading) {
+            Text("Order Date:\t \(formatter.string(from: order.orderDate))")
+            Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate))")
+            if order.deliveredDate == nil {
+                Text("Delivered:\t No")
+            } else {
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
+            }
+            Text("Discount: \(order.discount)")
+            Text("Note: \(order.note)")
+        }
+        
+        return NavigationButton(destination: orderForm, label: { content })
     }
 }
 
