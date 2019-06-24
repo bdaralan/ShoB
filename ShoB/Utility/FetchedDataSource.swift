@@ -16,7 +16,7 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetched
     let didChange = PassthroughSubject<Void, Never>()
     
     let context: NSManagedObjectContext
-    var fetchController: NSFetchedResultsController<T>!
+    var fetchController: NSFetchedResultsController<T>
     
     
     init(context: NSManagedObjectContext, entity: T.Type) {

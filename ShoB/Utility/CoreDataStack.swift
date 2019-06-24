@@ -62,12 +62,6 @@ class CoreDataStack: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(userIdentifyChanged(_:)), name: .NSUbiquityIdentityDidChange, object: nil)
     }
     
-    func newChildContext() -> NSManagedObjectContext {
-        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.parent = mainContext
-        return context
-    }
-    
     @objc func userIdentifyChanged(_ notification: Notification) {
         let newToken = FileManager.default.ubiquityIdentityToken
         

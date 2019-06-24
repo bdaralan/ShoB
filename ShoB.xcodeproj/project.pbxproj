@@ -29,6 +29,8 @@
 		B4B9D15522B2E4A0003FC4E3 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B9D14922B2E4A0003FC4E3 /* Order.swift */; };
 		B4B9D15822B2EC94003FC4E3 /* OrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */; };
 		B4D346B222B6A31B0051AABB /* StandardUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */; };
+		B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */; };
+		B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CE22C0558800BE7580 /* OrderRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,8 @@
 		B4B9D14922B2E4A0003FC4E3 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderForm.swift; sourceTree = "<group>"; };
 		B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardUserDefaults.swift; sourceTree = "<group>"; };
+		B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
+		B4D5E6CE22C0558800BE7580 /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,7 @@
 		B4B9D16222B40527003FC4E3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 				B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */,
 				B437BE3422B963CE007C02C0 /* SaleItemList.swift */,
 				B4932D1022BC53D50010710F /* CustomerList.swift */,
+				B4D5E6CE22C0558800BE7580 /* OrderRow.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -241,6 +247,7 @@
 				B4B9D13B22B2DF7D003FC4E3 /* CoreDataStack.swift in Sources */,
 				B437BE3522B963CE007C02C0 /* SaleItemList.swift in Sources */,
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
+				B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */,
 				B4B9D13D22B2DFAE003FC4E3 /* FetchedDataSource.swift in Sources */,
 				B437BE3322B95282007C02C0 /* Currency.swift in Sources */,
 				B4B9D13522B2DF3B003FC4E3 /* ShoB.xcdatamodeld in Sources */,
@@ -253,6 +260,7 @@
 				B4B9D15522B2E4A0003FC4E3 /* Order.swift in Sources */,
 				B4B9D15822B2EC94003FC4E3 /* OrderForm.swift in Sources */,
 				B4B9D14D22B2E4A0003FC4E3 /* Contact.swift in Sources */,
+				B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */,
 				B4B9D15122B2E4A0003FC4E3 /* SaleItem.swift in Sources */,
 				B4B9D14F22B2E4A0003FC4E3 /* Store.swift in Sources */,
 			);
