@@ -83,9 +83,13 @@ struct OrderForm: View {
             
             // MARK: Note Section
             Section(header: Text("NOTE")) {
-                TextField($order.note)
-                    .frame(minHeight: 200)
-                    .lineLimit(nil)
+                VStack {
+                    TextField($order.note, placeholder: Text(". . ."))
+                        .lineLimit(nil)
+                        .padding([.top, .bottom])
+                    Spacer()
+                }
+                .frame(minHeight: 200)
             }
             
         }
