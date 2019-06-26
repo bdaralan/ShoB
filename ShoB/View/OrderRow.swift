@@ -12,11 +12,9 @@ import CoreData
 
 struct OrderRow: View {
     
-    let context: NSManagedObjectContext
-    
     let order: Order
     
-    var onUpdated: (Bool) -> Void
+    var onUpdate: (Order) -> Void
     
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -26,23 +24,10 @@ struct OrderRow: View {
     }()
     
     
-    init(order: Order, onUpdated: @escaping (Bool) -> Void) {
-        self.context = order.managedObjectContext!.newChildContext()
-        self.order = order.get(from: context)
-        self.onUpdated = onUpdated
-    }
-    
-    
     var body: some View {
-        let orderForm = OrderForm(order: order, onCommit: {
-            let hasChanges = self.order.hasPersistentChangedValues
-            if hasChanges {
-                self.context.quickSave()
-            }
-            self.onUpdated(hasChanges)
-        }).onAppear {
-            self.context.rollback()
-        }
+        let orderForm = OrderForm(order: order, onCommit: { order in
+            self.onUpdate(order)
+        })
         
         let content = VStack(alignment: .leading) {
             Text("Order Date:\t \(formatter.string(from: order.orderDate))")
@@ -73,7 +58,7 @@ struct OrderRow: View {
 #if DEBUG
 struct OrderRow_Previews : PreviewProvider {
     static var previews: some View {
-        OrderRow(order: Order(context: CoreDataStack.current.mainContext), onUpdated: { bool in })
+        OrderRow(order: Order(context: CoreDataStack.current.mainContext), onUpdate: { order in })
     }
 }
 #endif

@@ -11,7 +11,7 @@ import CoreData
 
 struct OrderList: View {
     
-    @ObjectBinding var orderList: FetchedDataSource<Order> = {
+    @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource(context: CoreDataStack.current.mainContext, entity: Order.self)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
@@ -24,7 +24,11 @@ struct OrderList: View {
     
     @State private var segments = [Segment.today, .tomorrow, .past7Days]
     
+    /// A flag used to present or dismiss `placeOrderForm`.
     @State private var isPlacingOrder = false
+    
+    /// A child context used to view or edit order. Its parent is `orderList`'s context.
+    @State private var orderRowContext = CoreDataStack.current.mainContext.newChildContext()
     
     
     var body: some View {
@@ -37,10 +41,11 @@ struct OrderList: View {
             }
             
             // MARK: Order Rows
-            ForEach(orderList.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(order: order, onUpdated: { hasChanges in
-                    guard hasChanges else { return }
-                    order.managedObjectContext?.quickSave()
+            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
+                OrderRow(order: order.get(from: self.orderRowContext), onUpdate: { order in
+                    guard order.hasPersistentChangedValues else { return }
+                    self.orderRowContext.quickSave()
+                    self.orderRowContext.parent?.quickSave()
                 })
             }
         }
@@ -62,19 +67,24 @@ struct OrderList: View {
         let newOrder = Order(context: childContext)
         newOrder.discount = Cent.random(in: 100...500)
         
-        let dismiss = {
+        let cancel = {
+            childContext.rollback()
             self.isPlacingOrder = false
         }
         
-        let placeOrder = {
+        let cancelOrder: (Order) -> Void = { order in
+            cancel()
+        }
+        
+        let placeOrder: (Order) -> Void = { order in
             childContext.quickSave()
             childContext.parent?.quickSave()
             self.isPlacingOrder = false
         }
         
-        let orderForm = OrderForm(order: newOrder, onCancel: dismiss, onCommit: placeOrder)
+        let orderForm = OrderForm(order: newOrder, onCancel: cancelOrder, onCommit: placeOrder)
         
-        return Modal(NavigationView { orderForm }, onDismiss: dismiss)
+        return Modal(NavigationView { orderForm }, onDismiss: cancel)
     }
 }
 

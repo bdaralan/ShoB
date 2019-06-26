@@ -17,13 +17,13 @@ struct OrderForm: View {
     @State private var discountText: String = "\(Currency(0))"
     
     @State private var isDelivering = false
-    @State private var deliveryDate = Date()
+    @State private var orderDeliveryDate = Date()
     
     @State private var isDelivered = false
-    @State private var deliveredDate = Date()
+    @State private var orderDeliveredDate = Date()
     
-    var onCancel: (() -> Void)?
-    var onCommit: (() -> Void)
+    var onCancel: ((Order) -> Void)?
+    var onCommit: ((Order) -> Void)
     
     
     var body: some View {
@@ -39,7 +39,7 @@ struct OrderForm: View {
                 }
                 
                 if isDelivering {
-                    DatePicker($deliveryDate) {
+                    DatePicker($orderDeliveryDate) {
                         Text("Delivery Date")
                     }
                 }
@@ -49,7 +49,7 @@ struct OrderForm: View {
                 }
                 
                 if isDelivered {
-                    DatePicker($deliveredDate) {
+                    DatePicker($orderDeliveredDate) {
                         Text("Delivered Date")
                     }
                 }
@@ -95,8 +95,8 @@ struct OrderForm: View {
         }
         .navigationBarTitle(Text("Order Details"), displayMode: .inline)
         .modifier(CommitNavigationItems(
-            onCancel: onCancel,
-            onCommit: commit,
+            onCancel: onCancel == nil ? nil : cancelOrder,
+            onCommit: commitOrder,
             commitTitle: "Update",
             modalCommitTitle: "Place Order"
         ))
@@ -109,10 +109,14 @@ struct OrderForm: View {
         .navigationBarTitle(Text("Add Item"))
     }
     
-    func commit() {
-        order.deliveryDate = isDelivering ? deliveryDate : nil
-        order.deliveredDate = isDelivered ? deliveredDate : nil
-        onCommit()
+    func cancelOrder() {
+        onCancel?(order)
+    }
+    
+    func commitOrder() {
+        order.deliveryDate = isDelivering ? orderDeliveryDate : nil
+        order.deliveredDate = isDelivered ? orderDeliveredDate : nil
+        onCommit(order)
     }
 }
 
@@ -120,7 +124,7 @@ struct OrderForm: View {
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static var previews: some View {
-        OrderForm(order: sampleOrders().first!, onCancel: nil, onCommit: { Void() })
+        OrderForm(order: sampleOrders().first!, onCancel: nil, onCommit: { order in })
     }
 }
 #endif

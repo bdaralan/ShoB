@@ -26,13 +26,14 @@ struct CommitNavigationItems: ViewModifier {
     
     
     func body(content: Content) -> some View {
+        let title = onCancel == nil ? commitTitle : modalCommitTitle
+        let commit = Button(action: onCommit, label: { Text(title) })
+        
         if let onCancel = onCancel {
             let cancel = Button(action: onCancel, label: { Text("Cancel") })
-            let placeOrder = Button(action: onCommit, label: { Text(modalCommitTitle) })
-            return content.navigationBarItems(leading: cancel, trailing: placeOrder)
+            return content.navigationBarItems(leading: cancel, trailing: commit)
         }
         
-        let updateOrder = Button(action: onCommit, label: { Text(commitTitle) })
-        return content.navigationBarItems(trailing: updateOrder)
+        return content.navigationBarItems(trailing: commit)
     }
 }
