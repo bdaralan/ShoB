@@ -37,13 +37,13 @@ struct Currency: Equatable, CustomStringConvertible {
         return cent > 0
     }
     
-    var isNegativeAmount: Bool {
+    var isNegative: Bool {
         return amountInCent < 0
     }
     
     /// String representation. Example: $4.90
     var description: String {
-        let sign = isNegativeAmount ? "-" : ""
+        let sign = isNegative ? "-" : ""
         return "\(sign)\(dollarSymbol)\(abs(dollar)).\(String(format: "%02d", abs(cent)))"
     }
     
@@ -60,25 +60,20 @@ struct Currency: Equatable, CustomStringConvertible {
             string.removeFirst()
         }
         
-        if let double = Double(string) {
-            let dollarFormat = String(format: "%.02f", double) // ex: 1.00
-            let components = dollarFormat.components(separatedBy: ".")
-            let dollar = Int(components[0]) ?? 0
-            let cent = Int(components[1]) ?? 0
-            self.amountInCent = double < 0 ? Cent(dollar * 100 - cent) : Cent(dollar * 100 + cent)
-        } else {
-            self.amountInCent = 0
-        }
+        // convert string to number
+        let dollarAmount = Double(string) ?? 0
+        
+        // convert string into number with 2 decimal places (ex: 1.00)
+        let dollarFormat = String(format: "%.02f", dollarAmount)
+        
+        // convert string to cent
+        self.amountInCent = Currency.parseCent(dollarFormat)
     }
     
     /// Parse all the digits in the string and turn them into cent.
-    /// - Note: Negative is ignored
     /// - Returns: The amount of `Cent` or 0 if no digits found.
     static func parseCent(_ string: String) -> Cent {
-        var integer = ""
-        for character in string where Cent("\(character)") != nil {
-            integer.append(character)
-        }
-        return Cent(integer) ?? 0
+        let cent = Cent(string.filter({ $0.isNumber })) ?? 0
+        return string.hasPrefix("-") ? -cent : cent
     }
 }

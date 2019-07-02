@@ -17,7 +17,7 @@ struct Home : View {
             // MARK: Order List
             NavigationView {
                 OrderList()
-                    .navigationBarTitle(Text("Orders"), displayMode: .large)
+                    .navigationBarTitle("Orders", displayMode: .large)
             }
             .tabItem {
                 Image(systemName: "cube.box.fill")
@@ -27,7 +27,7 @@ struct Home : View {
             // MARK: Customer List
             NavigationView {
                 CustomerList()
-                    .navigationBarTitle(Text("Customers"), displayMode: .large)
+                    .navigationBarTitle("Customers", displayMode: .large)
             }
             .tabItem {
                 Image(systemName: "rectangle.stack.person.crop.fill")
@@ -37,7 +37,7 @@ struct Home : View {
             // MARK: Sale Item List
             NavigationView {
                 SaleItemList()
-                    .navigationBarTitle(Text("Items"), displayMode: .large)
+                    .navigationBarTitle("Items", displayMode: .large)
             }
             .tabItem {
                 Image(systemName: "list.dash")

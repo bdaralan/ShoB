@@ -18,9 +18,9 @@ struct OrderForm: View {
         case view(Order)
     }
     
-    var order: Order
-    
     let mode: Mode
+    
+    var order: Order
     
     @State private var discountText: String = ""
     
@@ -32,10 +32,6 @@ struct OrderForm: View {
     
     var onCancel: ((Order) -> Void)?
     var onCommit: ((Order) -> Void)
-    
-    var correctOrder: Order {
-        return order
-    }
     
     
     init(mode: Mode, onCancel: ((Order) -> Void)? = nil, onCommit: @escaping ((Order) -> Void)) {
@@ -58,28 +54,18 @@ struct OrderForm: View {
         Form {
             // MARK: Order Details Section
             Section(header: Text("ORDER DETAILS")) {
-//                DatePicker($order.orderDate) {
-//                    Text("Order Date")
-//                }
+//                DatePicker("Order Date", date: $order.orderDate)
 
-                Toggle(isOn: $isDelivering) {
-                    Text("Delivery")
-                }
+                Toggle("Delivery", isOn: $isDelivering)
 
                 if isDelivering {
-                    DatePicker($orderDeliveryDate) {
-                        Text("Delivery Date")
-                    }
+                    DatePicker("Delivery Date", date: $orderDeliveryDate)
                 }
 
-                Toggle(isOn: $isDelivered) {
-                    Text("Delivered")
-                }
+                Toggle("Delivered", isOn: $isDelivered)
 
                 if isDelivered {
-                    DatePicker($orderDeliveredDate) {
-                        Text("Delivered Date")
-                    }
+                    DatePicker("Delivered Date", date: $orderDeliveredDate)
                 }
             }
             
@@ -88,7 +74,7 @@ struct OrderForm: View {
                 HStack {
                     Text("After Discount")
                     Spacer()
-                    Text(Currency(order.total - order.discount).description)
+                    Text(verbatim: "\(Currency(order.total - order.discount))")
                 }
                 
                 HStack {
@@ -99,8 +85,14 @@ struct OrderForm: View {
                 
                 HStack {
                     Text("Discount")
-                    TextField("$0.00", text: $discountText)
-                        .multilineTextAlignment(.trailing)
+                    UITextFieldView(text: $discountText, setup: { textField in
+                        textField.keyboardType = .numberPad
+                        textField.textAlignment = .right
+                        textField.placeholder = "$0.00"
+                    }, showToolBar: true, onEditingChanged: { textField in
+                        let discount = Currency.parseCent(textField.text ?? "")
+                        textField.text = discount == 0 ? "" : "\(Currency(discount))"
+                    })
                 }
             }
             
@@ -121,7 +113,7 @@ struct OrderForm: View {
 //            }
             
         }
-        .navigationBarTitle(Text("Order Details"), displayMode: .inline)
+        .navigationBarTitle("Order Details", displayMode: .inline)
 //        .modifier(CommitNavigationItems(
 //            onCancel: onCancel == nil ? nil : cancelOrder,
 //            onCommit: commitOrder,
@@ -134,7 +126,7 @@ struct OrderForm: View {
         SaleItemList { (item, body) in
             print(item)
         }
-        .navigationBarTitle(Text("Add Item"))
+        .navigationBarTitle("Add Item")
     }
     
     func cancelOrder() {
