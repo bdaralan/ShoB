@@ -22,17 +22,17 @@ struct SaleItemList : View {
     var body: some View {
         List(items) { item in
             if self.onItemSelected == nil { // default behavior, show item details
-                NavigationButton(destination: Text(item.name), label: { Text(item.name) })
+                NavigationLink(destination: Text(item.name), label: { Text(item.name) })
             } else { // custom behavior
                 Button(action: { self.onItemSelected?(item, self) }, label: { Text(item.name) })
             }
         }
-        .modifier(CommitNavigationItems(
-            onCancel: nil,
-            onCommit: {},
-            commitTitle: "Update",
-            modalCommitTitle: "Add"
-        ))
+//        .modifier(CommitNavigationItems(
+//            onCancel: nil,
+//            onCommit: {},
+//            commitTitle: "Update",
+//            modalCommitTitle: "Add"
+//        ))
     }
 }
 

@@ -25,7 +25,7 @@ struct OrderRow: View {
     
     
     var body: some View {
-        let orderForm = OrderForm(order: order, onCommit: { order in
+        let orderForm = OrderForm(mode: .view(order), onCommit: { order in
             self.onUpdate(order)
         })
         
@@ -50,7 +50,7 @@ struct OrderRow: View {
             Text("Note: \(order.note)")
         }
         
-        return NavigationButton(destination: orderForm, label: { content })
+        return NavigationLink(destination: orderForm, label: { content })
     }
 }
 

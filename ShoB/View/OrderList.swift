@@ -64,8 +64,6 @@ struct OrderList: View {
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
     var placeOrderForm: Modal {
         let childContext = CoreDataStack.current.mainContext.newChildContext()
-        let newOrder = Order(context: childContext)
-        newOrder.discount = Cent.random(in: 100...500)
         
         let cancel = {
             childContext.rollback()
@@ -82,7 +80,7 @@ struct OrderList: View {
             self.isPlacingOrder = false
         }
         
-        let orderForm = OrderForm(order: newOrder, onCancel: cancelOrder, onCommit: placeOrder)
+        let orderForm = OrderForm(mode: .create(childContext), onCancel: cancelOrder, onCommit: placeOrder)
         
         return Modal(NavigationView { orderForm }, onDismiss: cancel)
     }

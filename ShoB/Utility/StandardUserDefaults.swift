@@ -27,7 +27,7 @@ struct UserDefaultsValue<T> {
     let key: String
     let defaultValue: T
     
-    var value: T {
+    var wrappedValue: T {
         set { UserDefaults.standard.set(newValue, forKey: key) }
         get { UserDefaults.standard.value(forKey: key) as? T ?? defaultValue }
     }
