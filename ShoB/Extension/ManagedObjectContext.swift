@@ -12,7 +12,7 @@ import CoreData
 extension NSManagedObjectContext {
     
     /// Create a child context and set itself as the parent.
-    func newChildContext(type: NSManagedObjectContextConcurrencyType = .mainQueueConcurrencyType, mergesChangesFromParent: Bool = false) -> NSManagedObjectContext {
+    func newChildContext(type: NSManagedObjectContextConcurrencyType = .mainQueueConcurrencyType, mergesChangesFromParent: Bool = true) -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: type)
         context.parent = self
         context.automaticallyMergesChangesFromParent = mergesChangesFromParent

@@ -69,8 +69,11 @@ class CoreDataStack: NSObject {
         let newTokenUUID = CoreDataStack.getUserIdentityTokenUUID(for: newToken)
         
         guard lastTokenUUID != newTokenUUID else { return }
-        CoreDataStack.current = CoreDataStack(userIdentityToken: newToken)
+        let coreDataStack = CoreDataStack(userIdentityToken: newToken)
+        CoreDataStack.current = coreDataStack
         StandardUserDefaults.lastUserIdentityToken = newTokenUUID
+        
+        NotificationCenter.default.post(name: CoreDataStack.nUserUbiquityIdentityTokenChanged, object: coreDataStack)
     }
 }
 
@@ -79,6 +82,10 @@ class CoreDataStack: NSObject {
 
 
 extension CoreDataStack {
+    
+    static var nUserUbiquityIdentityTokenChanged: Notification.Name {
+        .init(rawValue: "CoreDataStack.nUserUbiquityIdentityTokenChanged")
+    }
     
     static func getUserIdentityTokenUUID(for token: UbiquityIdentityToken?) -> String {
         guard let token = token else {

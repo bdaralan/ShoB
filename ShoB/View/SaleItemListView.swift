@@ -1,5 +1,5 @@
 //
-//  SaleItemList.swift
+//  SaleItemListView.swift
 //  ShoB
 //
 //  Created by Dara Beng on 6/18/19.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct SaleItemList : View {
+struct SaleItemListView: View {
     
     @State var items = sampleItems()
     
@@ -16,7 +16,7 @@ struct SaleItemList : View {
     ///
     /// Set this block to do custom action.
     /// Otherwise, The view will show the item details.
-    var onItemSelected: ((SaleItem, SaleItemList) -> Void)?
+    var onItemSelected: ((SaleItem, SaleItemListView) -> Void)?
     
     
     var body: some View {
@@ -39,7 +39,7 @@ struct SaleItemList : View {
 #if DEBUG
 struct SaleItemList_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemList()
+        SaleItemListView()
     }
 }
 #endif

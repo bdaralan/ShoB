@@ -8,16 +8,30 @@
 
 import SwiftUI
 
-struct Home : View {
+struct Home: View {
+    
+    @ObjectBinding var orderingDataSource = OrderingDataSource()
+    
+    @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
+        let dataSource = FetchedDataSource(context: CoreDataStack.current.mainContext, entity: Order.self)
+        let request = dataSource.fetchController.fetchRequest
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
+        dataSource.performFetch()
+        return dataSource
+    }()
     
     @State private var selectedTab = 0
+    
     
     var body: some View {
         TabbedView {
             // MARK: Order List
             NavigationView {
-                OrderList()
+                OrderListView()
                     .navigationBarTitle("Orders", displayMode: .large)
+                    .environmentObject(orderingDataSource)
+                    .environmentObject(orderDataSource)
             }
             .tabItem {
                 Image(systemName: "cube.box.fill")
@@ -26,7 +40,7 @@ struct Home : View {
             
             // MARK: Customer List
             NavigationView {
-                CustomerList()
+                CustomerListView()
                     .navigationBarTitle("Customers", displayMode: .large)
             }
             .tabItem {
@@ -36,7 +50,7 @@ struct Home : View {
             
             // MARK: Sale Item List
             NavigationView {
-                SaleItemList()
+                SaleItemListView()
                     .navigationBarTitle("Items", displayMode: .large)
             }
             .tabItem {

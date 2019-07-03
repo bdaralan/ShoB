@@ -1,5 +1,5 @@
 //
-//  CustomerList.swift
+//  CustomerListView.swift
 //  ShoB
 //
 //  Created by Dara Beng on 6/20/19.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct CustomerList : View {
+struct CustomerListView: View {
     
     @State var customers = sampleCustomers()
     
@@ -28,7 +28,7 @@ struct CustomerList : View {
 #if DEBUG
 struct CustomerList_Previews : PreviewProvider {
     static var previews: some View {
-        CustomerList()
+        CustomerListView()
     }
 }
 #endif

@@ -12,7 +12,7 @@ import CoreData
 
 struct OrderRow: View {
     
-    let order: Order
+    @ObjectBinding var order: Order
     
     var onUpdate: (Order) -> Void
     
@@ -25,11 +25,7 @@ struct OrderRow: View {
     
     
     var body: some View {
-        let orderForm = OrderForm(mode: .view(order), onCommit: { order in
-            self.onUpdate(order)
-        })
-        
-        let content = VStack(alignment: .leading) {
+        let rowContent = VStack(alignment: .leading) {
             Text("Order Date:\t \(formatter.string(from: order.orderDate))")
             
             if order.deliveryDate == nil {
@@ -50,7 +46,11 @@ struct OrderRow: View {
             Text("Note: \(order.note)")
         }
         
-        return NavigationLink(destination: orderForm, label: { content })
+        let detailView = OrderDetailView(order: order, onUpdate: {
+            self.onUpdate(self.order)
+        }).navigationBarTitle("Order Details", displayMode: .inline)
+        
+        return NavigationLink(destination: detailView, label: { rowContent })
     }
 }
 

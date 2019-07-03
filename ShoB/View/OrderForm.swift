@@ -13,16 +13,7 @@ import CoreData
 
 struct OrderForm: View {
     
-    enum Mode {
-        case create(NSManagedObjectContext)
-        case view(Order)
-    }
-    
-    let mode: Mode
-    
-    var order: Order
-    
-    @State private var discountText: String = ""
+    @ObjectBinding var order: Order
     
     @State private var isDelivering = false
     @State private var orderDeliveryDate = Date()
@@ -30,40 +21,21 @@ struct OrderForm: View {
     @State private var isDelivered = false
     @State private var orderDeliveredDate = Date()
     
-    var onCancel: ((Order) -> Void)?
-    var onCommit: ((Order) -> Void)
-    
-    
-    init(mode: Mode, onCancel: ((Order) -> Void)? = nil, onCommit: @escaping ((Order) -> Void)) {
-        self.mode = mode
-        self.onCancel = onCancel
-        self.onCommit = onCommit
-        
-        switch mode {
-        
-        case .create(let context):
-            self.order = Order(context: context)
-        
-        case .view(let order):
-            self.order = order
-        }
-    }
+    @State private var discountText = ""
     
     
     var body: some View {
         Form {
             // MARK: Order Details Section
             Section(header: Text("ORDER DETAILS")) {
-//                DatePicker("Order Date", date: $order.orderDate)
+                DatePicker("Order Date", date: $order.orderDate)
 
                 Toggle("Delivery", isOn: $isDelivering)
-
                 if isDelivering {
                     DatePicker("Delivery Date", date: $orderDeliveryDate)
                 }
 
                 Toggle("Delivered", isOn: $isDelivered)
-
                 if isDelivered {
                     DatePicker("Delivered Date", date: $orderDeliveredDate)
                 }
@@ -80,7 +52,7 @@ struct OrderForm: View {
                 HStack {
                     Text("Before Discount")
                     Spacer()
-                    Text(Currency(order.total).description)
+                    Text(verbatim: "\(Currency(order.total))")
                 }
                 
                 HStack {
@@ -92,51 +64,34 @@ struct OrderForm: View {
                     }, showToolBar: true, onEditingChanged: { textField in
                         let discount = Currency.parseCent(textField.text ?? "")
                         textField.text = discount == 0 ? "" : "\(Currency(discount))"
+                        print(self.order.objectID)
                     })
                 }
             }
             
             // MARK: Order Items Section
-//            Section(header: Text("ORDER ITEMS")) {
-//                NavigationButton(destination: saleItemList, label: { Text("Add Item").color(.secondary) })
-//            }
-//
-//            // MARK: Note Section
-//            Section(header: Text("NOTE")) {
-//                VStack {
-//                    TextField($order.note, placeholder: Text(". . ."))
-//                        .lineLimit(nil)
-//                        .padding([.top, .bottom])
-//                    Spacer()
-//                }
-//                .frame(minHeight: 200)
-//            }
-            
+            Section(header: Text("ORDER ITEMS")) {
+                NavigationLink(destination: saleItemList, label: { Text("Add Item").color(.accentColor) })
+            }
+
+            // MARK: Note Section
+            Section(header: Text("NOTE")) {
+                VStack {
+                    TextField(". . .", text: $order.note)
+                        .lineLimit(nil)
+                        .padding([.top, .bottom])
+                    Spacer()
+                }
+                .frame(minHeight: 200)
+            }
         }
-        .navigationBarTitle("Order Details", displayMode: .inline)
-//        .modifier(CommitNavigationItems(
-//            onCancel: onCancel == nil ? nil : cancelOrder,
-//            onCommit: commitOrder,
-//            commitTitle: "Update",
-//            modalCommitTitle: "Place Order"
-//        ))
     }
     
     var saleItemList: some View {
-        SaleItemList { (item, body) in
+        SaleItemListView { (item, body) in
             print(item)
         }
         .navigationBarTitle("Add Item")
-    }
-    
-    func cancelOrder() {
-        onCancel?(order)
-    }
-    
-    func commitOrder() {
-        order.deliveryDate = isDelivering ? orderDeliveryDate : nil
-        order.deliveredDate = isDelivered ? orderDeliveredDate : nil
-        onCommit(order)
     }
 }
 
@@ -144,7 +99,7 @@ struct OrderForm: View {
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static var previews: some View {
-        OrderForm(mode: .create(CoreDataStack.current.mainContext), onCommit: { _ in })
+        OrderForm(order: sampleOrders().first!)
     }
 }
 #endif
