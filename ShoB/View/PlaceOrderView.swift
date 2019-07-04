@@ -21,7 +21,8 @@ struct PlaceOrderView : View {
     
     var body: some View {
         NavigationView {
-            OrderForm(order: orderingDataSource.newOrder)
+            OrderForm()
+                .environmentObject(orderingDataSource.newOrder)
                 .navigationBarTitle("New Order", displayMode: .inline)
                 .navigationBarItems(
                     leading: Button("Cancel", action: { self.cancelOrder() }),

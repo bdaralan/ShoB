@@ -13,15 +13,23 @@ import CoreData
 
 struct OrderForm: View {
     
-    @ObjectBinding var order: Order
+    @EnvironmentObject var order: Order
     
-    @State private var isDelivering = false
-    @State private var orderDeliveryDate = Date()
+    @State var isDelivering = false
+    @State var deliveryDate = Date()
     
-    @State private var isDelivered = false
-    @State private var orderDeliveredDate = Date()
+    @State var isDelivered = false
+    @State var deliveredDate = Date()
     
-    @State private var discountText = ""
+    @State var discountText = ""
+    
+    static let currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.currencySymbol = "$"
+        formatter.numberStyle = .currency
+        formatter.locale = Locale.current
+        return formatter
+    }()
     
     
     var body: some View {
@@ -32,12 +40,12 @@ struct OrderForm: View {
 
                 Toggle("Delivery", isOn: $isDelivering)
                 if isDelivering {
-                    DatePicker("Delivery Date", date: $orderDeliveryDate)
+                    DatePicker("Delivery Date", date: $deliveryDate)
                 }
 
                 Toggle("Delivered", isOn: $isDelivered)
                 if isDelivered {
-                    DatePicker("Delivered Date", date: $orderDeliveredDate)
+                    DatePicker("Delivered Date", date: $deliveredDate)
                 }
             }
             
@@ -57,6 +65,8 @@ struct OrderForm: View {
                 
                 HStack {
                     Text("Discount")
+//                    TextField("$0.00", value: $order.discount, formatter: OrderForm.currencyFormatter)
+//                        .multilineTextAlignment(.trailing)
                     UITextFieldView(text: $discountText, setup: { textField in
                         textField.keyboardType = .numberPad
                         textField.textAlignment = .right
@@ -64,14 +74,14 @@ struct OrderForm: View {
                     }, showToolBar: true, onEditingChanged: { textField in
                         let discount = Currency.parseCent(textField.text ?? "")
                         textField.text = discount == 0 ? "" : "\(Currency(discount))"
-                        print(self.order.objectID)
+                        print(self.order.discount)
                     })
                 }
             }
             
             // MARK: Order Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationLink(destination: saleItemList, label: { Text("Add Item").color(.accentColor) })
+                NavigationLink("Add Item", destination: saleItemList).foregroundColor(.accentColor)
             }
 
             // MARK: Note Section
@@ -99,7 +109,7 @@ struct OrderForm: View {
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static var previews: some View {
-        OrderForm(order: sampleOrders().first!)
+        OrderForm().environmentObject(sampleOrders().first!)
     }
 }
 #endif

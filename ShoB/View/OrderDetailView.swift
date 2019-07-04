@@ -16,8 +16,16 @@ struct OrderDetailView : View {
     
     
     var body: some View {
-        OrderForm(order: order)
-            .navigationBarItems(trailing: Button("Update", action: onUpdate))
+        OrderForm()
+            .environmentObject(order)
+            .navigationBarItems(trailing: updateNavItem)
+    }
+    
+    
+    var updateNavItem: some View {
+        Button("Update", action: onUpdate)
+            .font(Font.body.bold())
+            .disabled(!order.hasPersistentChangedValues)
     }
 }
 

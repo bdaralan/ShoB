@@ -172,10 +172,10 @@
 			isa = PBXGroup;
 			children = (
 				B4B9D13A22B2DF7D003FC4E3 /* CoreDataStack.swift */,
+				B4A5D97B22CD1EC800695A3F /* OrderingDataSource.swift */,
 				B4B9D13C22B2DFAE003FC4E3 /* FetchedDataSource.swift */,
 				B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */,
 				B437BE3222B95282007C02C0 /* Currency.swift */,
-				B4A5D97B22CD1EC800695A3F /* OrderingDataSource.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";

@@ -35,7 +35,7 @@ struct OrderListView: View {
             // MARK: Order Rows
             ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
                 OrderRow(order: order.get(from: self.orderingDataSource.viewOrderContext), onUpdate: { order in
-                    self.orderingDataSource.updateViewingOrder(order)
+                    self.orderingDataSource.updateOrder(order)
                 })
             }
         }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct Home: View {
     
-    @ObjectBinding var orderingDataSource = OrderingDataSource()
+    @ObjectBinding var orderingDataSource = OrderingDataSource(context: CoreDataStack.current.mainContext)
     
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource(context: CoreDataStack.current.mainContext, entity: Order.self)
