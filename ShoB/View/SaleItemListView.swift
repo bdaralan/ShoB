@@ -27,12 +27,6 @@ struct SaleItemListView: View {
                 Button(item.name, action: { self.onItemSelected?(item, self) })
             }
         }
-//        .modifier(CommitNavigationItems(
-//            onCancel: nil,
-//            onCommit: {},
-//            commitTitle: "Update",
-//            modalCommitTitle: "Add"
-//        ))
     }
 }
 

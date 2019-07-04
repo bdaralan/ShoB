@@ -12,7 +12,7 @@ import CoreData
 
 struct PlaceOrderView : View {
     
-    @EnvironmentObject var orderingDataSource: OrderingDataSource
+    @ObjectBinding var newOrder: Order
     
     var onCancelled: () -> Void
     
@@ -21,34 +21,26 @@ struct PlaceOrderView : View {
     
     var body: some View {
         NavigationView {
-            OrderForm()
-                .environmentObject(orderingDataSource.newOrder)
+            OrderForm(order: newOrder)
                 .navigationBarTitle("New Order", displayMode: .inline)
-                .navigationBarItems(
-                    leading: Button("Cancel", action: { self.cancelOrder() }),
-                    trailing: Button("Place Order", action: { self.placeOrder() })
-                )
+                .navigationBarItems(leading: cancelOrderNavItem, trailing: placeOrderNavItem)
         }
     }
     
     
-    func cancelOrder() {
-        print("PlaceOrderView cancelOrder")
-        orderingDataSource.cancelPlacingNewOrder()
-        onCancelled()
+    var cancelOrderNavItem: some View {
+        Button("Cancel", action: onCancelled)
     }
     
-    func placeOrder() {
-        print("PlaceOrderView placeOrder")
-        orderingDataSource.placeNewOrder()
-        onPlacedOrder()
+    var placeOrderNavItem: some View {
+        Button("Place Order", action: onPlacedOrder)
     }
 }
 
 #if DEBUG
 struct PlaceOrderView_Previews : PreviewProvider {
     static var previews: some View {
-        PlaceOrderView(onCancelled: {}, onPlacedOrder: {})
+        PlaceOrderView(newOrder: sampleOrders().first!, onCancelled: {}, onPlacedOrder: {})
     }
 }
 #endif

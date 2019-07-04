@@ -25,32 +25,33 @@ struct OrderRow: View {
     
     
     var body: some View {
-        let rowContent = VStack(alignment: .leading) {
-            Text("Order Date:\t \(formatter.string(from: order.orderDate))")
-            
-            if order.deliveryDate == nil {
-                Text("Deliver:\t No")
-            } else {
-                Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
-            }
-            
-            
-            if order.deliveredDate == nil {
-                Text("Delivered:\t No")
-            } else {
-                Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
-            }
-            
-            Text("Discount: \(order.discount)")
-            
-            Text("Note: \(order.note)")
-        }
-        
-        let detailView = OrderDetailView(order: order, onUpdate: {
+        let orderDetailView = OrderDetailView(order: order, onUpdate: {
             self.onUpdate(self.order)
-        }).navigationBarTitle("Order Details", displayMode: .inline)
+        })
+        .navigationBarTitle("Order Details", displayMode: .inline)
         
-        return NavigationLink(destination: detailView, label: { rowContent })
+        return NavigationLink(destination: orderDetailView) { // row content
+            VStack(alignment: .leading) {
+                Text("Order Date:\t \(formatter.string(from: order.orderDate))")
+                
+                if order.deliveryDate == nil {
+                    Text("Deliver:\t No")
+                } else {
+                    Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
+                }
+                
+                
+                if order.deliveredDate == nil {
+                    Text("Delivered:\t No")
+                } else {
+                    Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
+                }
+                
+                Text("Discount: \(order.discount)")
+                
+                Text("Note: \(order.note)")
+            }
+        }
     }
 }
 

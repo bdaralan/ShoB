@@ -13,39 +13,72 @@ import CoreData
 
 struct OrderForm: View {
     
-    @EnvironmentObject var order: Order
+    @ObjectBinding var order: Order
     
-    @State var isDelivering = false
-    @State var deliveryDate = Date()
+    var orderDate: Binding<Date> {
+        .init(
+            getValue: { self.order.orderDate },
+            setValue: { self.order.orderDate = $0 }
+        )
+    }
     
-    @State var isDelivered = false
-    @State var deliveredDate = Date()
+    var isDelivering: Binding<Bool> {
+        .init(
+            getValue: { self.order.deliveryDate != nil },
+            setValue: { self.order.deliveryDate = $0 ? Date() : nil }
+        )
+    }
     
-    @State var discountText = ""
+    var deliveryDate: Binding<Date> {
+        .init(
+            getValue: { self.order.deliveryDate ?? Date() },
+            setValue: { self.order.deliveryDate = $0 }
+        )
+    }
     
-    static let currencyFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.currencySymbol = "$"
-        formatter.numberStyle = .currency
-        formatter.locale = Locale.current
-        return formatter
-    }()
+    var isDelivered: Binding<Bool> {
+        .init(
+            getValue: { self.order.deliveredDate != nil },
+            setValue: { self.order.deliveredDate = $0 ? Date() : nil }
+        )
+    }
+    
+    var deliveredDate: Binding<Date> {
+        .init(
+            getValue: { self.order.deliveredDate ?? Date() },
+            setValue: { self.order.deliveredDate = $0 }
+        )
+    }
+    
+    var discountText: Binding<String> {
+        .init(
+            getValue: { self.discountText(for: self.order.discount) },
+            setValue: { self.order.discount = Currency.parseCent($0) }
+        )
+    }
+    
+    var note: Binding<String> {
+        .init(
+            getValue: { self.order.note },
+            setValue: { self.order.note = $0 }
+        )
+    }
     
     
     var body: some View {
         Form {
-            // MARK: Order Details Section
+            // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
-                DatePicker("Order Date", date: $order.orderDate)
+                DatePicker("Order Date", date: orderDate)
 
-                Toggle("Delivery", isOn: $isDelivering)
-                if isDelivering {
-                    DatePicker("Delivery Date", date: $deliveryDate)
+                Toggle("Delivery", isOn: isDelivering)
+                if isDelivering.value {
+                    DatePicker("Delivery Date", date: deliveryDate)
                 }
 
-                Toggle("Delivered", isOn: $isDelivered)
-                if isDelivered {
-                    DatePicker("Delivered Date", date: $deliveredDate)
+                Toggle("Delivered", isOn: isDelivered)
+                if isDelivered.value {
+                    DatePicker("Delivered Date", date: deliveredDate)
                 }
             }
             
@@ -65,21 +98,18 @@ struct OrderForm: View {
                 
                 HStack {
                     Text("Discount")
-//                    TextField("$0.00", value: $order.discount, formatter: OrderForm.currencyFormatter)
-//                        .multilineTextAlignment(.trailing)
-                    UITextFieldView(text: $discountText, setup: { textField in
+                    UITextFieldView(text: discountText, setup: { textField in
                         textField.keyboardType = .numberPad
                         textField.textAlignment = .right
                         textField.placeholder = "$0.00"
                     }, showToolBar: true, onEditingChanged: { textField in
                         let discount = Currency.parseCent(textField.text ?? "")
-                        textField.text = discount == 0 ? "" : "\(Currency(discount))"
-                        print(self.order.discount)
+                        textField.text = self.discountText(for: discount)
                     })
                 }
             }
             
-            // MARK: Order Items Section
+            // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
                 NavigationLink("Add Item", destination: saleItemList).foregroundColor(.accentColor)
             }
@@ -87,7 +117,7 @@ struct OrderForm: View {
             // MARK: Note Section
             Section(header: Text("NOTE")) {
                 VStack {
-                    TextField(". . .", text: $order.note)
+                    TextField(". . .", text: note)
                         .lineLimit(nil)
                         .padding([.top, .bottom])
                     Spacer()
@@ -97,11 +127,19 @@ struct OrderForm: View {
         }
     }
     
+    
     var saleItemList: some View {
-        SaleItemListView { (item, body) in
+        SaleItemListView { item, body in
             print(item)
         }
         .navigationBarTitle("Add Item")
+    }
+    
+    
+    /// Return text for discount text field.
+    /// - Parameter discount: The discount to compute.
+    func discountText(for discount: Cent) -> String {
+        discount == 0 ? "" : "\(Currency(discount))"
     }
 }
 
@@ -109,7 +147,7 @@ struct OrderForm: View {
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static var previews: some View {
-        OrderForm().environmentObject(sampleOrders().first!)
+        OrderForm(order: sampleOrders().first!)
     }
 }
 #endif

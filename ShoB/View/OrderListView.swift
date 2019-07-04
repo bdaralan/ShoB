@@ -47,9 +47,23 @@ struct OrderListView: View {
     /// Construct an order form.
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
     var placeOrderForm: Modal {
-        let dismiss = { self.isPlacingOrder = false }
-        let placeOrderView = PlaceOrderView(onCancelled: dismiss, onPlacedOrder: dismiss).environmentObject(orderingDataSource)
-        return Modal(placeOrderView, onDismiss: dismiss)
+        let cancelOrder = {
+            self.orderingDataSource.cancelPlacingNewOrder()
+            self.isPlacingOrder = false
+        }
+        
+        let placeOrder = {
+            self.orderingDataSource.placeNewOrder()
+            self.isPlacingOrder = false
+        }
+        
+        let placeOrderView = PlaceOrderView(
+            newOrder: orderingDataSource.newOrder,
+            onCancelled: cancelOrder,
+            onPlacedOrder: placeOrder
+        )
+        
+        return Modal(placeOrderView, onDismiss: cancelOrder)
     }
     
     // Note: if color is not set, the button become disabled after pressed (beta 2)
