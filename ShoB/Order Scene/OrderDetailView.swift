@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct OrderDetailView : View {
+struct OrderDetailView: View {
     
     @ObjectBinding var order: Order
     
@@ -17,6 +17,7 @@ struct OrderDetailView : View {
     
     var body: some View {
         OrderForm(order: order)
+            .navigationBarTitle("Order Details", displayMode: .inline)
             .navigationBarItems(trailing: updateOrderNavItem)
     }
     

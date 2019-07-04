@@ -1,5 +1,5 @@
 //
-//  OrderingDataSource.swift
+//  CUDDataSource.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/3/19.
@@ -11,30 +11,31 @@ import SwiftUI
 import Combine
 
 
-class OrderingDataSource: BindableObject {
+/// A data source use to create, update, or delete object.
+class CUDDataSource<T: NSManagedObject>: BindableObject {
     
-    let didChange = PassthroughSubject<OrderingDataSource, Never>()
+    let didChange = PassthroughSubject<CUDDataSource, Never>()
     
     /// The source context.
     let sourceContext: NSManagedObjectContext
     
     /// The context used to place new order.
-    let placeOrderContext: NSManagedObjectContext
+    let createContext: NSManagedObjectContext
     
     /// The context used to view or edit existing orders.
-    let viewOrderContext: NSManagedObjectContext
+    let updateContext: NSManagedObjectContext
     
     /// A new order to be placed.
-    private var newOrderToPlace: Order?
+    private var newObjectToCreate: T?
     
     /// The new order to be placed.
     ///
     /// Return a new order after `cancelPlacingNewOrder()` or `placeNewOrder()` is called.
-    var newOrder: Order {
-        if newOrderToPlace == nil {
-            newOrderToPlace = Order(context: placeOrderContext)
+    var newObject: T {
+        if newObjectToCreate == nil {
+            newObjectToCreate = T(context: createContext)
         }
-        return newOrderToPlace!
+        return newObjectToCreate!
     }
     
     
@@ -42,32 +43,32 @@ class OrderingDataSource: BindableObject {
     /// - Parameter context: The parent or source context.
     init(context: NSManagedObjectContext) {
         sourceContext = context
-        placeOrderContext = sourceContext.newChildContext()
-        viewOrderContext = sourceContext.newChildContext()
+        createContext = sourceContext.newChildContext()
+        updateContext = sourceContext.newChildContext()
     }
     
     
     /// Save the `newOrder` to the context.
-    func placeNewOrder() {
-        guard newOrderToPlace?.managedObjectContext == placeOrderContext else { return }
-        placeOrderContext.quickSave()
+    func saveNewObject() {
+        guard newObjectToCreate?.managedObjectContext == createContext else { return }
+        createContext.quickSave()
         sourceContext.quickSave()
-        newOrderToPlace = nil
+        newObjectToCreate = nil
     }
     
     /// Discard the `newOrder` that hasn't been placed from the context.
-    func cancelPlacingNewOrder() {
-        placeOrderContext.rollback()
-        newOrderToPlace = nil
+    func discardNewObject() {
+        createContext.rollback()
+        newObjectToCreate = nil
     }
     
     /// Save changes of the order to the context.
     ///
     /// - Parameter order: The order to update. This order must be in the `viewOrderContext`.
-    func updateOrder(_ order: Order) {
-        guard order.managedObjectContext == viewOrderContext else { return }
-        guard order.hasPersistentChangedValues else { return }
-        viewOrderContext.quickSave()
+    func updateObject(_ object: T) {
+        guard object.managedObjectContext == updateContext else { return }
+        guard object.hasPersistentChangedValues else { return }
+        updateContext.quickSave()
         sourceContext.quickSave()
     }
 }

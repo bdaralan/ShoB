@@ -10,13 +10,23 @@ import SwiftUI
 
 struct Home: View {
     
-    @ObjectBinding var orderingDataSource = OrderingDataSource(context: CoreDataStack.current.mainContext)
+    @ObjectBinding var cudOrderDataSource = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
+    @ObjectBinding var cudSaleItemDataSource = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
+        dataSource.performFetch()
+        return dataSource
+    }()
+    
+    @ObjectBinding var saleItemDataSource: FetchedDataSource<SaleItem> = {
+        let dataSource = FetchedDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
+        let request = dataSource.fetchController.fetchRequest
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [.init(key: #keyPath(SaleItem.name), ascending: true)]
         dataSource.performFetch()
         return dataSource
     }()
@@ -30,7 +40,7 @@ struct Home: View {
             NavigationView {
                 OrderListView()
                     .navigationBarTitle("Orders", displayMode: .large)
-                    .environmentObject(orderingDataSource)
+                    .environmentObject(cudOrderDataSource)
                     .environmentObject(orderDataSource)
             }
             .tabItem {
@@ -52,6 +62,8 @@ struct Home: View {
             NavigationView {
                 SaleItemListView()
                     .navigationBarTitle("Items", displayMode: .large)
+                    .environmentObject(saleItemDataSource)
+                    .environmentObject(cudSaleItemDataSource)
             }
             .tabItem {
                 Image(systemName: "list.dash")

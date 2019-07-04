@@ -11,7 +11,7 @@ import CoreData
 
 struct OrderListView: View {
     
-    @EnvironmentObject var orderingDataSource: OrderingDataSource
+    @EnvironmentObject var cudDataSource: CUDDataSource<Order>
     
     @EnvironmentObject var orderDataSource: FetchedDataSource<Order>
 
@@ -34,8 +34,8 @@ struct OrderListView: View {
             
             // MARK: Order Rows
             ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(order: order.get(from: self.orderingDataSource.viewOrderContext), onUpdate: { order in
-                    self.orderingDataSource.updateOrder(order)
+                OrderRow(order: order.get(from: self.cudDataSource.updateContext), onUpdate: { order in
+                    self.cudDataSource.updateObject(order)
                 })
             }
         }
@@ -44,33 +44,34 @@ struct OrderListView: View {
     }
     
     
+    var placeNewOrderNavItem: some View {
+        Button(action: {
+            self.isPlacingOrder = true
+        }, label: {
+            Image(systemName: "plus").imageScale(.large)
+        }).accentColor(.accentColor)
+    }
+    
     /// Construct an order form.
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
     var placeOrderForm: Modal {
         let cancelOrder = {
-            self.orderingDataSource.cancelPlacingNewOrder()
+            self.cudDataSource.discardNewObject()
             self.isPlacingOrder = false
         }
         
         let placeOrder = {
-            self.orderingDataSource.placeNewOrder()
+            self.cudDataSource.saveNewObject()
             self.isPlacingOrder = false
         }
         
         let placeOrderView = PlaceOrderView(
-            newOrder: orderingDataSource.newOrder,
+            newOrder: cudDataSource.newObject,
             onCancelled: cancelOrder,
             onPlacedOrder: placeOrder
         )
         
         return Modal(placeOrderView, onDismiss: cancelOrder)
-    }
-    
-    // Note: if color is not set, the button become disabled after pressed (beta 2)
-    var placeNewOrderNavItem: some View {
-        let presentPlaceOrderForm = { self.isPlacingOrder = true }
-        let navIcon = { Image(systemName: "plus").imageScale(.large) }
-        return Button(action: presentPlaceOrderForm, label: navIcon).accentColor(.accentColor)
     }
 }
 

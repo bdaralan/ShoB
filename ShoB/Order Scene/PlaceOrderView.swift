@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 
-struct PlaceOrderView : View {
+struct PlaceOrderView: View {
     
     @ObjectBinding var newOrder: Order
     

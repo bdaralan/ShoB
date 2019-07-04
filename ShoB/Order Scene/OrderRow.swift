@@ -28,7 +28,6 @@ struct OrderRow: View {
         let orderDetailView = OrderDetailView(order: order, onUpdate: {
             self.onUpdate(self.order)
         })
-        .navigationBarTitle("Order Details", displayMode: .inline)
         
         return NavigationLink(destination: orderDetailView) { // row content
             VStack(alignment: .leading) {
