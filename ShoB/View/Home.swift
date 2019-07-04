@@ -13,7 +13,7 @@ struct Home: View {
     @ObjectBinding var orderingDataSource = OrderingDataSource(context: CoreDataStack.current.mainContext)
     
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
-        let dataSource = FetchedDataSource(context: CoreDataStack.current.mainContext, entity: Order.self)
+        let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]

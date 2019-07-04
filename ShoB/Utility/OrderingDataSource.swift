@@ -27,7 +27,9 @@ class OrderingDataSource: BindableObject {
     /// A new order to be placed.
     private var newOrderToPlace: Order?
     
-    /// The new order to be place.
+    /// The new order to be placed.
+    ///
+    /// Return a new order after `cancelPlacingNewOrder()` or `placeNewOrder()` is called.
     var newOrder: Order {
         if newOrderToPlace == nil {
             newOrderToPlace = Order(context: placeOrderContext)
@@ -47,7 +49,7 @@ class OrderingDataSource: BindableObject {
     
     /// Save the `newOrder` to the context.
     func placeNewOrder() {
-        guard newOrderToPlace != nil else { return }
+        guard newOrderToPlace?.managedObjectContext == placeOrderContext else { return }
         placeOrderContext.quickSave()
         sourceContext.quickSave()
         newOrderToPlace = nil
@@ -55,8 +57,8 @@ class OrderingDataSource: BindableObject {
     
     /// Discard the `newOrder` that hasn't been placed from the context.
     func cancelPlacingNewOrder() {
-        newOrderToPlace = nil
         placeOrderContext.rollback()
+        newOrderToPlace = nil
     }
     
     /// Save changes of the order to the context.

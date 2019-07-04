@@ -19,9 +19,9 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetched
     var fetchController: NSFetchedResultsController<T>
     
     
-    init(context: NSManagedObjectContext, entity: T.Type) {
+    init(context: NSManagedObjectContext) {
         self.context = context
-        let request = entity.fetchRequest() as! NSFetchRequest<T>
+        let request = T.fetchRequest() as! NSFetchRequest<T>
         request.sortDescriptors = []
         
         fetchController = NSFetchedResultsController<T>(
