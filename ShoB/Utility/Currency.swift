@@ -20,16 +20,16 @@ typealias Dollar = Int64
 struct Currency: Equatable, CustomStringConvertible {
     
     /// Total amount in cent.
-    var amountInCent: Cent
+    var amount: Cent
     
     /// Dollar amount.
     var dollar: Dollar {
-        return amountInCent / 100
+        return amount / 100
     }
     
     /// The remaining cent after the dollar amount.
     var cent: Cent {
-        return amountInCent - dollar * 100
+        return amount - dollar * 100
     }
     
     /// Check if there are any remaining cents after the dollar amount.
@@ -38,7 +38,7 @@ struct Currency: Equatable, CustomStringConvertible {
     }
     
     var isNegative: Bool {
-        return amountInCent < 0
+        return amount < 0
     }
     
     /// String representation. Example: $4.90
@@ -49,7 +49,7 @@ struct Currency: Equatable, CustomStringConvertible {
     
     
     init(_ amountInCent: Cent) {
-        self.amountInCent = amountInCent
+        self.amount = amountInCent
     }
     
     /// Construct with dollar string. Example: $1.00 or 2.00.
@@ -67,12 +67,12 @@ struct Currency: Equatable, CustomStringConvertible {
         let dollarFormat = String(format: "%.02f", dollarAmount)
         
         // convert string to cent
-        self.amountInCent = Currency.parseCent(dollarFormat)
+        self.amount = Currency.parseCent(from: dollarFormat)
     }
     
     /// Parse all the digits in the string and turn them into cent.
     /// - Returns: The amount of `Cent` or 0 if no digits found.
-    static func parseCent(_ string: String) -> Cent {
+    static func parseCent(from string: String) -> Cent {
         let cent = Cent(string.filter({ $0.isNumber })) ?? 0
         return string.hasPrefix("-") ? -cent : cent
     }
