@@ -31,7 +31,7 @@ struct OrderForm: View {
     
     var deliveryDate: Binding<Date> {
         .init(
-            getValue: { self.order.deliveryDate ?? Date() },
+            getValue: { self.order.deliveryDate! },
             setValue: { self.order.deliveryDate = $0 }
         )
     }
@@ -45,15 +45,15 @@ struct OrderForm: View {
     
     var deliveredDate: Binding<Date> {
         .init(
-            getValue: { self.order.deliveredDate ?? Date() },
+            getValue: { self.order.deliveredDate! },
             setValue: { self.order.deliveredDate = $0 }
         )
     }
     
     var discountText: Binding<String> {
         .init(
-            getValue: { self.discountText(for: self.order.discount) },
-            setValue: { self.order.discount = Currency.parseCent($0) }
+            getValue: { self.textForDiscount(self.order.discount) },
+            setValue: { self.order.discount = Currency.parseCent(from: $0) }
         )
     }
     
@@ -103,8 +103,9 @@ struct OrderForm: View {
                         textField.textAlignment = .right
                         textField.placeholder = "$0.00"
                     }, showToolBar: true, onEditingChanged: { textField in
-                        let discount = Currency.parseCent(textField.text ?? "")
-                        textField.text = self.discountText(for: discount)
+                        let text = textField.text ?? ""
+                        let discount = Currency.parseCent(from: text)
+                        textField.text = self.textForDiscount(discount)
                     })
                 }
             }
@@ -138,7 +139,7 @@ struct OrderForm: View {
     
     /// Return text for discount text field.
     /// - Parameter discount: The discount to compute.
-    func discountText(for discount: Cent) -> String {
+    func textForDiscount(_ discount: Cent) -> String {
         discount == 0 ? "" : "\(Currency(discount))"
     }
 }
