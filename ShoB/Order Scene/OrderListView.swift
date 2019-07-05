@@ -69,13 +69,13 @@ struct OrderListView: View {
             self.isPlacingOrder = false
         }
         
-        let placeOrderView = CreateOrderForm(
+        let form = CreateOrderForm(
             newOrder: cudDataSource.newObject,
             onCancel: cancelOrder,
             onPlacedOrder: placeOrder
         )
         
-        return Modal(placeOrderView, onDismiss: cancelOrder)
+        return Modal(NavigationView { form }, onDismiss: cancelOrder)
     }
 }
 

@@ -20,11 +20,9 @@ struct CreateOrderForm: View {
     
     
     var body: some View {
-        NavigationView {
-            OrderForm(order: newOrder)
-                .navigationBarTitle("New Order", displayMode: .inline)
-                .navigationBarItems(leading: cancelOrderNavItem, trailing: placeOrderNavItem)
-        }
+        OrderForm(order: newOrder)
+            .navigationBarTitle("New Order", displayMode: .inline)
+            .navigationBarItems(leading: cancelOrderNavItem, trailing: placeOrderNavItem)
     }
     
     
