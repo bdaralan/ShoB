@@ -98,7 +98,7 @@ struct OrderForm: View {
                 
                 HStack {
                     Text("Discount")
-                    UITextFieldView(text: discountText, setup: { textField in
+                    UIKTextField(text: discountText, setup: { textField in
                         textField.keyboardType = .numberPad
                         textField.textAlignment = .right
                         textField.placeholder = "$0.00"

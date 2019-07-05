@@ -26,14 +26,13 @@ struct SaleItemForm: View {
             Section {
                 HStack {
                     Text("Name")
-                    Spacer()
                     TextField("Name", text: $saleItem.name)
                         .multilineTextAlignment(.trailing)
                 }
                 
                 HStack {
                     Text("Price")
-                    UITextFieldView(text: priceText, setup: { textField in
+                    UIKTextField(text: priceText, setup: { textField in
                         textField.keyboardType = .numberPad
                         textField.textAlignment = .right
                         textField.placeholder = "$0.00"

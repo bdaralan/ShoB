@@ -1,5 +1,5 @@
 //
-//  UITextFieldView.swift
+//  UIKTextField.swift
 //  ShoB
 //
 //  Created by Dara Beng on 6/30/19.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 
-struct UITextFieldView : UIViewRepresentable {
+struct UIKTextField : UIViewRepresentable {
     
     @Binding var text: String
     
@@ -20,11 +20,11 @@ struct UITextFieldView : UIViewRepresentable {
     var onEditingChanged: ((UITextField) -> Void)?
     
     
-    func makeCoordinator() -> UITextFieldView.Coordinator {
+    func makeCoordinator() -> UIKTextField.Coordinator {
         return Coordinator(text: $text, onEditingChanged: onEditingChanged)
     }
     
-    func makeUIView(context: UIViewRepresentableContext<UITextFieldView>) -> UITextField {
+    func makeUIView(context: UIViewRepresentableContext<UIKTextField>) -> UITextField {
         let textField = UITextField()
         let coordinator = context.coordinator
         textField.delegate = coordinator
@@ -43,7 +43,7 @@ struct UITextFieldView : UIViewRepresentable {
         return textField
     }
     
-    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<UITextFieldView>) {
+    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<UIKTextField>) {
         uiView.text = text
     }
     
