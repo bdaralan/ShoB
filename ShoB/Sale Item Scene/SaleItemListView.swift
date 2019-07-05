@@ -13,7 +13,7 @@ struct SaleItemListView: View {
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
     @EnvironmentObject var cudDataSource: CUDDataSource<SaleItem>
     
-    @State var isAddingNewSaleItem = false
+    @State var isAddingNewItem = false
     
     /// Action to perform when an item is selected.
     ///
@@ -33,36 +33,36 @@ struct SaleItemListView: View {
             }
         }
         .navigationBarItems(trailing: addNewSaleItemNavItem)
-        .presentation(isAddingNewSaleItem ? addSaleItemForm : nil)
+        .presentation(isAddingNewItem ? createSaleItemForm : nil)
     }
     
 
     var addNewSaleItemNavItem: some View {
-        Button(action: {
-            self.isAddingNewSaleItem = true
-        }, label: {
-            Image(systemName: "plus").imageScale(.large)
-        }).accentColor(.accentColor)
+        Button(
+            action: { self.isAddingNewItem = true },
+            label: { Image(systemName: "plus").imageScale(.large) }
+        )
+        .accentColor(.accentColor)
     }
     
-    var addSaleItemForm: Modal {
-        let cancelAdding = {
+    var createSaleItemForm: Modal {
+        let cancelAddItem = {
             self.cudDataSource.discardNewObject()
-            self.isAddingNewSaleItem = false
+            self.isAddingNewItem = false
         }
         
-        let addSaleItem = {
+        let addItem = {
             self.cudDataSource.saveNewObject()
-            self.isAddingNewSaleItem = false
+            self.isAddingNewItem = false
         }
         
-        let addSaleItemForm = CreateSaleItemForm(
+        let form = CreateSaleItemForm(
             newSaleItem: cudDataSource.newObject,
-            onCancel: cancelAdding,
-            onAdd: addSaleItem
+            onCancel: cancelAddItem,
+            onAdd: addItem
         )
         
-        return Modal(addSaleItemForm, onDismiss: { self.isAddingNewSaleItem = false })
+        return Modal(NavigationView { form }, onDismiss: { self.isAddingNewItem = false })
     }
 }
 

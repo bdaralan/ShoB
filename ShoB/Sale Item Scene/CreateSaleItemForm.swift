@@ -18,11 +18,9 @@ struct CreateSaleItemForm : View {
     
     
     var body: some View {
-        NavigationView {
-            SaleItemForm(saleItem: newSaleItem)
-                .navigationBarTitle("New Item", displayMode: .inline)
-                .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
-        }
+        SaleItemForm(saleItem: newSaleItem)
+            .navigationBarTitle("New Item", displayMode: .inline)
+            .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
     }
     
     
