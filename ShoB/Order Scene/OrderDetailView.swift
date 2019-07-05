@@ -23,16 +23,18 @@ struct OrderDetailView: View {
     
     
     var updateOrderNavItem: some View {
-        Button("Update", action: onUpdate)
-            .font(Font.body.bold())
+        Button(action: onUpdate, label: { Text("Update").bold() })
             .disabled(!order.hasPersistentChangedValues)
     }
 }
 
 #if DEBUG
 struct OrderDetailView_Previews : PreviewProvider {
+    
+    static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
+    
     static var previews: some View {
-        OrderDetailView(order: sampleOrders().first!, onUpdate: {})
+        OrderDetailView(order: order, onUpdate: {})
     }
 }
 #endif

@@ -1,5 +1,5 @@
 //
-//  AddSaleItemView.swift
+//  CreateSaleItemForm.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/4/19.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct AddSaleItemView : View {
+struct CreateSaleItemForm : View {
     
     @ObjectBinding var newSaleItem: SaleItem
     
@@ -38,7 +38,7 @@ struct AddSaleItemView : View {
 #if DEBUG
 struct AddSaleItemView_Previews : PreviewProvider {
     static var previews: some View {
-        AddSaleItemView(newSaleItem: SaleItem(context: CoreDataStack.current.mainContext), onCancel: {}, onAdd: {})
+        CreateSaleItemForm(newSaleItem: SaleItem(context: CoreDataStack.current.mainContext), onCancel: {}, onAdd: {})
     }
 }
 #endif

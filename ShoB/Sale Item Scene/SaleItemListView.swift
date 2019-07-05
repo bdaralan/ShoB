@@ -56,7 +56,7 @@ struct SaleItemListView: View {
             self.isAddingNewSaleItem = false
         }
         
-        let addSaleItemForm = AddSaleItemView(
+        let addSaleItemForm = CreateSaleItemForm(
             newSaleItem: cudDataSource.newObject,
             onCancel: cancelAdding,
             onAdd: addSaleItem

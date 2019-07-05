@@ -33,9 +33,13 @@ struct OrderListView: View {
             }
             
             // MARK: Order Rows
-            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
+            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in // source order
+                // use data source's update context to view and modifer the order
+                // also send didChange once update button tapped so that the row disable the button
                 OrderRow(order: order.get(from: self.cudDataSource.updateContext), onUpdate: { order in
+                    guard order.hasPersistentChangedValues else { return }
                     self.cudDataSource.updateObject(order)
+                    order.didChange.send()
                 })
             }
         }
@@ -65,9 +69,9 @@ struct OrderListView: View {
             self.isPlacingOrder = false
         }
         
-        let placeOrderView = PlaceOrderView(
+        let placeOrderView = CreateOrderForm(
             newOrder: cudDataSource.newObject,
-            onCancelled: cancelOrder,
+            onCancel: cancelOrder,
             onPlacedOrder: placeOrder
         )
         
@@ -94,15 +98,3 @@ struct OrderList_Previews : PreviewProvider {
     }
 }
 #endif
-
-
-func sampleOrders() -> [Order] {
-    let context = CoreDataStack.current.mainContext
-    var orders = [Order]()
-    for i in 1...30 {
-        let order = Order(context: context)
-        order.discount = Cent(i * 10)
-        orders.append(order)
-    }
-    return orders
-}

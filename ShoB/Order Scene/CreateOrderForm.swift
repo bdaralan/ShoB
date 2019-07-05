@@ -1,5 +1,5 @@
 //
-//  PlaceOrderView.swift
+//  CreateOrderForm.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/2/19.
@@ -10,11 +10,11 @@ import SwiftUI
 import CoreData
 
 
-struct PlaceOrderView: View {
+struct CreateOrderForm: View {
     
     @ObjectBinding var newOrder: Order
     
-    var onCancelled: () -> Void
+    var onCancel: () -> Void
     
     var onPlacedOrder: () -> Void
     
@@ -29,7 +29,7 @@ struct PlaceOrderView: View {
     
     
     var cancelOrderNavItem: some View {
-        Button("Cancel", action: onCancelled)
+        Button("Cancel", action: onCancel)
     }
     
     var placeOrderNavItem: some View {
@@ -39,8 +39,11 @@ struct PlaceOrderView: View {
 
 #if DEBUG
 struct PlaceOrderView_Previews : PreviewProvider {
+    
+    static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
+    
     static var previews: some View {
-        PlaceOrderView(newOrder: sampleOrders().first!, onCancelled: {}, onPlacedOrder: {})
+        CreateOrderForm(newOrder: order, onCancel: {}, onPlacedOrder: {})
     }
 }
 #endif

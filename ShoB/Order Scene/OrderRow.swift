@@ -16,43 +16,47 @@ struct OrderRow: View {
     
     var onUpdate: (Order) -> Void
     
-    let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
-    }()
-    
     
     var body: some View {
         let orderDetailView = OrderDetailView(order: order, onUpdate: {
             self.onUpdate(self.order)
         })
         
-        return NavigationLink(destination: orderDetailView) { // row content
-            VStack(alignment: .leading) {
-                Text("Order Date:\t \(formatter.string(from: order.orderDate))")
-                
-                if order.deliveryDate == nil {
-                    Text("Deliver:\t No")
-                } else {
-                    Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
-                }
-                
-                
-                if order.deliveredDate == nil {
-                    Text("Delivered:\t No")
-                } else {
-                    Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
-                }
-                
-                Text("Discount: \(order.discount)")
-                
-                Text("Note: \(order.note)")
+        return NavigationLink(destination: orderDetailView, label: { rowContent })
+    }
+    
+    
+    var rowContent: some View {
+        VStack(alignment: .leading) {
+            Text("Order Date:\t \(formatter.string(from: order.orderDate))")
+            
+            if order.deliveryDate == nil {
+                Text("Deliver:\t No")
+            } else {
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
             }
+            
+            
+            if order.deliveredDate == nil {
+                Text("Delivered:\t No")
+            } else {
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
+            }
+            
+            Text("Discount: \(order.discount)")
+            
+            Text("Note: \(order.note)")
         }
     }
 }
+
+
+fileprivate let formatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .short
+    return formatter
+}()
 
 
 #if DEBUG

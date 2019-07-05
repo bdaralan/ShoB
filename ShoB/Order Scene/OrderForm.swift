@@ -83,11 +83,11 @@ struct OrderForm: View {
             }
             
             // MARK: Total Section
-            Section(header: Text("TOTAL")) {
+            Section(header: Text("TOTAL & DISCOUNT")) {
                 HStack {
-                    Text("After Discount")
+                    Text("Total").bold()
                     Spacer()
-                    Text(verbatim: "\(Currency(order.total - order.discount))")
+                    Text(verbatim: "\(Currency(order.total - order.discount))").bold()
                 }
                 
                 HStack {
@@ -112,7 +112,7 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationLink("Add Item", destination: saleItemList).foregroundColor(.accentColor)
+                NavigationLink(destination: saleItemList, label: { Text("Add Item").color(.accentColor) })
             }
 
             // MARK: Note Section
@@ -147,8 +147,11 @@ struct OrderForm: View {
 
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
+    
+    static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
+    
     static var previews: some View {
-        OrderForm(order: sampleOrders().first!)
+        OrderForm(order: order)
     }
 }
 #endif
