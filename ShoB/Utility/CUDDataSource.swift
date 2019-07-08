@@ -14,7 +14,7 @@ import Combine
 /// A data source use to create, update, or delete object.
 class CUDDataSource<T: NSManagedObject>: BindableObject {
     
-    let didChange = PassthroughSubject<CUDDataSource, Never>()
+    let didChange = PassthroughSubject<Void, Never>()
     
     /// The source context.
     let sourceContext: NSManagedObjectContext
@@ -55,16 +55,18 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     /// The new time the `newObject` is used, a newly created object is returned.
     func saveNewObject() {
         guard newObjectToCreate?.managedObjectContext == createContext else { return }
+        newObjectToCreate = nil
         createContext.quickSave()
         sourceContext.quickSave()
-        newObjectToCreate = nil
+        didChange.send()
     }
     
     /// Discard the `newObject` that hasn't been created.
     /// This also reset the `createContext` back to its previous commit state.
     func discardNewObject() {
-        createContext.rollback()
         newObjectToCreate = nil
+        createContext.rollback()
+        didChange.send()
     }
     
     /// Save changes of the given object to the context.
@@ -74,5 +76,6 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
         guard object.managedObjectContext == updateContext else { return }
         updateContext.quickSave()
         sourceContext.quickSave()
+        didChange.send()
     }
 }
