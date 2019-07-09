@@ -13,6 +13,13 @@ struct SaleItemForm: View {
     
     @ObjectBinding var saleItem: SaleItem
     
+    var name: Binding<String> {
+        .init(
+            getValue: { self.saleItem.name},
+            setValue: { self.saleItem.name = $0 }
+        )
+    }
+    
     var priceText: Binding<String> {
         .init(
             getValue: { self.textForPrice(self.saleItem.price) },
@@ -26,7 +33,7 @@ struct SaleItemForm: View {
             Section {
                 HStack {
                     Text("Name")
-                    TextField("Name", text: $saleItem.name)
+                    TextField("Name", text: name)
                         .multilineTextAlignment(.trailing)
                 }
                 
