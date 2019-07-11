@@ -38,31 +38,23 @@ struct SaleItemListView: View {
     
 
     var addNewSaleItemNavItem: some View {
-        Button(
-            action: { self.isAddingNewItem = true },
-            label: { Image(systemName: "plus").imageScale(.large) }
-        )
+        Button(action: {
+            self.cudDataSource.discardNewObject()
+            self.cudDataSource.prepareNewObject()
+            self.isAddingNewItem = true
+        }, label: {
+            Image(systemName: "plus").imageScale(.large)
+        })
         .accentColor(.accentColor)
     }
     
     var createSaleItemForm: Modal {
-        let cancelAddItem = {
-            self.cudDataSource.discardNewObject()
-            self.isAddingNewItem = false
-        }
+        let dismiss = { self.isAddingNewItem = false }
         
-        let addItem = {
-            self.cudDataSource.saveNewObject()
-            self.isAddingNewItem = false
-        }
+        let form = CreateSaleItemForm(onCreated: dismiss, onCancelled: dismiss)
+            .environmentObject(cudDataSource)
         
-        let form = CreateSaleItemForm(
-            newSaleItem: cudDataSource.newObject!,
-            onCancel: cancelAddItem,
-            onAdd: addItem
-        )
-        
-        return Modal(NavigationView { form }, onDismiss: { self.isAddingNewItem = false })
+        return Modal(NavigationView { form }, onDismiss: dismiss)
     }
 }
 
