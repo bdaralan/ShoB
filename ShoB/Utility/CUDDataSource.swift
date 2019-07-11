@@ -25,20 +25,17 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     /// The context used to view or edit existing orders.
     let updateContext: NSManagedObjectContext
     
-    /// A new object to be created and saved.
-    private var newObjectToCreate: T?
-    
-    /// A newly created object.
+    /// A new object to be created.
     ///
-    /// Accessing this property will give the same object until the one of following methods is called.
-    /// - `discardNewObject()`
+    /// To set a new object, call `prepareNewObject()`.
+    ///
+    /// The object becomes `nil` after calling:
+    ///
     /// - `saveNewObject()`
-    var newObject: T {
-        if newObjectToCreate == nil {
-            newObjectToCreate = T(context: createContext)
-        }
-        return newObjectToCreate!
-    }
+    /// - `discardNewObject()`
+    ///
+    /// See the above methods for more details.
+    private(set) var newObject: T?
     
     
     /// Construct the data source with the given context.
@@ -54,8 +51,8 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     ///
     /// The new time the `newObject` is used, a newly created object is returned.
     func saveNewObject() {
-        guard newObjectToCreate?.managedObjectContext == createContext else { return }
-        newObjectToCreate = nil
+        guard createContext.hasChanges else { return }
+        newObject = nil
         createContext.quickSave()
         sourceContext.quickSave()
         didChange.send()
@@ -64,18 +61,33 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     /// Discard the `newObject` that hasn't been created.
     /// This also reset the `createContext` back to its previous commit state.
     func discardNewObject() {
-        newObjectToCreate = nil
+        guard createContext.hasChanges else { return }
+        newObject = nil
         createContext.rollback()
         didChange.send()
     }
     
-    /// Save changes of the given object to the context.
+    /// Create a new object and assign to `newObject`.
     ///
-    /// - Parameter object: The object that has changes and it must be from the `updateContext`.
-    func updateObject(_ object: T) {
-        guard object.managedObjectContext == updateContext else { return }
+    /// The method only creates a new object if `newObject` is `nil`.
+    func prepareNewObject() {
+        guard newObject == nil else { return }
+        newObject = T(context: createContext)
+        didChange.send()
+    }
+    
+    /// Save changes from `updateContext` to `sourceContext`.
+    func saveUpdateContext() {
+        guard updateContext.hasChanges else { return }
         updateContext.quickSave()
         sourceContext.quickSave()
+        didChange.send()
+    }
+    
+    /// Discard changes from `updateContext`.
+    func discardUpdateContext() {
+        guard updateContext.hasChanges else { return }
+        updateContext.rollback()
         didChange.send()
     }
 }
