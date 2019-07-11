@@ -38,7 +38,7 @@ struct OrderListView: View {
                 // also send didChange once update button tapped so that the row disable the button
                 OrderRow(order: order.get(from: self.cudDataSource.updateContext), onUpdate: { order in
                     guard order.hasPersistentChangedValues else { return }
-                    self.cudDataSource.updateObject(order)
+                    self.cudDataSource.saveUpdateContext()
                     order.didChange.send()
                 })
             }
@@ -70,7 +70,7 @@ struct OrderListView: View {
         }
         
         let form = CreateOrderForm(
-            newOrder: cudDataSource.newObject,
+            newOrder: cudDataSource.newObject!,
             onCancel: cancelOrder,
             onPlacedOrder: placeOrder
         )

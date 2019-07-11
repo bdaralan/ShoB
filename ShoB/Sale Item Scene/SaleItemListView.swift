@@ -26,7 +26,7 @@ struct SaleItemListView: View {
         List(saleItemDataSource.fetchController.fetchedObjects ?? []) { saleItem in
             if self.onItemSelected == nil { // default behavior, show item details
                 SaleItemRow(saleItem: saleItem.get(from: self.cudDataSource.updateContext), onUpdate: { saleItem in
-                    self.cudDataSource.updateObject(saleItem)
+                    self.cudDataSource.saveUpdateContext()
                 })
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
@@ -57,7 +57,7 @@ struct SaleItemListView: View {
         }
         
         let form = CreateSaleItemForm(
-            newSaleItem: cudDataSource.newObject,
+            newSaleItem: cudDataSource.newObject!,
             onCancel: cancelAddItem,
             onAdd: addItem
         )
