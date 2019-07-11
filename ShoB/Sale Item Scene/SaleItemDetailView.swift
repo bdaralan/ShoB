@@ -12,7 +12,10 @@ struct SaleItemDetailView: View {
     
     @ObjectBinding var saleItem: SaleItem
     
-    var onUpdate: () -> Void
+    /// Get called after `saleItem`'s context is saved.
+    ///
+    /// This triggers when the update button is tapped.
+    var onUpdated: () -> Void
     
     
     var body: some View {
@@ -25,16 +28,20 @@ struct SaleItemDetailView: View {
     
     
     var updateSaleItemNavItem: some View {
-        Button("Update", action: onUpdate)
-            .font(Font.body.bold())
-            .disabled(!saleItem.hasPersistentChangedValues)
+        Button("Update", action: {
+            self.saleItem.managedObjectContext!.quickSave() // context must not be nil
+            self.saleItem.didChange.send() // call to refresh the button enabled state
+            self.onUpdated()
+        })
+        .font(Font.body.bold())
+        .disabled(!saleItem.hasPersistentChangedValues)
     }
 }
 
 #if DEBUG
 struct SaleItemDetailView_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemDetailView(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdate: {})
+        SaleItemDetailView(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdated: {})
     }
 }
 #endif

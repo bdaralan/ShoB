@@ -78,7 +78,6 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     
     /// Save changes from `updateContext` to `sourceContext`.
     func saveUpdateContext() {
-        guard updateContext.hasChanges else { return }
         updateContext.quickSave()
         sourceContext.quickSave()
         didChange.send()
@@ -86,7 +85,6 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     
     /// Discard changes from `updateContext`.
     func discardUpdateContext() {
-        guard updateContext.hasChanges else { return }
         updateContext.rollback()
         didChange.send()
     }
