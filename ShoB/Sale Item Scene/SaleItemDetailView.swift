@@ -25,7 +25,9 @@ struct SaleItemDetailView: View {
     
     
     var updateSaleItemNavItem: some View {
-        Button("Update", action: onUpdate).font(Font.body.bold()).disabled(!saleItem.hasPersistentChangedValues)
+        Button("Update", action: onUpdate)
+            .font(Font.body.bold())
+            .disabled(!saleItem.hasPersistentChangedValues)
     }
 }
 

@@ -27,6 +27,7 @@ struct SaleItemListView: View {
             if self.onItemSelected == nil { // default behavior, show item details
                 SaleItemRow(saleItem: saleItem.get(from: self.cudDataSource.updateContext), onUpdate: { saleItem in
                     self.cudDataSource.saveUpdateContext()
+                    saleItem.didChange.send()
                 })
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
