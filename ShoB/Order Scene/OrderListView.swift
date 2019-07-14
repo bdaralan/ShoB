@@ -50,6 +50,7 @@ struct OrderListView: View {
         Button(action: {
             self.cudDataSource.discardNewObject()
             self.cudDataSource.prepareNewObject()
+            self.cudDataSource.didChange.send()
             self.showPlaceOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
