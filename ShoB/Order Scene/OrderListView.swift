@@ -11,9 +11,7 @@ import CoreData
 
 struct OrderListView: View {
     
-    @EnvironmentObject var cudDataSource: CUDDataSource<Order>
-    
-    @EnvironmentObject var orderDataSource: FetchedDataSource<Order>
+    @EnvironmentObject var dataSource: FetchedDataSource<Order>
 
     @State private var currentSegment = Segment.today
     
@@ -33,8 +31,8 @@ struct OrderListView: View {
             }
             
             // MARK: Order Rows
-            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(sourceOrder: order, dataSource: self.cudDataSource, onUpdated: nil)
+            ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
+                OrderRow(sourceOrder: order, dataSource: self.dataSource.cud, onUpdated: nil)
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
@@ -44,9 +42,9 @@ struct OrderListView: View {
     
     var placeNewOrderNavItem: some View {
         Button(action: {
-            self.cudDataSource.discardNewObject()
-            self.cudDataSource.prepareNewObject()
-            self.cudDataSource.didChange.send()
+            self.dataSource.cud.discardNewObject()
+            self.dataSource.cud.prepareNewObject()
+            self.dataSource.cud.didChange.send()
             self.showPlaceOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -60,11 +58,15 @@ struct OrderListView: View {
         guard showPlaceOrderForm else { return nil }
         
         let dismiss = {
-            self.cudDataSource.discardCreateContext()
+            self.dataSource.cud.discardCreateContext()
             self.showPlaceOrderForm = false
         }
         
-        let form = CreateOrderForm(dataSource: cudDataSource, onPlacedOrder: dismiss, onCancelled: dismiss)
+        let form = CreateOrderForm(
+            cudDataSource: self.dataSource.cud,
+            onPlacedOrder: dismiss,
+            onCancelled: dismiss
+        )
         
         return Modal(NavigationView { form }, onDismiss: dismiss)
     }

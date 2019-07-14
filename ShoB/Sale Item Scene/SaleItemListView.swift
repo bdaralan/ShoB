@@ -10,9 +10,7 @@ import SwiftUI
 
 struct SaleItemListView: View {
     
-    @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
-    
-    @EnvironmentObject var cudDataSource: CUDDataSource<SaleItem>
+    @EnvironmentObject var dataSource: FetchedDataSource<SaleItem>
     
     @State var showCreateSaleItemForm = false
     
@@ -24,9 +22,9 @@ struct SaleItemListView: View {
     
     
     var body: some View {
-        List(saleItemDataSource.fetchController.fetchedObjects ?? []) { saleItem in
+        List(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
             if self.onItemSelected == nil { // default behavior
-                SaleItemRow(sourceItem: saleItem, dataSource: self.cudDataSource, onUpdated: nil)
+                SaleItemRow(sourceItem: saleItem, dataSource: self.dataSource.cud, onUpdated: nil)
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
             }
@@ -38,9 +36,9 @@ struct SaleItemListView: View {
 
     var addNewSaleItemNavItem: some View {
         Button(action: {
-            self.cudDataSource.discardNewObject()
-            self.cudDataSource.prepareNewObject()
-            self.cudDataSource.didChange.send()
+            self.dataSource.cud.discardNewObject()
+            self.dataSource.cud.prepareNewObject()
+            self.dataSource.cud.didChange.send()
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -52,11 +50,11 @@ struct SaleItemListView: View {
         guard showCreateSaleItemForm else { return nil }
         
         let dismiss = {
-            self.cudDataSource.discardCreateContext()
+            self.dataSource.cud.discardCreateContext()
             self.showCreateSaleItemForm = false
         }
         
-        let form = CreateSaleItemForm(dataSource: cudDataSource, onCreated: dismiss, onCancelled: dismiss)
+        let form = CreateSaleItemForm(cudDataSource: dataSource.cud, onCreated: dismiss, onCancelled: dismiss)
         
         return Modal(NavigationView { form }, onDismiss: dismiss)
     }

@@ -10,9 +10,6 @@ import SwiftUI
 
 struct Home: View {
     
-    @ObjectBinding var cudOrderDataSource = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
-    @ObjectBinding var cudSaleItemDataSource = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
-    
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
@@ -39,9 +36,8 @@ struct Home: View {
             // MARK: Order List
             NavigationView {
                 OrderListView()
-                    .navigationBarTitle("Orders", displayMode: .large)
-                    .environmentObject(cudOrderDataSource)
                     .environmentObject(orderDataSource)
+                    .navigationBarTitle("Orders", displayMode: .large)
             }
             .tabItem {
                 Image(systemName: "cube.box.fill")
@@ -61,9 +57,8 @@ struct Home: View {
             // MARK: Sale Item List
             NavigationView {
                 SaleItemListView()
-                    .navigationBarTitle("Items", displayMode: .large)
                     .environmentObject(saleItemDataSource)
-                    .environmentObject(cudSaleItemDataSource)
+                    .navigationBarTitle("Items", displayMode: .large)
             }
             .tabItem {
                 Image(systemName: "list.dash")

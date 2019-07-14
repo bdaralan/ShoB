@@ -16,11 +16,16 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetched
     let didChange = PassthroughSubject<Void, Never>()
     
     let context: NSManagedObjectContext
-    var fetchController: NSFetchedResultsController<T>
+    
+    let fetchController: NSFetchedResultsController<T>
+    
+    /// The create, update, delete data source.
+    let cud: CUDDataSource<T>
     
     
     init(context: NSManagedObjectContext) {
         self.context = context
+        
         let request = T.fetchRequest() as! NSFetchRequest<T>
         request.sortDescriptors = []
         
@@ -30,6 +35,8 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetched
             sectionNameKeyPath: nil,
             cacheName: nil
         )
+        
+        cud = .init(context: context)
         
         super.init()
         fetchController.delegate = self
@@ -42,10 +49,10 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetched
         } catch {
             print(error)
         }
-        didChange.send(())
+        didChange.send()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        didChange.send(())
+        didChange.send()
     }
 }

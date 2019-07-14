@@ -11,7 +11,7 @@ import SwiftUI
 struct CreateSaleItemForm : View {
     
     /// The data source that will create and save the new item.
-    @ObjectBinding var dataSource: CUDDataSource<SaleItem>
+    @ObjectBinding var cudDataSource: CUDDataSource<SaleItem>
     
     /// Triggered when the item is saved.
     var onCreated: () -> Void
@@ -21,7 +21,7 @@ struct CreateSaleItemForm : View {
     
     
     var body: some View {
-        SaleItemForm(saleItem: dataSource.newObject!)
+        SaleItemForm(saleItem: cudDataSource.newObject!)
             .navigationBarTitle("New Item", displayMode: .inline)
             .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
     }
@@ -29,14 +29,14 @@ struct CreateSaleItemForm : View {
     
     var cancelAddingNewSaleItemNavItem: some View {
         Button("Cancel", action: {
-            self.dataSource.discardCreateContext()
+            self.cudDataSource.discardCreateContext()
             self.onCancelled()
         })
     }
     
     var addNewSaleItemNavItem: some View {
         Button("Add", action: {
-            self.dataSource.saveCreateContext()
+            self.cudDataSource.saveCreateContext()
             self.onCreated()
         })
         .font(Font.body.bold())
@@ -47,7 +47,7 @@ struct CreateSaleItemForm : View {
 struct AddSaleItemView_Previews : PreviewProvider {
     static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CreateSaleItemForm(dataSource: cud, onCreated: {}, onCancelled: {})
+        CreateSaleItemForm(cudDataSource: cud, onCreated: {}, onCancelled: {})
     }
 }
 #endif
