@@ -41,6 +41,7 @@ struct CreateOrderForm: View {
             self.dataSource.saveCreateContext()
             self.onPlacedOrder()
         })
+        .font(Font.body.bold())
     }
 }
 

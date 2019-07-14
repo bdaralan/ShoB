@@ -50,9 +50,9 @@ struct OrderForm: View {
         )
     }
     
-    var discountText: Binding<String> {
+    var discount: Binding<String> {
         .init(
-            getValue: { self.textForDiscount(self.order.discount) },
+            getValue: { self.order.discount == 0 ? "" : "\(Currency(self.order.discount))" },
             setValue: { self.order.discount = Currency.parseCent(from: $0) }
         )
     }
@@ -95,19 +95,6 @@ struct OrderForm: View {
                     Spacer()
                     Text(verbatim: "\(Currency(order.total))")
                 }
-                
-                HStack {
-                    Text("Discount")
-                    UIKTextField(text: discountText, setup: { textField in
-                        textField.keyboardType = .numberPad
-                        textField.textAlignment = .right
-                        textField.placeholder = "$0.00"
-                    }, showToolBar: true, onEditingChanged: { textField in
-                        let text = textField.text ?? ""
-                        let discount = Currency.parseCent(from: text)
-                        textField.text = self.textForDiscount(discount)
-                    })
-                }
             }
             
             // MARK: Items Section
@@ -134,13 +121,6 @@ struct OrderForm: View {
             print(item)
         }
         .navigationBarTitle("Add Item")
-    }
-    
-    
-    /// Return text for discount text field.
-    /// - Parameter discount: The discount to compute.
-    func textForDiscount(_ discount: Cent) -> String {
-        discount == 0 ? "" : "\(Currency(discount))"
     }
 }
 

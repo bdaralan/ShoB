@@ -13,7 +13,7 @@ struct SaleItemForm: View {
     
     @ObjectBinding var saleItem: SaleItem
     
-    var priceText: Binding<String> {
+    var price: Binding<String> {
         .init(
             getValue: { self.saleItem.price == 0 ? "" : "\(Currency(self.saleItem.price))" },
             setValue: { self.saleItem.price = Currency.parseCent(from: $0) }
@@ -32,7 +32,7 @@ struct SaleItemForm: View {
                 
                 HStack {
                     Text("Price")
-                    TextField("$0.00", text: priceText)
+                    TextField("$0.00", text: price)
                         .multilineTextAlignment(.trailing)
                 }
             }
