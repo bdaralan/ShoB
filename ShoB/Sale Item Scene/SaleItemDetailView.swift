@@ -10,9 +10,10 @@ import SwiftUI
 
 struct SaleItemDetailView: View {
     
+    /// The item to view or update.
     @ObjectBinding var saleItem: SaleItem
     
-    /// Triggered when the update button is tapped.
+    /// Triggered when the item is updated.
     var onUpdated: () -> Void
     
     
@@ -26,7 +27,7 @@ struct SaleItemDetailView: View {
     var updateSaleItemNavItem: some View {
         Button("Update", action: {
             self.saleItem.managedObjectContext!.quickSave()
-            self.saleItem.didChange.send() // reload update button's state
+            self.saleItem.didChange.send() // reload enabled state
             self.onUpdated()
             
         })

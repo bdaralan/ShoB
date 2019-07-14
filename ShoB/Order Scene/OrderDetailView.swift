@@ -10,8 +10,10 @@ import SwiftUI
 
 struct OrderDetailView: View {
     
+    /// The order to view or update.
     @ObjectBinding var order: Order
     
+    /// Triggered when the order is updated.
     var onUpdated: () -> Void
     
     
@@ -25,7 +27,7 @@ struct OrderDetailView: View {
     var updateOrderNavItem: some View {
         Button("Update", action: {
             self.order.managedObjectContext!.quickSave()
-            self.order.didChange.send() // reload update button's state
+            self.order.didChange.send() // reload enabled state
             self.onUpdated()
         })
         .font(Font.body.bold())
