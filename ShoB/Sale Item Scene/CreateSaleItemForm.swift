@@ -10,42 +10,35 @@ import SwiftUI
 
 struct CreateSaleItemForm : View {
     
-    @EnvironmentObject var cudDataSource: CUDDataSource<SaleItem>
+    @ObjectBinding var dataSource: CUDDataSource<SaleItem>
     
-    var onCreated: () -> Void
+    var onCreate: () -> Void
     
-    var onCancelled: () -> Void
+    var onCancel: () -> Void
     
     
     var body: some View {
-        SaleItemForm(saleItem: cudDataSource.newObject!)
+        SaleItemForm(saleItem: dataSource.newObject!)
             .navigationBarTitle("New Item", displayMode: .inline)
             .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
     }
     
     
     var cancelAddingNewSaleItemNavItem: some View {
-        Button("Cancel", action: {
-            self.cudDataSource.discardNewObject()
-            self.cudDataSource.prepareNewObject()
-            self.onCancelled()
-        })
+        Button("Cancel", action: onCancel)
     }
     
     var addNewSaleItemNavItem: some View {
-        Button("Add", action: {
-            self.cudDataSource.saveNewObject()
-            self.cudDataSource.prepareNewObject()
-            self.onCreated()
-        })
-        .font(Font.body.bold())
+        Button("Add", action: onCreate)
+            .font(Font.body.bold())
     }
 }
 
 #if DEBUG
 struct AddSaleItemView_Previews : PreviewProvider {
+    static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CreateSaleItemForm(onCreated: {}, onCancelled: {})
+        CreateSaleItemForm(dataSource: cud, onCreate: {}, onCancel: {})
     }
 }
 #endif

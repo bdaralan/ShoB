@@ -14,12 +14,12 @@ struct OrderRow: View {
     
     @ObjectBinding var order: Order
     
-    var onUpdate: (Order) -> Void
+    var onUpdate: () -> Void
     
     
     var body: some View {
         let orderDetailView = OrderDetailView(order: order, onUpdate: {
-            self.onUpdate(self.order)
+            self.onUpdate()
         })
         
         return NavigationLink(destination: orderDetailView, label: { rowContent })
@@ -62,7 +62,7 @@ fileprivate let formatter: DateFormatter = {
 #if DEBUG
 struct OrderRow_Previews : PreviewProvider {
     static var previews: some View {
-        OrderRow(order: Order(context: CoreDataStack.current.mainContext), onUpdate: { order in })
+        OrderRow(order: Order(context: CoreDataStack.current.mainContext), onUpdate: {})
     }
 }
 #endif

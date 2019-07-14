@@ -12,13 +12,10 @@ struct SaleItemRow: View {
     
     @ObjectBinding var saleItem: SaleItem
     
-    var onUpdated: (SaleItem) -> Void
+    var onUpdate: () -> Void
     
     var body: some View {
-        
-        let saleItemDetailView = SaleItemDetailView(saleItem: saleItem, onUpdated: {
-            self.onUpdated(self.saleItem)
-        })
+        let saleItemDetailView = SaleItemDetailView(saleItem: saleItem, onUpdate: onUpdate)
         
         return NavigationLink(destination: saleItemDetailView) { // row content
             HStack {
@@ -33,7 +30,7 @@ struct SaleItemRow: View {
 #if DEBUG
 struct SaleItemRow_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemRow(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdated: { _ in })
+        SaleItemRow(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdate: {})
     }
 }
 #endif

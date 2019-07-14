@@ -11,9 +11,10 @@ import SwiftUI
 struct SaleItemListView: View {
     
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
+    
     @EnvironmentObject var cudDataSource: CUDDataSource<SaleItem>
     
-    @State var isAddingNewItem = false
+    @State var showCreateSaleItemForm = false
     
     /// Action to perform when an item is selected.
     ///
@@ -25,7 +26,7 @@ struct SaleItemListView: View {
     var body: some View {
         List(saleItemDataSource.fetchController.fetchedObjects ?? []) { saleItem in
             if self.onItemSelected == nil { // default behavior, show item details
-                SaleItemRow(saleItem: saleItem.get(from: self.cudDataSource.updateContext), onUpdated: { saleItem in
+                SaleItemRow(saleItem: saleItem.get(from: self.cudDataSource.updateContext), onUpdate: {
                     self.cudDataSource.saveUpdateContext()
                 })
             } else { // custom behavior
@@ -33,7 +34,7 @@ struct SaleItemListView: View {
             }
         }
         .navigationBarItems(trailing: addNewSaleItemNavItem)
-        .presentation(isAddingNewItem ? createSaleItemForm : nil)
+        .presentation(modalCreateSaleItemForm)
     }
     
 
@@ -41,20 +42,30 @@ struct SaleItemListView: View {
         Button(action: {
             self.cudDataSource.discardNewObject()
             self.cudDataSource.prepareNewObject()
-            self.isAddingNewItem = true
+            self.cudDataSource.didChange.send()
+            self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
         })
         .accentColor(.accentColor)
     }
     
-    var createSaleItemForm: Modal {
-        let dismiss = { self.isAddingNewItem = false }
+    var modalCreateSaleItemForm: Modal? {
+        guard showCreateSaleItemForm else { return nil }
         
-        let form = CreateSaleItemForm(onCreated: dismiss, onCancelled: dismiss)
-            .environmentObject(cudDataSource)
+        let cancelItem = {
+            self.cudDataSource.discardCreateContext()
+            self.showCreateSaleItemForm = false
+        }
         
-        return Modal(NavigationView { form }, onDismiss: dismiss)
+        let createItem = {
+            self.cudDataSource.saveCreateContext()
+            self.showCreateSaleItemForm = false
+        }
+        
+        let form = CreateSaleItemForm(dataSource: cudDataSource, onCreate: createItem, onCancel: cancelItem)
+        
+        return Modal(NavigationView { form }, onDismiss: cancelItem)
     }
 }
 

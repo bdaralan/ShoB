@@ -23,8 +23,12 @@ struct OrderDetailView: View {
     
     
     var updateOrderNavItem: some View {
-        Button(action: onUpdate, label: { Text("Update").bold() })
-            .disabled(!order.hasPersistentChangedValues)
+        Button("Update", action: {
+            self.onUpdate()
+            self.order.didChange.send() // reload update button's state
+        })
+        .font(Font.body.bold())
+        .disabled(!order.hasPersistentChangedValues)
     }
 }
 

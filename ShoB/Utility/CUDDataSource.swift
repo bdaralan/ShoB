@@ -14,6 +14,7 @@ import Combine
 /// A data source use to create, update, or delete object.
 class CUDDataSource<T: NSManagedObject>: BindableObject {
     
+    /// Publisher
     let didChange = PassthroughSubject<Void, Never>()
     
     /// The source context.
@@ -27,14 +28,8 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     
     /// A new object to be created.
     ///
-    /// To set a new object, call `prepareNewObject()`.
-    ///
-    /// The object becomes `nil` after calling:
-    ///
-    /// - `saveNewObject()`
-    /// - `discardNewObject()`
-    ///
-    /// See the above methods for more details.
+    /// This object is `nil` until `prepareNewObject()` is called.
+    /// It becomes `nil` again after `discardNewObject()` is called.
     private(set) var newObject: T?
     
     
@@ -47,45 +42,54 @@ class CUDDataSource<T: NSManagedObject>: BindableObject {
     }
     
     
-    /// Save the `newObject` to the context.
-    ///
-    /// The new time the `newObject` is used, a newly created object is returned.
-    func saveNewObject() {
-        guard createContext.hasChanges else { return }
-        newObject = nil
-        createContext.quickSave()
-        sourceContext.quickSave()
-        didChange.send()
-    }
-    
-    /// Discard the `newObject` that hasn't been created.
-    /// This also reset the `createContext` back to its previous commit state.
+    /// Set `newObject` to `nil`.
     func discardNewObject() {
-        guard createContext.hasChanges else { return }
+        guard newObject != nil else { return }
         newObject = nil
-        createContext.rollback()
-        didChange.send()
     }
     
-    /// Create a new object and assign to `newObject`.
-    ///
-    /// The method only creates a new object if `newObject` is `nil`.
+    /// Assign `newObject` a new value if it is `nil`.
     func prepareNewObject() {
         guard newObject == nil else { return }
         newObject = T(context: createContext)
-        didChange.send()
     }
     
-    /// Save changes from `updateContext` to `sourceContext`.
-    func saveUpdateContext() {
-        updateContext.quickSave()
+    /// Save changes of the given context.
+    /// - Parameter context: Must be the `createContext` or `updateContext`.
+    func saveChanges(for context: NSManagedObjectContext) {
+        guard context === createContext || context === updateContext else { return }
+        guard context.hasChanges else { return }
+        context.quickSave()
         sourceContext.quickSave()
         didChange.send()
     }
     
-    /// Discard changes from `updateContext`.
-    func discardUpdateContext() {
-        updateContext.rollback()
+    /// Discard changes of the given context.
+    /// - Parameter context: Must be the `createContext` or `updateContext`.
+    func discardChanges(for context: NSManagedObjectContext) {
+        guard context === createContext || context === updateContext else { return }
+        guard context.hasChanges else { return }
+        context.rollback()
         didChange.send()
+    }
+}
+
+
+extension CUDDataSource {
+    
+    func saveCreateContext() {
+        saveChanges(for: createContext)
+    }
+    
+    func discardCreateContext() {
+        discardChanges(for: createContext)
+    }
+    
+    func saveUpdateContext() {
+        saveChanges(for: updateContext)
+    }
+    
+    func discardUpdateContext() {
+        discardChanges(for: updateContext)
     }
 }

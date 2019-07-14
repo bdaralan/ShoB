@@ -12,7 +12,7 @@ import CoreData
 
 struct CreateOrderForm: View {
     
-    @ObjectBinding var newOrder: Order
+    @ObjectBinding var dataSource: CUDDataSource<Order>
     
     var onCancel: () -> Void
     
@@ -20,7 +20,7 @@ struct CreateOrderForm: View {
     
     
     var body: some View {
-        OrderForm(order: newOrder)
+        OrderForm(order: dataSource.newObject!)
             .navigationBarTitle("New Order", displayMode: .inline)
             .navigationBarItems(leading: cancelOrderNavItem, trailing: placeOrderNavItem)
     }
@@ -38,10 +38,10 @@ struct CreateOrderForm: View {
 #if DEBUG
 struct PlaceOrderView_Previews : PreviewProvider {
     
-    static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
+    static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     
     static var previews: some View {
-        CreateOrderForm(newOrder: order, onCancel: {}, onPlacedOrder: {})
+        CreateOrderForm(dataSource: cud, onCancel: {}, onPlacedOrder: {})
     }
 }
 #endif

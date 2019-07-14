@@ -13,16 +13,9 @@ struct SaleItemForm: View {
     
     @ObjectBinding var saleItem: SaleItem
     
-    var name: Binding<String> {
-        .init(
-            getValue: { self.saleItem.name},
-            setValue: { self.saleItem.name = $0 }
-        )
-    }
-    
     var priceText: Binding<String> {
         .init(
-            getValue: { self.textForPrice(self.saleItem.price) },
+            getValue: { self.saleItem.price == 0 ? "" : "\(Currency(self.saleItem.price))" },
             setValue: { self.saleItem.price = Currency.parseCent(from: $0) }
         )
     }
@@ -33,29 +26,17 @@ struct SaleItemForm: View {
             Section {
                 HStack {
                     Text("Name")
-                    TextField("Name", text: name)
+                    TextField("Name", text: $saleItem.name)
                         .multilineTextAlignment(.trailing)
                 }
                 
                 HStack {
                     Text("Price")
-                    UIKTextField(text: priceText, setup: { textField in
-                        textField.keyboardType = .numberPad
-                        textField.textAlignment = .right
-                        textField.placeholder = "$0.00"
-                    }, showToolBar: true, onEditingChanged: { textField in
-                        let text = textField.text ?? ""
-                        let price = Currency.parseCent(from: text)
-                        textField.text = self.textForPrice(price)
-                    })
+                    TextField("$0.00", text: priceText)
+                        .multilineTextAlignment(.trailing)
                 }
             }
         }
-    }
-    
-    
-    func textForPrice(_ price: Cent) -> String {
-        price == 0 ? "" : "\(Currency(price))"
     }
 }
 
