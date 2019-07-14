@@ -12,7 +12,7 @@ struct OrderDetailView: View {
     
     @ObjectBinding var order: Order
     
-    var onUpdate: () -> Void
+    var onUpdated: () -> Void
     
     
     var body: some View {
@@ -24,8 +24,9 @@ struct OrderDetailView: View {
     
     var updateOrderNavItem: some View {
         Button("Update", action: {
-            self.onUpdate()
+            self.order.managedObjectContext!.quickSave()
             self.order.didChange.send() // reload update button's state
+            self.onUpdated()
         })
         .font(Font.body.bold())
         .disabled(!order.hasPersistentChangedValues)
@@ -38,7 +39,7 @@ struct OrderDetailView_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
     
     static var previews: some View {
-        OrderDetailView(order: order, onUpdate: {})
+        OrderDetailView(order: order, onUpdated: {})
     }
 }
 #endif

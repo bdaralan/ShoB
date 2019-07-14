@@ -92,4 +92,12 @@ extension CUDDataSource {
     func discardUpdateContext() {
         discardChanges(for: updateContext)
     }
+    
+    func saveSourceContext() {
+        saveChanges(for: sourceContext)
+    }
+    
+    func discardSourceContext() {
+        discardChanges(for: sourceContext)
+    }
 }

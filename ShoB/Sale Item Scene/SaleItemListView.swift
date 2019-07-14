@@ -16,19 +16,17 @@ struct SaleItemListView: View {
     
     @State var showCreateSaleItemForm = false
     
-    /// Action to perform when an item is selected.
+    /// Triggered when an item is selected.
     ///
-    /// Set this block to do custom action.
-    /// Otherwise, The view will show the item details.
+    /// Set this block to perform custom action.
+    /// Otherwise, the default behavior is to show the item's details.
     var onItemSelected: ((SaleItem, SaleItemListView) -> Void)?
     
     
     var body: some View {
         List(saleItemDataSource.fetchController.fetchedObjects ?? []) { saleItem in
-            if self.onItemSelected == nil { // default behavior, show item details
-                SaleItemRow(saleItem: saleItem.get(from: self.cudDataSource.updateContext), onUpdate: {
-                    self.cudDataSource.saveUpdateContext()
-                })
+            if self.onItemSelected == nil { // default behavior
+                SaleItemRow(sourceItem: saleItem, dataSource: self.cudDataSource, onUpdated: nil)
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
             }
@@ -53,19 +51,14 @@ struct SaleItemListView: View {
     var modalCreateSaleItemForm: Modal? {
         guard showCreateSaleItemForm else { return nil }
         
-        let cancelItem = {
+        let dismiss = {
             self.cudDataSource.discardCreateContext()
             self.showCreateSaleItemForm = false
         }
         
-        let createItem = {
-            self.cudDataSource.saveCreateContext()
-            self.showCreateSaleItemForm = false
-        }
+        let form = CreateSaleItemForm(dataSource: cudDataSource, onCreated: dismiss, onCancelled: dismiss)
         
-        let form = CreateSaleItemForm(dataSource: cudDataSource, onCreate: createItem, onCancel: cancelItem)
-        
-        return Modal(NavigationView { form }, onDismiss: cancelItem)
+        return Modal(NavigationView { form }, onDismiss: dismiss)
     }
 }
 

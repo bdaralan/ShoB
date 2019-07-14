@@ -12,8 +12,8 @@ struct SaleItemDetailView: View {
     
     @ObjectBinding var saleItem: SaleItem
     
-    /// Triggers when the update button is tapped.
-    var onUpdate: () -> Void
+    /// Triggered when the update button is tapped.
+    var onUpdated: () -> Void
     
     
     var body: some View {
@@ -27,8 +27,9 @@ struct SaleItemDetailView: View {
     
     var updateSaleItemNavItem: some View {
         Button("Update", action: {
-            self.onUpdate()
+            self.saleItem.managedObjectContext!.quickSave()
             self.saleItem.didChange.send() // reload update button's state
+            self.onUpdated()
             
         })
         .font(Font.body.bold())
@@ -38,8 +39,9 @@ struct SaleItemDetailView: View {
 
 #if DEBUG
 struct SaleItemDetailView_Previews : PreviewProvider {
+    static let item = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        SaleItemDetailView(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdate: {})
+        SaleItemDetailView(saleItem: item, onUpdated: {})
     }
 }
 #endif

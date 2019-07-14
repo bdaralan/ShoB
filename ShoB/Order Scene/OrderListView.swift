@@ -33,12 +33,8 @@ struct OrderListView: View {
             }
             
             // MARK: Order Rows
-            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in // source order
-                // use data source's update context to view and modifer the order
-                // also send didChange once update button tapped so that the row disable the button
-                OrderRow(order: order.get(from: self.cudDataSource.updateContext), onUpdate: {
-                    self.cudDataSource.saveUpdateContext()
-                })
+            ForEach(orderDataSource.fetchController.fetchedObjects ?? []) { order in
+                OrderRow(sourceOrder: order, dataSource: self.cudDataSource, onUpdated: nil)
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
@@ -54,7 +50,8 @@ struct OrderListView: View {
             self.showPlaceOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
-        }).accentColor(.accentColor)
+        })
+        .accentColor(.accentColor)
     }
     
     /// Construct an order form.
@@ -62,19 +59,14 @@ struct OrderListView: View {
     var modalPlaceOrderForm: Modal? {
         guard showPlaceOrderForm else { return nil }
         
-        let cancelOrder = {
+        let dismiss = {
             self.cudDataSource.discardCreateContext()
             self.showPlaceOrderForm = false
         }
         
-        let placeOrder = {
-            self.cudDataSource.saveCreateContext()
-            self.showPlaceOrderForm = false
-        }
+        let form = CreateOrderForm(dataSource: cudDataSource, onPlacedOrder: dismiss, onCancelled: dismiss)
         
-        let form = CreateOrderForm(dataSource: cudDataSource, onCancel: cancelOrder, onPlacedOrder: placeOrder)
-        
-        return Modal(NavigationView { form }, onDismiss: cancelOrder)
+        return Modal(NavigationView { form }, onDismiss: dismiss)
     }
 }
 

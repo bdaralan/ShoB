@@ -12,11 +12,14 @@ import CoreData
 
 struct CreateOrderForm: View {
     
+    /// The data source that will create and save the new order.
     @ObjectBinding var dataSource: CUDDataSource<Order>
     
-    var onCancel: () -> Void
-    
+    /// Triggered when the new order is placed.
     var onPlacedOrder: () -> Void
+    
+    /// Triggered when cancelled to create a new order.
+    var onCancelled: () -> Void
     
     
     var body: some View {
@@ -27,21 +30,25 @@ struct CreateOrderForm: View {
     
     
     var cancelOrderNavItem: some View {
-        Button("Cancel", action: onCancel)
+        Button("Cancel", action: {
+            self.dataSource.discardCreateContext()
+            self.onCancelled()
+        })
     }
     
     var placeOrderNavItem: some View {
-        Button("Place Order", action: onPlacedOrder)
+        Button("Place Order", action: {
+            self.dataSource.saveCreateContext()
+            self.onPlacedOrder()
+        })
     }
 }
 
 #if DEBUG
 struct PlaceOrderView_Previews : PreviewProvider {
-    
     static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
-    
     static var previews: some View {
-        CreateOrderForm(dataSource: cud, onCancel: {}, onPlacedOrder: {})
+        CreateOrderForm(dataSource: cud, onPlacedOrder: {}, onCancelled: {})
     }
 }
 #endif

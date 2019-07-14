@@ -10,18 +10,34 @@ import SwiftUI
 
 struct SaleItemRow: View {
     
-    @ObjectBinding var saleItem: SaleItem
+    /// The source item.
+    @ObjectBinding var sourceItem: SaleItem
     
-    var onUpdate: () -> Void
+    /// The data source that will update and save the item.
+    @ObjectBinding var dataSource: CUDDataSource<SaleItem>
+    
+    /// Triggered when the item is updated.
+    var onUpdated: (() -> Void)?
+    
+    /// The item to be updated.
+    ///
+    /// This is the source item, but get from data source's update context.
+    var saleItemToUpdate: SaleItem {
+        sourceItem.get(from: dataSource.updateContext)
+    }
+    
     
     var body: some View {
-        let saleItemDetailView = SaleItemDetailView(saleItem: saleItem, onUpdate: onUpdate)
+        let saleItemDetailView = SaleItemDetailView(saleItem: saleItemToUpdate, onUpdated: {
+            self.dataSource.saveSourceContext()
+            self.onUpdated?()
+        })
         
         return NavigationLink(destination: saleItemDetailView) { // row content
             HStack {
-                Text(self.saleItem.name)
+                Text(self.sourceItem.name)
                 Spacer()
-                Text(verbatim: "\(Currency(self.saleItem.price))")
+                Text(verbatim: "\(Currency(self.sourceItem.price))")
             }
         }
     }
@@ -29,8 +45,10 @@ struct SaleItemRow: View {
 
 #if DEBUG
 struct SaleItemRow_Previews : PreviewProvider {
+    static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
+    static let item = SaleItem(context: cud.sourceContext)
     static var previews: some View {
-        SaleItemRow(saleItem: SaleItem(context: CoreDataStack.current.mainContext), onUpdate: {})
+        SaleItemRow(sourceItem: item, dataSource: cud, onUpdated: {})
     }
 }
 #endif

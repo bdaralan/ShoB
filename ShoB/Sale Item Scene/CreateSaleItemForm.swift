@@ -10,11 +10,14 @@ import SwiftUI
 
 struct CreateSaleItemForm : View {
     
+    /// The data source that will create and save the new item.
     @ObjectBinding var dataSource: CUDDataSource<SaleItem>
     
-    var onCreate: () -> Void
+    /// Triggered when the item is saved.
+    var onCreated: () -> Void
     
-    var onCancel: () -> Void
+    /// Triggered when cancelled to create a new item.
+    var onCancelled: () -> Void
     
     
     var body: some View {
@@ -25,12 +28,18 @@ struct CreateSaleItemForm : View {
     
     
     var cancelAddingNewSaleItemNavItem: some View {
-        Button("Cancel", action: onCancel)
+        Button("Cancel", action: {
+            self.dataSource.discardCreateContext()
+            self.onCancelled()
+        })
     }
     
     var addNewSaleItemNavItem: some View {
-        Button("Add", action: onCreate)
-            .font(Font.body.bold())
+        Button("Add", action: {
+            self.dataSource.saveCreateContext()
+            self.onCreated()
+        })
+        .font(Font.body.bold())
     }
 }
 
@@ -38,7 +47,7 @@ struct CreateSaleItemForm : View {
 struct AddSaleItemView_Previews : PreviewProvider {
     static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CreateSaleItemForm(dataSource: cud, onCreate: {}, onCancel: {})
+        CreateSaleItemForm(dataSource: cud, onCreated: {}, onCancelled: {})
     }
 }
 #endif
