@@ -11,7 +11,7 @@ import CoreData
 import Combine
 
 
-class FetchedDataSource<T: NSManagedObject>: NSObject, BindableObject, NSFetchedResultsControllerDelegate {
+class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, BindableObject, NSFetchedResultsControllerDelegate {
     
     let didChange = PassthroughSubject<Void, Never>()
     

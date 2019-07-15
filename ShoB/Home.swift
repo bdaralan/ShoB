@@ -16,6 +16,13 @@ struct Home: View {
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
         dataSource.performFetch()
+        
+        // reset code
+        dataSource.fetchController.fetchedObjects?.forEach {
+            dataSource.context.delete($0)
+        }
+        dataSource.context.quickSave()
+        
         return dataSource
     }()
     
@@ -25,6 +32,13 @@ struct Home: View {
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(SaleItem.name), ascending: true)]
         dataSource.performFetch()
+        
+        // reset code
+        dataSource.fetchController.fetchedObjects?.forEach {
+            dataSource.context.delete($0)
+        }
+        dataSource.context.quickSave()
+        
         return dataSource
     }()
     

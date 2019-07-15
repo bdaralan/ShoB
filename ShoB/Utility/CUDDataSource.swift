@@ -12,7 +12,7 @@ import Combine
 
 
 /// A data source use to create, update, or delete object.
-class CUDDataSource<T: NSManagedObject>: BindableObject {
+class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
     
     /// Publisher
     let didChange = PassthroughSubject<Void, Never>()
