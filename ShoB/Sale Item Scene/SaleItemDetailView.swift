@@ -27,7 +27,7 @@ struct SaleItemDetailView: View {
     var updateSaleItemNavItem: some View {
         Button("Update", action: {
             self.saleItem.managedObjectContext!.quickSave()
-            self.saleItem.didChange.send() // reload enabled state
+            self.saleItem.willChange.send() // reload enabled state
             self.onUpdated()
             
         })

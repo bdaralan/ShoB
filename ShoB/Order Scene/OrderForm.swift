@@ -69,16 +69,16 @@ struct OrderForm: View {
         Form {
             // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
-                DatePicker("Order Date", date: orderDate)
+                DatePicker("Order Date", selection: orderDate)
 
                 Toggle("Delivery", isOn: isDelivering)
-                if isDelivering.value {
-                    DatePicker("Delivery Date", date: deliveryDate)
+                if isDelivering.wrappedValue {
+                    DatePicker("Delivery Date", selection: deliveryDate)
                 }
 
                 Toggle("Delivered", isOn: isDelivered)
-                if isDelivered.value {
-                    DatePicker("Delivered Date", date: deliveredDate)
+                if isDelivered.wrappedValue {
+                    DatePicker("Delivered Date", selection: deliveredDate)
                 }
             }
             
@@ -99,19 +99,19 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationLink(destination: saleItemList, label: { Text("Add Item").color(.accentColor) })
+                NavigationLink(destination: saleItemList, label: { Text("Add Item") })
             }
 
-            // MARK: Note Section
-            Section(header: Text("NOTE")) {
-                VStack {
-                    TextField(". . .", text: note)
-                        .lineLimit(nil)
-                        .padding([.top, .bottom])
-                    Spacer()
-                }
-                .frame(minHeight: 200)
-            }
+//            // MARK: Note Section
+//            Section(header: Text("NOTE")) {
+//                VStack {
+//                    TextField(". . .", text: note)
+//                        .lineLimit(nil)
+//                        .padding([.top, .bottom])
+//                    Spacer()
+//                }
+//                .frame(minHeight: 200)
+//            }
         }
     }
     

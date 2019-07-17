@@ -15,7 +15,7 @@ import Combine
 class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
     
     /// Publisher
-    let didChange = PassthroughSubject<Void, Never>()
+    let willChange = PassthroughSubject<Void, Never>()
     
     /// The source context.
     let sourceContext: NSManagedObjectContext
@@ -61,7 +61,7 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
         guard context.hasChanges else { return }
         context.quickSave()
         sourceContext.quickSave()
-        didChange.send()
+        willChange.send()
     }
     
     /// Discard changes of the given context.
@@ -70,7 +70,7 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
         guard context === createContext || context === updateContext else { return }
         guard context.hasChanges else { return }
         context.rollback()
-        didChange.send()
+        willChange.send()
     }
 }
 

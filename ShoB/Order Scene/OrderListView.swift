@@ -25,7 +25,7 @@ struct OrderListView: View {
         List {
             // MARK: Segment Control
             SegmentedControl(selection: $currentSegment) {
-                ForEach(segments.identified(by: \.self)) { segment in
+                ForEach(segments, id: \.self) { segment in
                     Text(segment.rawValue).tag(segment)
                 }
             }
@@ -36,7 +36,11 @@ struct OrderListView: View {
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
-        .presentation(modalPlaceOrderForm)
+        .sheet(
+            isPresented: $showPlaceOrderForm,
+            onDismiss: dismissPlaceOrderForm,
+            content: { self.placeOrderForm }
+        )
     }
     
     
@@ -44,7 +48,7 @@ struct OrderListView: View {
         Button(action: {
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
-            self.dataSource.cud.didChange.send()
+            self.dataSource.cud.willChange.send()
             self.showPlaceOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -54,21 +58,20 @@ struct OrderListView: View {
     
     /// Construct an order form.
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
-    var modalPlaceOrderForm: Modal? {
-        guard showPlaceOrderForm else { return nil }
-        
-        let dismiss = {
-            self.dataSource.cud.discardCreateContext()
-            self.showPlaceOrderForm = false
+    var placeOrderForm: some View {
+        NavigationView {
+            CreateOrderForm(
+                cudDataSource: self.dataSource.cud,
+                onPlacedOrder: dismissPlaceOrderForm,
+                onCancelled: dismissPlaceOrderForm
+            )
         }
-        
-        let form = CreateOrderForm(
-            cudDataSource: self.dataSource.cud,
-            onPlacedOrder: dismiss,
-            onCancelled: dismiss
-        )
-        
-        return Modal(NavigationView { form }, onDismiss: dismiss)
+    }
+    
+    
+    func dismissPlaceOrderForm() {
+        self.dataSource.cud.discardCreateContext()
+        self.showPlaceOrderForm = false
     }
 }
 

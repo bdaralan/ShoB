@@ -27,7 +27,7 @@ struct OrderDetailView: View {
     var updateOrderNavItem: some View {
         Button("Update", action: {
             self.order.managedObjectContext!.quickSave()
-            self.order.didChange.send() // reload enabled state
+            self.order.willChange.send() // reload enabled state
             self.onUpdated()
         })
         .font(Font.body.bold())

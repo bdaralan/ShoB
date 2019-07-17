@@ -14,7 +14,7 @@ struct CustomerListView: View {
     
     
     var body: some View {
-        List(customers.identified(by: \.self)) { customer in
+        List(customers, id: \.self) { customer in
             NavigationLink(destination: Text("Customer Info"), label: {
                 HStack {
                     Image(systemName: "person.crop.rectangle").imageScale(.large)

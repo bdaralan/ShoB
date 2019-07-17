@@ -39,7 +39,7 @@ class CoreDataStack: NSObject {
         
         // initialize the CloudKit schema
         let options = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.bdaralan.ShoB")
-        options.shouldInitializeSchema = true // toggle to false when go in production
+//        options.shouldInitializeSchema = true // toggle to false when go in production
         storeDescription.cloudKitContainerOptions = options
         
         // assign store description

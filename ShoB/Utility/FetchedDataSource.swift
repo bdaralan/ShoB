@@ -13,7 +13,7 @@ import Combine
 
 class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, BindableObject, NSFetchedResultsControllerDelegate {
     
-    let didChange = PassthroughSubject<Void, Never>()
+    let willChange = PassthroughSubject<Void, Never>()
     
     let context: NSManagedObjectContext
     
@@ -49,10 +49,10 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
         } catch {
             print(error)
         }
-        didChange.send()
+        willChange.send()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        didChange.send()
+        willChange.send()
     }
 }

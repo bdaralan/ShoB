@@ -14,7 +14,7 @@ import Combine
 
 class SaleItem: NSManagedObject, BindableObject {
     
-    let didChange = PassthroughSubject<Void, Never>()
+    let willChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -29,7 +29,7 @@ class SaleItem: NSManagedObject, BindableObject {
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
-        didChange.send()
+        willChange.send()
     }
 }
 

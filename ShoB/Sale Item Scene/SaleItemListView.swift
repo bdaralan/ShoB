@@ -30,7 +30,11 @@ struct SaleItemListView: View {
             }
         }
         .navigationBarItems(trailing: addNewSaleItemNavItem)
-        .presentation(modalCreateSaleItemForm)
+        .sheet(
+            isPresented: $showCreateSaleItemForm,
+            onDismiss: dismisCreateSaleItem,
+            content: { self.createSaleItemForm }
+        )
     }
     
 
@@ -38,7 +42,7 @@ struct SaleItemListView: View {
         Button(action: {
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
-            self.dataSource.cud.didChange.send()
+            self.dataSource.cud.willChange.send()
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -46,17 +50,20 @@ struct SaleItemListView: View {
         .accentColor(.accentColor)
     }
     
-    var modalCreateSaleItemForm: Modal? {
-        guard showCreateSaleItemForm else { return nil }
-        
-        let dismiss = {
-            self.dataSource.cud.discardCreateContext()
-            self.showCreateSaleItemForm = false
+    var createSaleItemForm: some View {
+        NavigationView {
+            CreateSaleItemForm(
+                cudDataSource: dataSource.cud,
+                onCreated: dismisCreateSaleItem,
+                onCancelled: dismisCreateSaleItem
+            )
         }
-        
-        let form = CreateSaleItemForm(cudDataSource: dataSource.cud, onCreated: dismiss, onCancelled: dismiss)
-        
-        return Modal(NavigationView { form }, onDismiss: dismiss)
+    }
+    
+    
+    func dismisCreateSaleItem() {
+        self.dataSource.cud.discardCreateContext()
+        self.showCreateSaleItemForm = false
     }
 }
 
