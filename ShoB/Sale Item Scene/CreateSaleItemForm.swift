@@ -21,7 +21,7 @@ struct CreateSaleItemForm : View {
     
     
     var body: some View {
-        SaleItemForm(model: $model)
+        SaleItemForm(model: $model, showQuantity: false)
             .navigationBarTitle("New Item", displayMode: .inline)
             .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
     }

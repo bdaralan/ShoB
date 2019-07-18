@@ -13,7 +13,9 @@ struct SaleItemForm: View {
     
     @Binding var model: Model
     
-    @State private var quantityStepBy = 1
+    @State private var quantityStepByValue = 1
+    
+    var showQuantity: Bool
     
     
     var body: some View {
@@ -31,33 +33,36 @@ struct SaleItemForm: View {
                         .multilineTextAlignment(.trailing)
                 }
                 
-                HStack {
-                    Text("Quantity")
-                    Spacer()
-                    Text("\(model.quantity)")
-                }
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Step By: \(quantityStepBy)")
-                        Text("Tap here to change the step value")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }.tapAction {
-                        self.toggleQuantityStepperStepByValue()
+                if showQuantity {
+                    HStack {
+                        Text("Quantity")
+                        Spacer()
+                        Text("\(model.quantity)")
                     }
-                    Stepper("", value: $model.quantity, in: 1...999, step: quantityStepBy)
+                    
+                    HStack { // quantity stepper row
+                        VStack(alignment: .leading) {
+                            Text("Step By: \(quantityStepByValue)")
+                            Text("Tap here to change the step value").font(.caption)
+                        }
+                        .foregroundColor(.secondary)
+                        .tapAction {
+                            self.toggleQuantityStepByValue()
+                        }
+                        
+                        Stepper("", value: $model.quantity, in: 1...999, step: quantityStepByValue)
+                    }
                 }
             }
         }
     }
     
     
-    func toggleQuantityStepperStepByValue() {
-        switch quantityStepBy {
-        case 1: quantityStepBy = 5
-        case 5: quantityStepBy = 10
-        default: quantityStepBy = 1
+    func toggleQuantityStepByValue() {
+        switch quantityStepByValue {
+        case 1: quantityStepByValue = 5
+        case 5: quantityStepByValue = 10
+        default: quantityStepByValue = 1
         }
     }
 }
@@ -82,7 +87,7 @@ extension SaleItemForm {
             guard let item = item else { return }
             self.item = item
             name = item.name
-            price = "\(Currency(item.price))"
+            price = item.price == 0 ? "" : "\(Currency(item.price))"
             quantity = 1 // default to 1 when create item
         }
         
@@ -90,7 +95,7 @@ extension SaleItemForm {
             guard let item = item else { return }
             self.orderItem = item
             name = item.name
-            price = "\(Currency(item.price))"
+            price = item.price == 0 ? "" : "\(Currency(item.price))"
             quantity = Int(64)
         }
         
@@ -122,7 +127,7 @@ extension SaleItemForm {
 #if DEBUG
 struct SaleItemForm_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemForm(model: .constant(.init()))
+        SaleItemForm(model: .constant(.init()), showQuantity: true)
     }
 }
 #endif
