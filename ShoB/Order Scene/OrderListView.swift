@@ -20,6 +20,9 @@ struct OrderListView: View {
     /// A flag used to present or dismiss `placeOrderForm`.
     @State private var showPlaceOrderForm = false
     
+    /// The model used to place new order.
+    @State private var newOrderModel = OrderForm.Model()
+    
     
     var body: some View {
         List {
@@ -36,19 +39,16 @@ struct OrderListView: View {
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
-        .sheet(
-            isPresented: $showPlaceOrderForm,
-            onDismiss: dismissPlaceOrderForm,
-            content: { self.placeOrderForm }
-        )
+        .sheet(isPresented: $showPlaceOrderForm, onDismiss: dismissPlaceOrderForm, content: { self.placeOrderForm })
     }
     
     
     var placeNewOrderNavItem: some View {
         Button(action: {
+            // discard and create a new order object for the form
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
-            self.dataSource.cud.willChange.send()
+            self.newOrderModel = .init(order: self.dataSource.cud.newObject!)
             self.showPlaceOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -60,18 +60,26 @@ struct OrderListView: View {
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
     var placeOrderForm: some View {
         NavigationView {
-            CreateOrderForm(
-                cudDataSource: self.dataSource.cud,
-                onPlacedOrder: dismissPlaceOrderForm,
-                onCancelled: dismissPlaceOrderForm
-            )
+            CreateOrderForm(model: $newOrderModel, onPlaceOrder: placeOrder, onCancel: dismissPlaceOrderForm)
         }
     }
     
     
+    /// Dismiss place order form.
+    ///
+    /// If the form was cancelled or dismissed, any changes to the data source's create context is discarded.
     func dismissPlaceOrderForm() {
-        self.dataSource.cud.discardCreateContext()
-        self.showPlaceOrderForm = false
+        if dataSource.cud.createContext.hasChanges {
+            dataSource.cud.discardCreateContext()
+        }
+        showPlaceOrderForm = false
+    }
+    
+    /// Save the new order to the data source.
+    func placeOrder() {
+        newOrderModel.assign()
+        dataSource.cud.saveCreateContext()
+        showPlaceOrderForm = false
     }
 }
 

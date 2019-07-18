@@ -61,7 +61,6 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
         guard context.hasChanges else { return }
         context.quickSave()
         sourceContext.quickSave()
-        willChange.send()
     }
     
     /// Discard changes of the given context.
@@ -70,10 +69,11 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
         guard context === createContext || context === updateContext else { return }
         guard context.hasChanges else { return }
         context.rollback()
-        willChange.send()
     }
 }
 
+
+// MARK: - Convenient Method
 
 extension CUDDataSource {
     
@@ -91,13 +91,5 @@ extension CUDDataSource {
     
     func discardUpdateContext() {
         discardChanges(for: updateContext)
-    }
-    
-    func saveSourceContext() {
-        saveChanges(for: sourceContext)
-    }
-    
-    func discardSourceContext() {
-        discardChanges(for: sourceContext)
     }
 }

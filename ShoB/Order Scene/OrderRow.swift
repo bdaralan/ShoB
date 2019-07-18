@@ -31,7 +31,7 @@ struct OrderRow: View {
     
     var body: some View {
         let orderDetailView = OrderDetailView(order: orderToUpdate, onUpdated: {
-            self.dataSource.saveSourceContext()
+            self.dataSource.sourceContext.quickSave()
             self.onUpdated?()
         })
         

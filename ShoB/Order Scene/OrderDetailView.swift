@@ -18,7 +18,7 @@ struct OrderDetailView: View {
     
     
     var body: some View {
-        OrderForm(order: order)
+        OrderForm(model: .constant(.init(order: order)))
             .navigationBarTitle("Order Details", displayMode: .inline)
             .navigationBarItems(trailing: updateOrderNavItem)
     }

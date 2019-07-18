@@ -11,74 +11,26 @@ import Combine
 import CoreData
 
 
+/// A form use to view and editing order.
 struct OrderForm: View {
     
-    @ObjectBinding var order: Order
-    
-    var orderDate: Binding<Date> {
-        .init(
-            getValue: { self.order.orderDate },
-            setValue: { self.order.orderDate = $0 }
-        )
-    }
-    
-    var isDelivering: Binding<Bool> {
-        .init(
-            getValue: { self.order.deliveryDate != nil },
-            setValue: { self.order.deliveryDate = $0 ? Date() : nil }
-        )
-    }
-    
-    var deliveryDate: Binding<Date> {
-        .init(
-            getValue: { self.order.deliveryDate! },
-            setValue: { self.order.deliveryDate = $0 }
-        )
-    }
-    
-    var isDelivered: Binding<Bool> {
-        .init(
-            getValue: { self.order.deliveredDate != nil },
-            setValue: { self.order.deliveredDate = $0 ? Date() : nil }
-        )
-    }
-    
-    var deliveredDate: Binding<Date> {
-        .init(
-            getValue: { self.order.deliveredDate! },
-            setValue: { self.order.deliveredDate = $0 }
-        )
-    }
-    
-    var discount: Binding<String> {
-        .init(
-            getValue: { self.order.discount == 0 ? "" : "\(Currency(self.order.discount))" },
-            setValue: { self.order.discount = Currency.parseCent(from: $0) }
-        )
-    }
-    
-    var note: Binding<String> {
-        .init(
-            getValue: { self.order.note },
-            setValue: { self.order.note = $0 }
-        )
-    }
+    @Binding var model: Model
     
     
     var body: some View {
         Form {
             // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
-                DatePicker("Order Date", selection: orderDate)
+                DatePicker("Order Date", selection: $model.orderDate)
 
-                Toggle("Delivery", isOn: isDelivering)
-                if isDelivering.wrappedValue {
-                    DatePicker("Delivery Date", selection: deliveryDate)
+                Toggle("Delivery", isOn: $model.isDelivering)
+                if model.isDelivering {
+                    DatePicker("Delivery Date", selection: $model.deliveryDate)
                 }
 
-                Toggle("Delivered", isOn: isDelivered)
-                if isDelivered.wrappedValue {
-                    DatePicker("Delivered Date", selection: deliveredDate)
+                Toggle("Delivered", isOn: $model.isDelivered)
+                if model.isDelivered {
+                    DatePicker("Delivered Date", selection: $model.deliveredDate)
                 }
             }
             
@@ -87,13 +39,13 @@ struct OrderForm: View {
                 HStack {
                     Text("Total").bold()
                     Spacer()
-                    Text(verbatim: "\(Currency(order.total - order.discount))").bold()
+                    Text(model.totalAfterDiscount).bold()
                 }
                 
                 HStack {
                     Text("Before Discount")
                     Spacer()
-                    Text(verbatim: "\(Currency(order.total))")
+                    Text(model.totalBeforeDiscount)
                 }
             }
             
@@ -102,16 +54,16 @@ struct OrderForm: View {
                 NavigationLink(destination: saleItemList, label: { Text("Add Item") })
             }
 
-//            // MARK: Note Section
-//            Section(header: Text("NOTE")) {
-//                VStack {
-//                    TextField(". . .", text: note)
-//                        .lineLimit(nil)
-//                        .padding([.top, .bottom])
-//                    Spacer()
-//                }
-//                .frame(minHeight: 200)
-//            }
+            // MARK: Note Section
+            Section(header: Text("NOTE")) {
+                VStack {
+                    TextField(". . .", text: $model.note)
+                        .lineLimit(nil)
+                        .padding([.top, .bottom])
+                    Spacer()
+                }
+                .frame(minHeight: 200)
+            }
         }
     }
     
@@ -125,13 +77,59 @@ struct OrderForm: View {
 }
 
 
+// MARK: - View Model
+
+extension OrderForm {
+    
+    struct Model {
+        weak var order: Order?
+        var isDelivering = false
+        var isDelivered = false
+        var orderDate = Date()
+        var deliveryDate = Date()
+        var deliveredDate = Date()
+        var discount = ""
+        var note = ""
+        
+        /// Check whether the order has changed values.
+        /// Always `false` if the `order` is `nil`.
+        var hasOrderValueChanged: Bool {
+            return order?.hasPersistentChangedValues ?? false
+        }
+        
+        /// Total before discount.
+        var totalBeforeDiscount: String {
+            guard let order = order else { return "\(Currency(0))" }
+            return "\(Currency(order.total))"
+        }
+        
+        /// Total after discount.
+        var totalAfterDiscount: String {
+            guard let order = order else { return "\(Currency(0))" }
+            return "\(Currency(order.total - order.discount))"
+        }
+        
+        
+        /// Assign the model's values to the order.
+        func assign() {
+            // DEVELOPER NOTE:
+            // Update the logic when needed.
+            guard let order = order else { return }
+            order.orderDate = orderDate
+            order.deliveryDate = isDelivering ? deliveryDate : nil
+            order.deliveredDate = isDelivered ? deliveredDate : nil
+            order.discount = Currency.parseCent(from: discount)
+            order.note = note
+        }
+    }
+}
+
+
 #if DEBUG
 struct OrderForm_Previews : PreviewProvider {
-    
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
-    
     static var previews: some View {
-        OrderForm(order: order)
+        OrderForm(model: .constant(.init()))
     }
 }
 #endif

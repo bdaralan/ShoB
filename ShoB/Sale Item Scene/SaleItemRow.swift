@@ -29,7 +29,7 @@ struct SaleItemRow: View {
     
     var body: some View {
         let saleItemDetailView = SaleItemDetailView(saleItem: saleItemToUpdate, onUpdated: {
-            self.dataSource.saveSourceContext()
+            self.dataSource.sourceContext.quickSave()
             self.onUpdated?()
         })
         
