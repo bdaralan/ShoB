@@ -12,7 +12,9 @@ struct SaleItemListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<SaleItem>
     
-    @State var showCreateSaleItemForm = false
+    @State private var showCreateSaleItemForm = false
+    
+    @State private var newSaleItemModel = SaleItemForm.Model()
     
     /// Triggered when an item is selected.
     ///
@@ -40,9 +42,10 @@ struct SaleItemListView: View {
 
     var addNewSaleItemNavItem: some View {
         Button(action: {
+            // discard and create new item for the form
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
-            self.dataSource.cud.willChange.send()
+            self.newSaleItemModel = .init(item: self.dataSource.cud.newObject!)
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -53,19 +56,26 @@ struct SaleItemListView: View {
     var createSaleItemForm: some View {
         NavigationView {
             CreateSaleItemForm(
-                cudDataSource: dataSource.cud,
-                onCreated: dismisCreateSaleItem,
-                onCancelled: dismisCreateSaleItem
+                model: $newSaleItemModel,
+                onCreate: saveNewSaleItem,
+                onCancel: dismisCreateSaleItem
             )
         }
     }
     
     
     func dismisCreateSaleItem() {
-        self.dataSource.cud.discardCreateContext()
-        self.showCreateSaleItemForm = false
+        dataSource.cud.discardCreateContext()
+        showCreateSaleItemForm = false
+    }
+    
+    func saveNewSaleItem() {
+        newSaleItemModel.assign()
+        dataSource.cud.saveCreateContext()
+        showCreateSaleItemForm = false
     }
 }
+
 
 #if DEBUG
 struct SaleItemList_Previews : PreviewProvider {

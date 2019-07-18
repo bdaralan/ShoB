@@ -18,7 +18,7 @@ struct SaleItemDetailView: View {
     
     
     var body: some View {
-        SaleItemForm(saleItem: saleItem)
+        SaleItemForm(model: .constant(.init()))
             .navigationBarTitle("Item Details", displayMode: .inline)
             .navigationBarItems(trailing: updateSaleItemNavItem)
     }

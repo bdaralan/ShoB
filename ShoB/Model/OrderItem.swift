@@ -15,7 +15,7 @@ class OrderItem: NSManagedObject {
     
     @NSManaged var name: String
     @NSManaged var price: Cent
-    @NSManaged var quantity: Cent
+    @NSManaged var quantity: Int64
     @NSManaged var order: Order?
     
     

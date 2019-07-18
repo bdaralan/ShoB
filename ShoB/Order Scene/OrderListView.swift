@@ -39,7 +39,11 @@ struct OrderListView: View {
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
-        .sheet(isPresented: $showPlaceOrderForm, onDismiss: dismissPlaceOrderForm, content: { self.placeOrderForm })
+        .sheet(
+            isPresented: $showPlaceOrderForm,
+            onDismiss: dismissPlaceOrderForm,
+            content: { self.placeOrderForm }
+        )
     }
     
     
@@ -60,7 +64,11 @@ struct OrderListView: View {
     /// - Parameter order: The order to view or pass `nil` get a create mode form.
     var placeOrderForm: some View {
         NavigationView {
-            CreateOrderForm(model: $newOrderModel, onPlaceOrder: placeOrder, onCancel: dismissPlaceOrderForm)
+            CreateOrderForm(
+                model: $newOrderModel,
+                onPlaceOrder: saveNewOrder,
+                onCancel: dismissPlaceOrderForm
+            )
         }
     }
     
@@ -69,14 +77,12 @@ struct OrderListView: View {
     ///
     /// If the form was cancelled or dismissed, any changes to the data source's create context is discarded.
     func dismissPlaceOrderForm() {
-        if dataSource.cud.createContext.hasChanges {
-            dataSource.cud.discardCreateContext()
-        }
+        dataSource.cud.discardCreateContext()
         showPlaceOrderForm = false
     }
     
     /// Save the new order to the data source.
-    func placeOrder() {
+    func saveNewOrder() {
         newOrderModel.assign()
         dataSource.cud.saveCreateContext()
         showPlaceOrderForm = false
