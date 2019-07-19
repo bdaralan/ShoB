@@ -47,6 +47,12 @@ struct OrderForm: View {
                     Spacer()
                     Text(model.totalBeforeDiscount)
                 }
+                
+                HStack {
+                    Text("Discount")
+                    TextField("$0.00", text: $model.discount)
+                        .multilineTextAlignment(.trailing)
+                }
             }
             
             // MARK: Items Section
@@ -107,6 +113,19 @@ extension OrderForm {
         var totalAfterDiscount: String {
             guard let order = order else { return "\(Currency(0))" }
             return "\(Currency(order.total - order.discount))"
+        }
+        
+        
+        init(order: Order? = nil) {
+            guard let order = order else { return }
+            self.order = order
+            orderDate = order.orderDate
+            isDelivering = order.deliveryDate != nil
+            isDelivered = order.deliveredDate != nil
+            deliveryDate = isDelivering ? order.deliveryDate! : Date()
+            deliveredDate = isDelivered ? order.deliveredDate! : Date()
+            discount = order.discount == 0 ? "" : "\(Currency(order.discount))"
+            note = order.note
         }
         
         

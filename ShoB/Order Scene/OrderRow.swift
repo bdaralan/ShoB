@@ -12,53 +12,51 @@ import CoreData
 
 struct OrderRow: View {
     
-    /// The source order.
-    @ObjectBinding var sourceOrder: Order
-    
-    /// The data source that will update and save the order.
-    @ObjectBinding var dataSource: CUDDataSource<Order>
+    /// The order to view or update.
+    @ObjectBinding var order: Order
     
     /// Triggered when the order is updated.
-    var onUpdated: (() -> Void)?
+    var onUpdate: (OrderForm.Model) -> Void
     
-    /// The order to be updated.
-    ///
-    /// This is the source order, but get from data source's update context.
-    var orderToUpdate: Order {
-        sourceOrder.get(from: dataSource.updateContext)
-    }
+    @State private var orderModel = OrderForm.Model()
     
     
     var body: some View {
-        let orderDetailView = OrderDetailView(order: orderToUpdate, onUpdated: {
-            self.dataSource.sourceContext.quickSave()
-            self.onUpdated?()
-        })
-        
-        return NavigationLink(destination: orderDetailView, label: { rowContent })
+        NavigationLink(destination: orderDetailView, label: { rowContent })
     }
     
     
     var rowContent: some View {
         VStack(alignment: .leading) {
-            Text("Order Date:\t \(formatter.string(from: sourceOrder.orderDate))")
+            Text("Order Date:\t \(formatter.string(from: order.orderDate))")
             
-            if sourceOrder.deliveryDate == nil {
+            if order.deliveryDate == nil {
                 Text("Deliver:\t No")
             } else {
-                Text("Delivery Date:\t \(formatter.string(from: sourceOrder.deliveryDate!))")
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
             }
             
             
-            if sourceOrder.deliveredDate == nil {
+            if order.deliveredDate == nil {
                 Text("Delivered:\t No")
             } else {
-                Text("Delivery Date:\t \(formatter.string(from: sourceOrder.deliveredDate!))")
+                Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
             }
             
-            Text("Discount: \(sourceOrder.discount)")
+            Text("Discount: \(order.discount)")
             
-            Text("Note: \(sourceOrder.note)")
+            Text("Note: \(order.note)")
+        }
+    }
+    
+    var orderDetailView: some View {
+        OrderDetailView(model: $orderModel, onUpdate: {
+            self.onUpdate(self.orderModel)
+        })
+        .onAppear { // assign the order to the model.
+            // DEVELOPER NOTE:
+            // Do the assignment here for now until finding a better place for the assignment
+            self.orderModel = .init(order: self.order)
         }
     }
 }
@@ -77,7 +75,7 @@ struct OrderRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     static let order = Order(context: cud.sourceContext)
     static var previews: some View {
-        OrderRow(sourceOrder: order, dataSource: cud, onUpdated: nil)
+        OrderRow(order: order, onUpdate: { _ in })
     }
 }
 #endif

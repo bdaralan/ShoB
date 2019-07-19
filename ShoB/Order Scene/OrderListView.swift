@@ -36,7 +36,14 @@ struct OrderListView: View {
             
             // MARK: Order Rows
             ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(sourceOrder: order, dataSource: self.dataSource.cud, onUpdated: nil)
+                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onUpdate: { model in
+                    model.assign()
+                    if model.order!.hasPersistentChangedValues {
+                        self.dataSource.cud.saveUpdateContext()
+                    } else {
+                        self.dataSource.cud.discardUpdateContext()
+                    }
+                })
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
