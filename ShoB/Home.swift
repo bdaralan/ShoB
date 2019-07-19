@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct Home: View {
     
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
@@ -33,11 +34,11 @@ struct Home: View {
         request.sortDescriptors = [.init(key: #keyPath(SaleItem.name), ascending: true)]
         dataSource.performFetch()
         
-        // reset code
-        dataSource.fetchController.fetchedObjects?.forEach {
-            dataSource.context.delete($0)
-        }
-        dataSource.context.quickSave()
+//        // reset code
+//        dataSource.fetchController.fetchedObjects?.forEach {
+//            dataSource.context.delete($0)
+//        }
+//        dataSource.context.quickSave()
         
         return dataSource
     }()

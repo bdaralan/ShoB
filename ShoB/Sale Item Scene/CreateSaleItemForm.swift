@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct CreateSaleItemForm : View {
     
     /// The model to create sale item.

@@ -8,47 +8,48 @@
 
 import SwiftUI
 
+
 struct SaleItemRow: View {
     
-    /// The source item.
-    @ObjectBinding var sourceItem: SaleItem
+    /// The source item to view or update.
+    @ObjectBinding var saleItem: SaleItem
     
-    /// The data source that will update and save the item.
-    @ObjectBinding var dataSource: CUDDataSource<SaleItem>
+    /// Triggered when the update button is tapped.
+    var onUpdate: (SaleItemForm.Model) -> Void
     
-    /// Triggered when the item is updated.
-    var onUpdated: (() -> Void)?
-    
-    /// The item to be updated.
-    ///
-    /// This is the source item, but get from data source's update context.
-    var saleItemToUpdate: SaleItem {
-        sourceItem.get(from: dataSource.updateContext)
-    }
+    @State private var saleItemModel = SaleItemForm.Model()
     
     
     var body: some View {
-        let saleItemDetailView = SaleItemDetailView(saleItem: saleItemToUpdate, onUpdated: {
-            self.dataSource.sourceContext.quickSave()
-            self.onUpdated?()
-        })
-        
-        return NavigationLink(destination: saleItemDetailView) { // row content
+        NavigationLink(destination: saleItemDetailView) { // row content
             HStack {
-                Text(self.sourceItem.name)
+                Text(saleItem.name)
                 Spacer()
-                Text(verbatim: "\(Currency(self.sourceItem.price))")
+                Text(verbatim: "\(Currency(saleItem.price))")
             }
+        }
+    }
+    
+    
+    var saleItemDetailView: some View {
+        SaleItemDetailView(model: $saleItemModel, onUpdate: {
+            self.onUpdate(self.saleItemModel)
+        })
+        .onAppear { // assign the item to the model.
+            // DEVELOPER NOTE:
+            // Do the assignment here for now until finding a better place for the assignment
+            self.saleItemModel = .init(item: self.saleItem)
         }
     }
 }
 
+
 #if DEBUG
 struct SaleItemRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
-    static let item = SaleItem(context: cud.sourceContext)
+    static let saleItem = SaleItem(context: cud.sourceContext)
     static var previews: some View {
-        SaleItemRow(sourceItem: item, dataSource: cud, onUpdated: {})
+        SaleItemRow(saleItem: saleItem, onUpdate: { _ in })
     }
 }
 #endif

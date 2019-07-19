@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct SaleItemListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<SaleItem>
@@ -26,7 +27,14 @@ struct SaleItemListView: View {
     var body: some View {
         List(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
             if self.onItemSelected == nil { // default behavior
-                SaleItemRow(sourceItem: saleItem, dataSource: self.dataSource.cud, onUpdated: nil)
+                SaleItemRow(saleItem: saleItem.get(from: self.dataSource.cud.updateContext), onUpdate: { model in
+                    model.assign(to: saleItem.get(from: self.dataSource.cud.updateContext))
+                    if model.saleItem!.hasPersistentChangedValues { // must be unwrappable here
+                        self.dataSource.cud.saveUpdateContext()
+                    } else {
+                        self.dataSource.cud.discardUpdateContext()
+                    }
+                })
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
             }
@@ -70,7 +78,7 @@ struct SaleItemListView: View {
     }
     
     func saveNewSaleItem() {
-        newSaleItemModel.assign()
+        newSaleItemModel.assign(to: self.dataSource.cud.newObject!)
         dataSource.cud.saveCreateContext()
         showCreateSaleItemForm = false
     }

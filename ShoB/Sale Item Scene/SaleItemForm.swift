@@ -13,9 +13,9 @@ struct SaleItemForm: View {
     
     @Binding var model: Model
     
-    @State private var quantityStepByValue = 1
-    
     var showQuantity: Bool
+    
+    @State private var quantityStepByValue = 1
     
     
     var body: some View {
@@ -73,7 +73,7 @@ struct SaleItemForm: View {
 extension SaleItemForm {
     
     struct Model {
-        weak var item: SaleItem?
+        weak var saleItem: SaleItem?
         weak var orderItem: OrderItem?
         
         var name = ""
@@ -85,7 +85,7 @@ extension SaleItemForm {
         
         init(item: SaleItem? = nil) {
             guard let item = item else { return }
-            self.item = item
+            self.saleItem = item
             name = item.name
             price = item.price == 0 ? "" : "\(Currency(item.price))"
             quantity = 1 // default to 1 when create item
@@ -100,25 +100,15 @@ extension SaleItemForm {
         }
         
         
-        /// Assign model's values to either the `item` or `orderItem`.
-        ///
-        /// How the assignment works.
-        /// - Assign to `item` if `orderItem` is `nil`.
-        /// - Assign to `orderItem` if `item` is `nil`.
-        /// - Otherwise the method does nothing.
-        func assign() {
-            if let item = item, orderItem == nil {
-                item.name = name
-                item.price = Currency.parseCent(from: price)
-                return
-            }
-            
-            if let orderItem = orderItem, item == nil {
-                orderItem.name = name
-                orderItem.price = Currency.parseCent(from: price)
-                orderItem.quantity = Int64(quantity)
-                return
-            }
+        func assign(to item: SaleItem) {
+            item.name = name
+            item.price = Currency.parseCent(from: price)
+        }
+        
+        func assign(to item: OrderItem) {
+            item.name = name
+            item.price = Currency.parseCent(from: price)
+            item.quantity = Int64(quantity)
         }
     }
 }
