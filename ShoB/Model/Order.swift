@@ -32,7 +32,7 @@ class Order: NSManagedObject, BindableObject {
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        orderDate = Date()
+        orderDate = Date.currentYMDHM
         deliveryDate = nil
         deliveredDate = nil
         discount = 0

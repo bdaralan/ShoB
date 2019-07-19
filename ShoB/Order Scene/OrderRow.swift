@@ -15,45 +15,47 @@ struct OrderRow: View {
     /// The order to view or update.
     @ObjectBinding var order: Order
     
-    /// Triggered when the order is updated.
-    var onUpdate: (OrderForm.Model) -> Void
+    var onSave: (Order) -> Void
     
     @State private var orderModel = OrderForm.Model()
     
     
+    // MARK: - View Body
+    
     var body: some View {
-        NavigationLink(destination: orderDetailView, label: { rowContent })
-    }
-    
-    
-    var rowContent: some View {
-        VStack(alignment: .leading) {
-            Text("Order Date:\t \(formatter.string(from: order.orderDate))")
-            
-            if order.deliveryDate == nil {
-                Text("Deliver:\t No")
-            } else {
-                Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
+        NavigationLink(destination: orderDetailView) { // row content
+            VStack(alignment: .leading) {
+                Text("Order Date:\t \(formatter.string(from: order.orderDate))")
+                
+                if order.deliveryDate == nil {
+                    Text("Deliver:\t No")
+                } else {
+                    Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
+                }
+                
+                
+                if order.deliveredDate == nil {
+                    Text("Delivered:\t No")
+                } else {
+                    Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
+                }
+                
+                Text("Discount: \(order.discount)")
+                
+                Text("Note: \(order.note)")
             }
-            
-            
-            if order.deliveredDate == nil {
-                Text("Delivered:\t No")
-            } else {
-                Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
-            }
-            
-            Text("Discount: \(order.discount)")
-            
-            Text("Note: \(order.note)")
         }
     }
+
+    
+    // MARK: - View Component
     
     var orderDetailView: some View {
-        OrderDetailView(model: $orderModel, onUpdate: {
-            self.onUpdate(self.orderModel)
+        OrderDetailView(order: order, model: $orderModel, onSave: {
+            self.onSave(self.order)
         })
         .onAppear { // assign the order to the model.
+            print("rowContent.onAppear")
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
             self.orderModel = .init(order: self.order)
@@ -75,7 +77,7 @@ struct OrderRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     static let order = Order(context: cud.sourceContext)
     static var previews: some View {
-        OrderRow(order: order, onUpdate: { _ in })
+        OrderRow(order: order, onSave: { _ in })
     }
 }
 #endif

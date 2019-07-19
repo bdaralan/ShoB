@@ -18,6 +18,8 @@ struct SaleItemForm: View {
     @State private var quantityStepByValue = 1
     
     
+    // MARK: - View Body
+    
     var body: some View {
         Form {
             Section {
@@ -58,6 +60,8 @@ struct SaleItemForm: View {
     }
     
     
+    // MARK: - Method
+    
     func toggleQuantityStepByValue() {
         switch quantityStepByValue {
         case 1: quantityStepByValue = 5
@@ -76,9 +80,18 @@ extension SaleItemForm {
         weak var saleItem: SaleItem?
         weak var orderItem: OrderItem?
         
-        var name = ""
-        var price = ""
-        var quantity = 0
+        var name = "" {
+            didSet { assign(to: .name) }
+        }
+        
+        @CurrencyWrapper(amount: 0)
+        var price: String {
+            didSet { assign(to: .price) }
+        }
+        
+        var quantity = 0 {
+            didSet { assign(to: .quantity) }
+        }
         
         
         init() {}
@@ -87,7 +100,7 @@ extension SaleItemForm {
             guard let item = item else { return }
             self.saleItem = item
             name = item.name
-            price = item.price == 0 ? "" : "\(Currency(item.price))"
+            price = "\(Currency(item.price))"
             quantity = 1 // default to 1 when create item
         }
         
@@ -95,20 +108,43 @@ extension SaleItemForm {
             guard let item = item else { return }
             self.orderItem = item
             name = item.name
-            price = item.price == 0 ? "" : "\(Currency(item.price))"
+            price = "\(Currency(item.price))"
             quantity = Int(64)
         }
         
         
-        func assign(to item: SaleItem) {
-            item.name = name
-            item.price = Currency.parseCent(from: price)
+        private func assign(to item: SaleItem, key: Key) {
+            switch key {
+            case .name: item.name = name
+            case .price: item.price = _price.amount
+            default: break
+            }
+            
+            
         }
         
-        func assign(to item: OrderItem) {
-            item.name = name
-            item.price = Currency.parseCent(from: price)
-            item.quantity = Int64(quantity)
+        private func assign(to item: OrderItem, key: Key) {
+            switch key {
+            case .name: item.name = name
+            case .price: item.price = _price.amount
+            case .quantity: item.quantity = Int64(quantity)
+            }
+        }
+        
+        private func assign(to key: Key) {
+            if let saleItem = saleItem, orderItem == nil {
+                assign(to: saleItem, key: key)
+            
+            } else if let orderItem = orderItem, saleItem == nil {
+                assign(to: orderItem, key: key)
+            }
+        }
+        
+        
+        enum Key {
+            case name
+            case price
+            case quantity
         }
     }
 }

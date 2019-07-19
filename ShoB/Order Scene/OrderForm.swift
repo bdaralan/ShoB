@@ -17,6 +17,8 @@ struct OrderForm: View {
     @Binding var model: Model
     
     
+    // MARK: - View Body
+    
     var body: some View {
         Form {
             // MARK: Date Section
@@ -74,6 +76,8 @@ struct OrderForm: View {
     }
     
     
+    // MARK: - View Component
+    
     var saleItemList: some View {
         SaleItemListView { item, body in
             print(item)
@@ -89,18 +93,34 @@ extension OrderForm {
     
     struct Model {
         weak var order: Order?
-        var isDelivering = false
-        var isDelivered = false
-        var orderDate = Date()
-        var deliveryDate = Date()
-        var deliveredDate = Date()
-        var discount = ""
-        var note = ""
         
-        /// Check whether the order has changed values.
-        /// Always `false` if the `order` is `nil`.
-        var hasOrderValueChanged: Bool {
-            return order?.hasPersistentChangedValues ?? false
+        var isDelivering = false {
+            didSet { self.order?.deliveryDate = isDelivering ? Date.currentYMDHM : nil }
+        }
+        
+        var isDelivered = false {
+            didSet { self.order?.deliveredDate = isDelivered ? Date.currentYMDHM : nil }
+        }
+        
+        var orderDate = Date.currentYMDHM {
+            didSet { self.order?.orderDate = orderDate }
+        }
+        
+        var deliveryDate = Date.currentYMDHM {
+            didSet { self.order?.deliveryDate = deliveryDate }
+        }
+        
+        var deliveredDate = Date.currentYMDHM {
+            didSet { self.order?.deliveredDate = deliveredDate }
+        }
+        
+        @CurrencyWrapper(amount: 0)
+        var discount: String {
+            didSet { self.order?.discount = _discount.amount }
+        }
+        
+        var note = "" {
+            didSet { self.order?.note = note }
         }
         
         /// Total before discount.
@@ -122,26 +142,15 @@ extension OrderForm {
             orderDate = order.orderDate
             isDelivering = order.deliveryDate != nil
             isDelivered = order.deliveredDate != nil
-            deliveryDate = isDelivering ? order.deliveryDate! : Date()
-            deliveredDate = isDelivered ? order.deliveredDate! : Date()
+            deliveryDate = isDelivering ? order.deliveryDate! : Date.currentYMDHM
+            deliveredDate = isDelivered ? order.deliveredDate! : Date.currentYMDHM
             discount = order.discount == 0 ? "" : "\(Currency(order.discount))"
             note = order.note
         }
-        
-        
-        /// Assign the model's values to the order.
-        func assign() {
-            // DEVELOPER NOTE:
-            // Update the logic when needed.
-            guard let order = order else { return }
-            order.orderDate = orderDate
-            order.deliveryDate = isDelivering ? deliveryDate : nil
-            order.deliveredDate = isDelivered ? deliveredDate : nil
-            order.discount = Currency.parseCent(from: discount)
-            order.note = note
-        }
     }
 }
+
+
 
 
 #if DEBUG

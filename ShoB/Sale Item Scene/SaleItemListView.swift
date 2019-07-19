@@ -24,17 +24,16 @@ struct SaleItemListView: View {
     var onItemSelected: ((SaleItem, SaleItemListView) -> Void)?
     
     
+    // MARK: - View Body
+    
     var body: some View {
         List(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
             if self.onItemSelected == nil { // default behavior
-                SaleItemRow(saleItem: saleItem.get(from: self.dataSource.cud.updateContext), onUpdate: { model in
-                    model.assign(to: saleItem.get(from: self.dataSource.cud.updateContext))
-                    if model.saleItem!.hasPersistentChangedValues { // must be unwrappable here
-                        self.dataSource.cud.saveUpdateContext()
-                    } else {
-                        self.dataSource.cud.discardUpdateContext()
-                    }
-                })
+                SaleItemRow(
+                    saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
+                    onSave: self.saveSaleItemRowChanges
+                )
+            
             } else { // custom behavior
                 Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
             }
@@ -48,6 +47,8 @@ struct SaleItemListView: View {
     }
     
 
+    // MARK: - View Component
+    
     var addNewSaleItemNavItem: some View {
         Button(action: {
             // discard and create new item for the form
@@ -72,15 +73,25 @@ struct SaleItemListView: View {
     }
     
     
+    // MARK: - Method
+    
     func dismisCreateSaleItem() {
         dataSource.cud.discardCreateContext()
         showCreateSaleItemForm = false
     }
     
     func saveNewSaleItem() {
-        newSaleItemModel.assign(to: self.dataSource.cud.newObject!)
         dataSource.cud.saveCreateContext()
         showCreateSaleItemForm = false
+    }
+    
+    func saveSaleItemRowChanges(item: SaleItem) {
+        if item.hasPersistentChangedValues {
+            dataSource.cud.saveUpdateContext()
+        } else {
+            dataSource.cud.discardUpdateContext()
+        }
+        item.willChange.send()
     }
 }
 

@@ -15,10 +15,12 @@ struct SaleItemRow: View {
     @ObjectBinding var saleItem: SaleItem
     
     /// Triggered when the update button is tapped.
-    var onUpdate: (SaleItemForm.Model) -> Void
+    var onSave: (SaleItem) -> Void
     
     @State private var saleItemModel = SaleItemForm.Model()
     
+    
+    // MARK: - View Body
     
     var body: some View {
         NavigationLink(destination: saleItemDetailView) { // row content
@@ -31,9 +33,11 @@ struct SaleItemRow: View {
     }
     
     
+    // MARK: - View Component
+    
     var saleItemDetailView: some View {
-        SaleItemDetailView(model: $saleItemModel, onUpdate: {
-            self.onUpdate(self.saleItemModel)
+        SaleItemDetailView(saleItem: saleItem, model: $saleItemModel, onSave: {
+            self.onSave(self.saleItem)
         })
         .onAppear { // assign the item to the model.
             // DEVELOPER NOTE:
@@ -49,7 +53,7 @@ struct SaleItemRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static let saleItem = SaleItem(context: cud.sourceContext)
     static var previews: some View {
-        SaleItemRow(saleItem: saleItem, onUpdate: { _ in })
+        SaleItemRow(saleItem: saleItem, onSave: { _ in })
     }
 }
 #endif

@@ -9,26 +9,22 @@
 import SwiftUI
 
 
-struct OrderDetailView: View {
+struct OrderDetailView: View, EditableForm {
+    
+    @ObjectBinding var order: Order
     
     /// The order to view or update.
     @Binding var model: OrderForm.Model
     
-    /// Triggered when the order is updated.
-    var onUpdate: () -> Void
+    var onSave: () -> Void
     
+    
+    // MARK: - View Body
     
     var body: some View {
         OrderForm(model: $model)
             .navigationBarTitle("Order Details", displayMode: .inline)
-            .navigationBarItems(trailing: updateOrderNavItem)
-    }
-    
-    
-    var updateOrderNavItem: some View {
-        Button("Update", action: onUpdate)
-            .font(Font.body.bold())
-//            .disabled(!model.order!.hasPersistentChangedValues)
+            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: order.hasPersistentChangedValues))
     }
 }
 
@@ -36,7 +32,7 @@ struct OrderDetailView: View {
 struct OrderDetailView_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
     static var previews: some View {
-        OrderDetailView(model: .constant(.init()), onUpdate: {})
+        OrderDetailView(order: order, model: .constant(.init()), onSave: {})
     }
 }
 #endif

@@ -11,8 +11,10 @@ import SwiftUI
 
 struct CustomerListView: View {
     
-    @State var customers = sampleCustomers()
+    @State var customers = [Customer]()
     
+    
+    // MARK: - View Body
     
     var body: some View {
         List(customers, id: \.self) { customer in
@@ -33,16 +35,3 @@ struct CustomerList_Previews : PreviewProvider {
     }
 }
 #endif
-
-
-func sampleCustomers() -> [Customer] {
-    var customers = [Customer]()
-    for i in 1...40 {
-        let context = CoreDataStack.current.mainContext
-        let customer = Customer(context: context)
-        customer.firstName = "F\(i)"
-        customer.lastName = "L\(i)"
-        customers.append(customer)
-    }
-    return customers
-}

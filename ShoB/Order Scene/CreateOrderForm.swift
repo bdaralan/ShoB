@@ -11,32 +11,24 @@ import CoreData
 
 
 /// A form used to create new order.
-struct CreateOrderForm: View {
+struct CreateOrderForm: View, CreatableForm {
     
     /// The model to create order.
     @Binding var model: OrderForm.Model
     
     /// Triggered when the new order is placed.
-    var onPlaceOrder: () -> Void
+    var onCreate: () -> Void
     
     /// Triggered when cancelled to create a new order.
     var onCancel: () -> Void
     
     
+    // MARK: - View Body
+    
     var body: some View {
         OrderForm(model: $model)
             .navigationBarTitle("New Order", displayMode: .inline)
-            .navigationBarItems(leading: cancelOrderNavItem, trailing: placeOrderNavItem)
-    }
-    
-    
-    var cancelOrderNavItem: some View {
-        Button("Cancel", action: onCancel)
-    }
-    
-    var placeOrderNavItem: some View {
-        Button("Place Order", action: onPlaceOrder)
-            .font(Font.body.bold())
+            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Place Order"))
     }
 }
 
@@ -45,7 +37,7 @@ struct CreateOrderForm: View {
 struct PlaceOrderView_Previews : PreviewProvider {
     static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CreateOrderForm(model: .constant(.init()), onPlaceOrder: {}, onCancel: {})
+        CreateOrderForm(model: .constant(.init()), onCreate: {}, onCancel: {})
     }
 }
 #endif

@@ -77,3 +77,33 @@ struct Currency: Equatable, CustomStringConvertible {
         return string.hasPrefix("-") ? -cent : cent
     }
 }
+
+
+/// Wrap string into currency format.
+///
+/// Example:
+///
+///     @DiscountWrapper(amount: 0)
+///     var discount: String // discount = $0.00
+///
+@propertyWrapper
+struct CurrencyWrapper {
+    
+    var string: String
+    var amount: Cent
+    
+    var wrappedValue: String {
+        set {
+            amount = Currency.parseCent(from: newValue)
+            string = "\(Currency(amount))"
+        }
+        
+        get { string }
+    }
+    
+    
+    init(amount: Cent = 0) {
+        self.amount = amount
+        string = amount == 0 ? "" : "\(Currency(amount))"
+    }
+}

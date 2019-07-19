@@ -25,6 +25,8 @@ struct OrderListView: View {
     @State private var newOrderModel = OrderForm.Model()
     
     
+    // MARK: - View Body
+    
     var body: some View {
         List {
             // MARK: Segment Control
@@ -36,13 +38,13 @@ struct OrderListView: View {
             
             // MARK: Order Rows
             ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onUpdate: { model in
-                    model.assign()
-                    if model.order!.hasPersistentChangedValues {
+                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onSave: { order in
+                    if order.hasPersistentChangedValues {
                         self.dataSource.cud.saveUpdateContext()
                     } else {
                         self.dataSource.cud.discardUpdateContext()
                     }
+                    order.willChange.send()
                 })
             }
         }
@@ -54,6 +56,8 @@ struct OrderListView: View {
         )
     }
     
+    
+    // MARK: - View Component
     
     var placeNewOrderNavItem: some View {
         Button(action: {
@@ -74,12 +78,14 @@ struct OrderListView: View {
         NavigationView {
             CreateOrderForm(
                 model: $newOrderModel,
-                onPlaceOrder: saveNewOrder,
+                onCreate: saveNewOrder,
                 onCancel: dismissPlaceOrderForm
             )
         }
     }
     
+    
+    // MARK: - Method
     
     /// Dismiss place order form.
     ///
@@ -91,7 +97,6 @@ struct OrderListView: View {
     
     /// Save the new order to the data source.
     func saveNewOrder() {
-        newOrderModel.assign()
         dataSource.cud.saveCreateContext()
         showPlaceOrderForm = false
     }

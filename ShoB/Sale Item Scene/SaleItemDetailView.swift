@@ -9,25 +9,22 @@
 import SwiftUI
 
 
-struct SaleItemDetailView: View {
+struct SaleItemDetailView: View, EditableForm {
+    
+    @ObjectBinding var saleItem: SaleItem
     
     /// The model to view or edit sale item.
     @Binding var model: SaleItemForm.Model
     
-    /// Triggered when the item is updated.
-    var onUpdate: () -> Void
+    var onSave: () -> Void
     
+    
+    // MARK: - View Body
     
     var body: some View {
         SaleItemForm(model: $model, showQuantity: false)
             .navigationBarTitle("Item Details", displayMode: .inline)
-            .navigationBarItems(trailing: updateSaleItemNavItem)
-    }
-    
-    
-    var updateSaleItemNavItem: some View {
-        Button("Update", action: onUpdate)
-            .font(Font.body.bold())
+            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
     }
 }
 
@@ -35,7 +32,7 @@ struct SaleItemDetailView: View {
 struct SaleItemDetailView_Previews : PreviewProvider {
     static let saleItem = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        SaleItemDetailView(model: .constant(.init(item: saleItem)), onUpdate: {})
+        SaleItemDetailView(saleItem: saleItem, model: .constant(.init(item: saleItem)), onSave: {})
     }
 }
 #endif

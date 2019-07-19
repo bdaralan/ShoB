@@ -9,32 +9,22 @@
 import SwiftUI
 
 
-struct CreateSaleItemForm : View {
+struct CreateSaleItemForm : View, CreatableForm {
     
     /// The model to create sale item.
     @Binding var model: SaleItemForm.Model
     
-    /// Triggered when the item is saved.
     var onCreate: () -> Void
     
-    /// Triggered when cancelled to create a new item.
     var onCancel: () -> Void
     
+    
+    // MARK: - View Body
     
     var body: some View {
         SaleItemForm(model: $model, showQuantity: false)
             .navigationBarTitle("New Item", displayMode: .inline)
-            .navigationBarItems(leading: cancelAddingNewSaleItemNavItem, trailing: addNewSaleItemNavItem)
-    }
-    
-    
-    var cancelAddingNewSaleItemNavItem: some View {
-        Button("Cancel", action: onCancel)
-    }
-    
-    var addNewSaleItemNavItem: some View {
-        Button("Add", action: onCreate)
-            .font(Font.body.bold())
+            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Add"))
     }
 }
 
