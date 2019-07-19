@@ -59,7 +59,9 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationLink(destination: saleItemList, label: { Text("Add Item") })
+                NavigationLink(destination: saleItemList, label: {
+                    Text("Add Item").foregroundColor(.accentColor)
+                })
             }
 
             // MARK: Note Section
