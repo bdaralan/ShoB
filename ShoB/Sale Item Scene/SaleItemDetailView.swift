@@ -14,7 +14,7 @@ struct SaleItemDetailView: View, EditableForm {
     @ObjectBinding var saleItem: SaleItem
     
     /// The model to view or edit sale item.
-    @Binding var model: SaleItemForm.Model
+    @Binding var model: SaleItemFormModel
     
     var onSave: () -> Void
     

@@ -13,6 +13,9 @@ import CoreData
 struct OrderListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<Order>
+    
+    /// Used to display sale item list when create new order.
+    @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
 
     @State private var currentSegment = Segment.today
     
@@ -81,6 +84,7 @@ struct OrderListView: View {
                 onCreate: saveNewOrder,
                 onCancel: dismissPlaceOrderForm
             )
+            .environmentObject(saleItemDataSource)
         }
     }
     
@@ -102,6 +106,8 @@ struct OrderListView: View {
     }
 }
 
+
+// MARK: - Class Component
 
 extension OrderListView {
     

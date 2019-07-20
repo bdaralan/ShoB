@@ -14,7 +14,15 @@ import CoreData
 /// A form use to view and editing order.
 struct OrderForm: View {
     
+    @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
+    
+    /// Model used to create order.
     @Binding var model: Model
+    
+    /// Model used to create and add item to the order.
+    @State private var itemToAddModel = SaleItemFormModel()
+    
+    @State private var showSaleItemList = false
     
     
     // MARK: - View Body
@@ -59,9 +67,7 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
-                NavigationLink(destination: saleItemList, label: {
-                    Text("Add Item").foregroundColor(.accentColor)
-                })
+                Button("Add Item", action: { self.showSaleItemList = true })
             }
 
             // MARK: Note Section
@@ -75,16 +81,76 @@ struct OrderForm: View {
                 .frame(minHeight: 200)
             }
         }
+        .sheet(
+            isPresented: $showSaleItemList,
+            onDismiss: dismissSaleItemList,
+            content: { self.saleItemList }
+        )
     }
     
     
     // MARK: - View Component
     
     var saleItemList: some View {
-        SaleItemListView { item, body in
-            print(item)
+        NavigationView {
+            Form {
+                Section(header: Text("ORDER ITEM")) {
+                    SaleItemFormView(model: self.$itemToAddModel, showQuantity: true)
+                }
+                
+                Section(header: Text("ALL SALE ITEMS")) {
+                    ForEach(saleItemDataSource.fetchController.fetchedObjects ?? []) { item in
+                        Button(action: {
+                            self.itemToAddModel = self.orderItemToAddModel(from: item)
+                        }, label: {
+                            HStack {
+                                Text("\(item.name)")
+                                Spacer()
+                                Text(verbatim: "\(Currency(item.price))")
+                            }.accentColor(.primary)
+                        })
+                    }
+                }
+            }
+            .navigationBarTitle("Add Item", displayMode: .inline)
+            .navigationBarItems(leading: cancelOrderItemNavItem, trailing: addOrderItemNavItem)
         }
-        .navigationBarTitle("Add Item")
+    }
+    
+    var addOrderItemNavItem: some View {
+        Button("Add", action: {
+            guard let order = self.model.order, let context = order.managedObjectContext else { return }
+            
+            let newOrderItem = OrderItem(context: context)
+            newOrderItem.order = order
+            self.itemToAddModel.assign(to: newOrderItem)
+            
+            self.dismissSaleItemList()
+            
+            print(self.model.order!.orderItems)
+        })
+    }
+    
+    var cancelOrderItemNavItem: some View {
+        Button("Cancel", action: dismissSaleItemList)
+    }
+    
+    
+    // MARK: - Method
+    
+    func dismissSaleItemList() {
+        self.showSaleItemList = false
+        self.itemToAddModel = .init()
+    }
+    
+    /// Create a model from the given item's values.
+    ///
+    /// Once created, the item is set to `nil` to avoid modifying the actual item.
+    /// - Parameter item: A model with `.saleItem = nil`.
+    func orderItemToAddModel(from item: SaleItem) -> SaleItemFormModel {
+        var model = SaleItemFormModel(item: item)
+        model.saleItem = nil
+        return model
     }
 }
 

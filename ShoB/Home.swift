@@ -54,6 +54,7 @@ struct Home: View {
             NavigationView {
                 OrderListView()
                     .environmentObject(orderDataSource)
+                    .environmentObject(saleItemDataSource)
                     .navigationBarTitle("Orders", displayMode: .large)
             }
             .tabItem {

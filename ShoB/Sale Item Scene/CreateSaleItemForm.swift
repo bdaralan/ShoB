@@ -12,7 +12,7 @@ import SwiftUI
 struct CreateSaleItemForm : View, CreatableForm {
     
     /// The model to create sale item.
-    @Binding var model: SaleItemForm.Model
+    @Binding var model: SaleItemFormModel
     
     var onCreate: () -> Void
     

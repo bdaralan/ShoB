@@ -104,6 +104,6 @@ struct CurrencyWrapper {
     
     init(amount: Cent = 0) {
         self.amount = amount
-        string = amount == 0 ? "" : "\(Currency(amount))"
+        string = "\(Currency(amount))"
     }
 }
