@@ -14,7 +14,7 @@ struct SaleItemDetailView: View, EditableForm {
     @ObjectBinding var saleItem: SaleItem
     
     /// The model to view or edit sale item.
-    @Binding var model: SaleItemFormModel
+    @Binding var model: SaleItemForm.Model
     
     var onSave: () -> Void
     
@@ -22,7 +22,7 @@ struct SaleItemDetailView: View, EditableForm {
     // MARK: - View Body
     
     var body: some View {
-        SaleItemForm(model: $model, showQuantity: false)
+        SaleItemForm(model: $model, mode: .createSaleItem)
             .navigationBarTitle("Item Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
     }

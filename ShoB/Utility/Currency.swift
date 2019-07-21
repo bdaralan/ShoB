@@ -89,21 +89,19 @@ struct Currency: Equatable, CustomStringConvertible {
 @propertyWrapper
 struct CurrencyWrapper {
     
-    var string: String
-    var amount: Cent
+    var string: String = ""
+    var amount: Cent = 0
     
     var wrappedValue: String {
+        get { string }
         set {
             amount = Currency.parseCent(from: newValue)
             string = "\(Currency(amount))"
         }
-        
-        get { string }
     }
     
     
     init(amount: Cent = 0) {
-        self.amount = amount
-        string = "\(Currency(amount))"
+        wrappedValue = "\(Currency(amount))"
     }
 }

@@ -12,7 +12,7 @@ import SwiftUI
 struct CreateSaleItemForm : View, CreatableForm {
     
     /// The model to create sale item.
-    @Binding var model: SaleItemFormModel
+    @Binding var model: SaleItemForm.Model
     
     var onCreate: () -> Void
     
@@ -22,7 +22,7 @@ struct CreateSaleItemForm : View, CreatableForm {
     // MARK: - View Body
     
     var body: some View {
-        SaleItemForm(model: $model, showQuantity: false)
+        SaleItemForm(model: $model, mode: .createSaleItem)
             .navigationBarTitle("New Item", displayMode: .inline)
             .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Add"))
     }

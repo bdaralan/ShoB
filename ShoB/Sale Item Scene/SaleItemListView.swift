@@ -15,7 +15,7 @@ struct SaleItemListView: View {
     
     @State private var showCreateSaleItemForm = false
     
-    @State private var newSaleItemModel = SaleItemFormModel()
+    @State private var newSaleItemModel = SaleItemForm.Model()
     
     /// Triggered when an item is selected.
     ///

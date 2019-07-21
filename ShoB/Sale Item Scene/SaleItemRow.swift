@@ -17,7 +17,7 @@ struct SaleItemRow: View {
     /// Triggered when the update button is tapped.
     var onSave: (SaleItem) -> Void
     
-    @State private var saleItemModel = SaleItemFormModel()
+    @State private var saleItemModel = SaleItemForm.Model()
     
     
     // MARK: - View Body

@@ -11,16 +11,16 @@ import SwiftUI
 
 struct SaleItemForm: View {
     
-    @Binding var model: SaleItemFormModel
+    @Binding var model: Model
     
-    var showQuantity: Bool
+    var mode: Mode
     
     
     // MARK: - View Body
     
     var body: some View {
         Form {
-            SaleItemFormView(model: $model, showQuantity: showQuantity)
+            SaleItemForm.BodyView(model: $model, mode: mode)
         }
     }
 }
@@ -29,7 +29,7 @@ struct SaleItemForm: View {
 #if DEBUG
 struct SaleItemForm_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemForm(model: .constant(.init()), showQuantity: true)
+        SaleItemForm(model: .constant(.init()), mode: .createSaleItem)
     }
 }
 #endif

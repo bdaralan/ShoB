@@ -20,7 +20,7 @@ struct OrderForm: View {
     @Binding var model: Model
     
     /// Model used to create and add item to the order.
-    @State private var itemToAddModel = SaleItemFormModel()
+    @State private var newOrderItemModel = SaleItemForm.Model()
     
     @State private var showSaleItemList = false
     
@@ -67,7 +67,13 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
-                Button("Add Item", action: { self.showSaleItemList = true })
+                Button(action: { self.showSaleItemList = true }, label: {
+                    HStack {
+                        Text("Add Item")
+                        Spacer()
+                        Image(systemName: "plus.circle").imageScale(.medium)
+                    }
+                })
             }
 
             // MARK: Note Section
@@ -95,13 +101,13 @@ struct OrderForm: View {
         NavigationView {
             Form {
                 Section(header: Text("ORDER ITEM")) {
-                    SaleItemFormView(model: self.$itemToAddModel, showQuantity: true)
+                    SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .addItemToOrder)
                 }
                 
                 Section(header: Text("ALL SALE ITEMS")) {
                     ForEach(saleItemDataSource.fetchController.fetchedObjects ?? []) { item in
                         Button(action: {
-                            self.itemToAddModel = self.orderItemToAddModel(from: item)
+                            self.newOrderItemModel = .init(item: item, keepReference: false)
                         }, label: {
                             HStack {
                                 Text("\(item.name)")
@@ -112,7 +118,7 @@ struct OrderForm: View {
                     }
                 }
             }
-            .navigationBarTitle("Add Item", displayMode: .inline)
+            .navigationBarTitle("Order's Item", displayMode: .inline)
             .navigationBarItems(leading: cancelOrderItemNavItem, trailing: addOrderItemNavItem)
         }
     }
@@ -121,9 +127,10 @@ struct OrderForm: View {
         Button("Add", action: {
             guard let order = self.model.order, let context = order.managedObjectContext else { return }
             
+            // create order item and add it to the order
             let newOrderItem = OrderItem(context: context)
             newOrderItem.order = order
-            self.itemToAddModel.assign(to: newOrderItem)
+            self.newOrderItemModel.assign(to: newOrderItem)
             
             self.dismissSaleItemList()
             
@@ -140,85 +147,9 @@ struct OrderForm: View {
     
     func dismissSaleItemList() {
         self.showSaleItemList = false
-        self.itemToAddModel = .init()
-    }
-    
-    /// Create a model from the given item's values.
-    ///
-    /// Once created, the item is set to `nil` to avoid modifying the actual item.
-    /// - Parameter item: A model with `.saleItem = nil`.
-    func orderItemToAddModel(from item: SaleItem) -> SaleItemFormModel {
-        var model = SaleItemFormModel(item: item)
-        model.saleItem = nil
-        return model
+        self.newOrderItemModel = .init()
     }
 }
-
-
-// MARK: - View Model
-
-extension OrderForm {
-    
-    struct Model {
-        weak var order: Order?
-        
-        var isDelivering = false {
-            didSet { self.order?.deliveryDate = isDelivering ? Date.currentYMDHM : nil }
-        }
-        
-        var isDelivered = false {
-            didSet { self.order?.deliveredDate = isDelivered ? Date.currentYMDHM : nil }
-        }
-        
-        var orderDate = Date.currentYMDHM {
-            didSet { self.order?.orderDate = orderDate }
-        }
-        
-        var deliveryDate = Date.currentYMDHM {
-            didSet { self.order?.deliveryDate = deliveryDate }
-        }
-        
-        var deliveredDate = Date.currentYMDHM {
-            didSet { self.order?.deliveredDate = deliveredDate }
-        }
-        
-        @CurrencyWrapper(amount: 0)
-        var discount: String {
-            didSet { self.order?.discount = _discount.amount }
-        }
-        
-        var note = "" {
-            didSet { self.order?.note = note }
-        }
-        
-        /// Total before discount.
-        var totalBeforeDiscount: String {
-            guard let order = order else { return "\(Currency(0))" }
-            return "\(Currency(order.total))"
-        }
-        
-        /// Total after discount.
-        var totalAfterDiscount: String {
-            guard let order = order else { return "\(Currency(0))" }
-            return "\(Currency(order.total - order.discount))"
-        }
-        
-        
-        init(order: Order? = nil) {
-            guard let order = order else { return }
-            self.order = order
-            orderDate = order.orderDate
-            isDelivering = order.deliveryDate != nil
-            isDelivered = order.deliveredDate != nil
-            deliveryDate = isDelivering ? order.deliveryDate! : Date.currentYMDHM
-            deliveredDate = isDelivered ? order.deliveredDate! : Date.currentYMDHM
-            discount = order.discount == 0 ? "" : "\(Currency(order.discount))"
-            note = order.note
-        }
-    }
-}
-
-
 
 
 #if DEBUG
