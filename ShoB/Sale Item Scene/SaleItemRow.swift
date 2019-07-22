@@ -20,7 +20,7 @@ struct SaleItemRow: View {
     @State private var saleItemModel = SaleItemForm.Model()
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         NavigationLink(destination: saleItemDetailView) { // row content
@@ -33,7 +33,7 @@ struct SaleItemRow: View {
     }
     
     
-    // MARK: - View Component
+    // MARK: - Body Component
     
     var saleItemDetailView: some View {
         SaleItemDetailView(saleItem: saleItem, model: $saleItemModel, onSave: {

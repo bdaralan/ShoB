@@ -28,7 +28,7 @@ struct OrderListView: View {
     @State private var newOrderModel = OrderForm.Model()
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         List {
@@ -60,7 +60,7 @@ struct OrderListView: View {
     }
     
     
-    // MARK: - View Component
+    // MARK: - Body Component
     
     var placeNewOrderNavItem: some View {
         Button(action: {

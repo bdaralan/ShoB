@@ -18,6 +18,10 @@ class OrderItem: NSManagedObject {
     @NSManaged var quantity: Int64
     @NSManaged var order: Order?
     
+    var subtotal: Cent {
+        price * quantity
+    }
+    
     
     override func awakeFromInsert() {
         super.awakeFromInsert()

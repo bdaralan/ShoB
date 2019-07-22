@@ -32,7 +32,7 @@ extension SaleItemForm {
         }
         
         
-        // MARK: - View Body
+        // MARK: - Body
         
         var body: some View {
             Section {

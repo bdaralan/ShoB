@@ -19,7 +19,7 @@ struct OrderDetailView: View, EditableForm {
     var onSave: () -> Void
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         OrderForm(model: $model)

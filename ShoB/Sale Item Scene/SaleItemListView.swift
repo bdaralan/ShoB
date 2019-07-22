@@ -24,7 +24,7 @@ struct SaleItemListView: View {
     var onItemSelected: ((SaleItem, SaleItemListView) -> Void)?
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         List(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
@@ -47,7 +47,7 @@ struct SaleItemListView: View {
     }
     
 
-    // MARK: - View Component
+    // MARK: - Body Component
     
     var addNewSaleItemNavItem: some View {
         Button(action: {

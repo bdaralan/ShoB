@@ -25,7 +25,7 @@ struct OrderForm: View {
     @State private var showSaleItemList = false
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         Form {
@@ -67,6 +67,8 @@ struct OrderForm: View {
             
             // MARK: Items Section
             Section(header: Text("ORDER ITEMS")) {
+                
+                // MARK: Add Button
                 Button(action: { self.showSaleItemList = true }, label: {
                     HStack {
                         Text("Add Item")
@@ -74,6 +76,11 @@ struct OrderForm: View {
                         Image(systemName: "plus.circle").imageScale(.medium)
                     }
                 })
+                
+                // MARK: Order Item List
+                ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
+                    NavigationLink("\(item.name) | \(item.subtotal)", destination: Text("\(item.name)"))
+                }
             }
 
             // MARK: Note Section
@@ -95,7 +102,7 @@ struct OrderForm: View {
     }
     
     
-    // MARK: - View Component
+    // MARK: - Body Component
     
     var saleItemList: some View {
         NavigationView {

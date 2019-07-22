@@ -46,7 +46,7 @@ struct Home: View {
     @State private var selectedTab = 0
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         TabbedView {

@@ -14,7 +14,7 @@ struct CustomerListView: View {
     @State var customers = [Customer]()
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         List(customers, id: \.self) { customer in

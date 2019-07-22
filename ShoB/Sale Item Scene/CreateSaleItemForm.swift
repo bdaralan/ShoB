@@ -19,7 +19,7 @@ struct CreateSaleItemForm : View, CreatableForm {
     var onCancel: () -> Void
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         SaleItemForm(model: $model, mode: .createSaleItem)

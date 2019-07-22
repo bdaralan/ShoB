@@ -23,7 +23,7 @@ struct CreateOrderForm: View, CreatableForm {
     var onCancel: () -> Void
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         OrderForm(model: $model)

@@ -20,7 +20,7 @@ struct OrderRow: View {
     @State private var orderModel = OrderForm.Model()
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         NavigationLink(destination: orderDetailView) { // row content
@@ -48,7 +48,7 @@ struct OrderRow: View {
     }
 
     
-    // MARK: - View Component
+    // MARK: - Body Component
     
     var orderDetailView: some View {
         OrderDetailView(order: order, model: $orderModel, onSave: {

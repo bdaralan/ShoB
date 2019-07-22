@@ -16,7 +16,7 @@ struct SaleItemForm: View {
     var mode: Mode
     
     
-    // MARK: - View Body
+    // MARK: - Body
     
     var body: some View {
         Form {
