@@ -78,8 +78,10 @@ struct OrderForm: View {
                 })
                 
                 // MARK: Order Item List
-                ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
-                    NavigationLink("\(item.name) | \(item.subtotal)", destination: Text("\(item.name)"))
+                if model.order != nil {
+                    ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
+                        NavigationLink("\(item.name) | \(item.subtotal)", destination: Text("\(item.name)"))
+                    }
                 }
             }
 
@@ -96,21 +98,23 @@ struct OrderForm: View {
         }
         .sheet(
             isPresented: $showSaleItemList,
-            onDismiss: dismissSaleItemList,
-            content: { self.saleItemList }
+            onDismiss: dismissAddOrderItemForm,
+            content: { self.addOrderItemForm }
         )
     }
     
     
     // MARK: - Body Component
     
-    var saleItemList: some View {
+    var addOrderItemForm: some View {
         NavigationView {
             Form {
+                // Input Section
                 Section(header: Text("ORDER ITEM")) {
                     SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .addItemToOrder)
                 }
                 
+                // Sale Item List Section
                 Section(header: Text("ALL SALE ITEMS")) {
                     ForEach(saleItemDataSource.fetchController.fetchedObjects ?? []) { item in
                         Button(action: {
@@ -120,7 +124,8 @@ struct OrderForm: View {
                                 Text("\(item.name)")
                                 Spacer()
                                 Text(verbatim: "\(Currency(item.price))")
-                            }.accentColor(.primary)
+                            }
+                            .accentColor(.primary)
                         })
                     }
                 }
@@ -139,20 +144,21 @@ struct OrderForm: View {
             newOrderItem.order = order
             self.newOrderItemModel.assign(to: newOrderItem)
             
-            self.dismissSaleItemList()
+            // send change to reload form's Update button's state
+            order.willChange.send()
             
-            print(self.model.order!.orderItems)
+            self.dismissAddOrderItemForm()
         })
     }
     
     var cancelOrderItemNavItem: some View {
-        Button("Cancel", action: dismissSaleItemList)
+        Button("Cancel", action: dismissAddOrderItemForm)
     }
     
     
     // MARK: - Method
     
-    func dismissSaleItemList() {
+    func dismissAddOrderItemForm() {
         self.showSaleItemList = false
         self.newOrderItemModel = .init()
     }

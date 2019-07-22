@@ -22,5 +22,7 @@ extension EditableForm {
         Button(title, action: onSave)
             .font(Font.body.bold())
             .disabled(!enable)
+            .accentColor(.accentColor)
+        // beta 4: needs to set a color or nil to retain the color after certain view update
     }
 }
