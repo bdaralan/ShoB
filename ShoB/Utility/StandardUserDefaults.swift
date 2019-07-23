@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct StandardUserDefaults {
+enum StandardUserDefaults {
     
     static let unknownUserIdentityToken = "unknownUserIdentityToken"
     
@@ -25,6 +25,7 @@ struct StandardUserDefaults {
 struct UserDefaultsValue<T> {
     
     let key: String
+    
     let defaultValue: T
     
     var wrappedValue: T {
