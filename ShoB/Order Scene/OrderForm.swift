@@ -167,9 +167,7 @@ struct OrderForm: View {
     }
     
     func customerPickerRow(forURI uri: URL) -> some View {
-        // use the data source's context here since only need to display data
-        if uri != Model.customerURINone,
-            let customer = customerDataSource.object(forURI: uri, in: customerDataSource.context) {
+        if let customer = model.customer(forURI: uri) {
             return Text("\(customer.identity)")
                 .tag(uri)
                 .foregroundColor(.primary)

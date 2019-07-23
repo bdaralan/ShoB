@@ -97,14 +97,6 @@ struct OrderListView: View {
     
     /// Save the new order to the data source.
     func saveNewOrder() {
-        guard let order = newOrderModel.order, let context = order.managedObjectContext else { return }
-        
-        // assign order's customer if a customer is selected
-        if newOrderModel.isCustomerSelected,
-            let customer = customerDataSource.object(forURI: newOrderModel.customerURI, in: context) {
-            order.customer = customer
-        }
-        
         dataSource.cud.saveCreateContext()
         showPlaceOrderForm = false
     }

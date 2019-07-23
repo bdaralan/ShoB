@@ -15,16 +15,14 @@ extension OrderForm {
     struct Model {
         weak var order: Order?
         
-        /// Customer's managed object ID URI path.
+        /// Customer's managed object URI.
         ///
-        /// Set this property does not update `order.customer` property.
+        /// Set this property does not update the order's customer property.
         ///
-        /// Set to empty string to indicate that no customer is selected.
+        /// The default is `Self.customerURINone`.
         var customerURI = customerURINone {
-            willSet { willSetCustomerURI?(newValue) }
+            didSet { order?.customer = customer(forURI: customerURI) }
         }
-        
-        var willSetCustomerURI: ((URL) -> Void)?
         
         var isDelivering = false {
             didSet { self.order?.deliveryDate = isDelivering ? Date.currentYMDHM : nil }
@@ -74,6 +72,7 @@ extension OrderForm {
 
 extension OrderForm.Model {
     
+    /// A constant used to indicate that there is no customer selected.
     static let customerURINone = URL(string: "/\(Self.self).customerURINone")!
     
     /// Total before discount.
@@ -90,5 +89,21 @@ extension OrderForm.Model {
     
     var isCustomerSelected: Bool {
         return customerURI != Self.customerURINone
+    }
+    
+    /// Get customer object from the URI.
+    ///
+    /// - Warning: The system will `throws` if the URI is not CoreData URI.
+    /// - Parameter uri: Customer object's URI.
+    func customer(forURI uri: URL) -> Customer? {
+        guard uri != Self.customerURINone else { return nil }
+        
+        guard let context = order?.managedObjectContext,
+            let coordinator = context.persistentStoreCoordinator,
+            let objectID = coordinator.managedObjectID(forURIRepresentation: uri),
+            let customer = context.object(with: objectID) as? Customer
+            else { return nil }
+        
+        return customer
     }
 }
