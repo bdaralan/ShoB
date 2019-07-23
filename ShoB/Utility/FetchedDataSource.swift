@@ -43,6 +43,10 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
     }
     
     
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        willChange.send()
+    }
+    
     func performFetch() {
         do {
             try fetchController.performFetch()
@@ -52,7 +56,18 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
         willChange.send()
     }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        willChange.send()
+    func fetchedObjectURIs() -> [URL] {
+        fetchController.fetchedObjects?.compactMap({ $0.objectID.uriRepresentation() }) ?? []
+    }
+
+    /// Get fetched object from its URI.
+    /// 
+    /// - Parameter uri: The object's URI.
+    /// - Parameter context: The context to get the from.
+    /// - Warning: The system will `throws` if the URI is not CoreData URI.
+    func object(forURI uri: URL, in context: NSManagedObjectContext) -> T? {
+        let coordinator = context.persistentStoreCoordinator
+        guard let objectID = coordinator?.managedObjectID(forURIRepresentation: uri) else { return nil }
+        return context.object(with: objectID) as? T
     }
 }

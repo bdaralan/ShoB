@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.19" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14877.5" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Contact" representedClassName=".Contact" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString="N/A"/>
@@ -8,8 +8,8 @@
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="contact" inverseEntity="Store"/>
     </entity>
     <entity name="Customer" representedClassName=".Customer" syncable="YES">
-        <attribute name="firstName" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <attribute name="lastName" optional="YES" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="familyName" optional="YES" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="givenName" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <attribute name="organization" optional="YES" attributeType="String" defaultValueString="N/A"/>
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Contact" inverseName="customer" inverseEntity="Contact"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Order" inverseName="customer" inverseEntity="Order"/>

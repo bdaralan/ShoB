@@ -21,7 +21,7 @@ struct CustomerListView: View {
             NavigationLink(destination: Text("Customer Info"), label: {
                 HStack {
                     Image(systemName: "person.crop.rectangle").imageScale(.large)
-                    Text("\(customer.firstName) \(customer.lastName)")
+                    Text("\(customer.familyName) \(customer.givenName)")
                 }
             })
         }

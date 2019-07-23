@@ -7,12 +7,24 @@
 //
 
 import Foundation
+import CoreData
 
 
 extension OrderForm {
     
     struct Model {
         weak var order: Order?
+        
+        /// Customer's managed object ID URI path.
+        ///
+        /// Set this property does not update `order.customer` property.
+        ///
+        /// Set to empty string to indicate that no customer is selected.
+        var customerURI = customerURINone {
+            willSet { willSetCustomerURI?(newValue) }
+        }
+        
+        var willSetCustomerURI: ((URL) -> Void)?
         
         var isDelivering = false {
             didSet { self.order?.deliveryDate = isDelivering ? Date.currentYMDHM : nil }
@@ -43,22 +55,11 @@ extension OrderForm {
             didSet { self.order?.note = note }
         }
         
-        /// Total before discount.
-        var totalBeforeDiscount: String {
-            guard let order = order else { return "\(Currency(0))" }
-            return "\(Currency(order.total))"
-        }
-        
-        /// Total after discount.
-        var totalAfterDiscount: String {
-            guard let order = order else { return "\(Currency(0))" }
-            return "\(Currency(order.total - order.discount))"
-        }
-        
         
         init(order: Order? = nil) {
             guard let order = order else { return }
             self.order = order
+            self.customerURI = order.customer?.objectID.uriRepresentation() ?? Self.customerURINone
             orderDate = order.orderDate
             isDelivering = order.deliveryDate != nil
             isDelivered = order.deliveredDate != nil
@@ -67,5 +68,27 @@ extension OrderForm {
             discount = order.discount == 0 ? "" : "\(Currency(order.discount))"
             note = order.note
         }
+    }
+}
+
+
+extension OrderForm.Model {
+    
+    static let customerURINone = URL(string: "/\(Self.self).customerURINone")!
+    
+    /// Total before discount.
+    var totalBeforeDiscount: String {
+        guard let order = order else { return "\(Currency(0))" }
+        return "\(Currency(order.total))"
+    }
+    
+    /// Total after discount.
+    var totalAfterDiscount: String {
+        guard let order = order else { return "\(Currency(0))" }
+        return "\(Currency(order.total - order.discount))"
+    }
+    
+    var isCustomerSelected: Bool {
+        return customerURI != Self.customerURINone
     }
 }

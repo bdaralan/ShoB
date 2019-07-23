@@ -14,6 +14,8 @@ import CoreData
 /// A form use to view and editing order.
 struct OrderForm: View {
     
+    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
+    
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
     
     /// Model used to create order.
@@ -22,13 +24,22 @@ struct OrderForm: View {
     /// Model used to create and add item to the order.
     @State private var newOrderItemModel = SaleItemForm.Model()
     
-    @State private var showSaleItemList = false
+    @State private var showAddOrderItemForm = false
     
     
     // MARK: - Body
     
     var body: some View {
         Form {
+            // MARK: Customer Section
+            Section(header: Text("CUSTOMER")) {
+                Picker("Customer", selection: $model.customerURI) {
+                    ForEach([Model.customerURINone] + customerDataSource.fetchedObjectURIs(), id: \.self) { uri in
+                        self.customerPickerRow(forURI: uri)
+                    }
+                }
+            }
+            
             // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
                 DatePicker("Order Date", selection: $model.orderDate)
@@ -69,7 +80,7 @@ struct OrderForm: View {
             Section(header: Text("ORDER ITEMS")) {
                 
                 // MARK: Add Button
-                Button(action: { self.showSaleItemList = true }, label: {
+                Button(action: { self.showAddOrderItemForm = true }, label: {
                     HStack {
                         Text("Add Item")
                         Spacer()
@@ -97,7 +108,7 @@ struct OrderForm: View {
             }
         }
         .sheet(
-            isPresented: $showSaleItemList,
+            isPresented: $showAddOrderItemForm,
             onDismiss: dismissAddOrderItemForm,
             content: { self.addOrderItemForm }
         )
@@ -155,11 +166,25 @@ struct OrderForm: View {
         Button("Cancel", action: dismissAddOrderItemForm)
     }
     
+    func customerPickerRow(forURI uri: URL) -> some View {
+        // use the data source's context here since only need to display data
+        if uri != Model.customerURINone,
+            let customer = customerDataSource.object(forURI: uri, in: customerDataSource.context) {
+            return Text("\(customer.identity)")
+                .tag(uri)
+                .foregroundColor(.primary)
+        }
+        
+        return Text("None")
+            .tag(Model.customerURINone)
+            .foregroundColor(.secondary)
+    }
+    
     
     // MARK: - Method
     
     func dismissAddOrderItemForm() {
-        self.showSaleItemList = false
+        self.showAddOrderItemForm = false
         self.newOrderItemModel = .init()
     }
 }

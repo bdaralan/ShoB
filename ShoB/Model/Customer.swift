@@ -7,27 +7,45 @@
 //
 //
 
-import Foundation
 import CoreData
+import SwiftUI
+import Combine
 
 
-class Customer: NSManagedObject {
+class Customer: NSManagedObject, BindableObject {
     
-    @NSManaged var firstName: String
-    @NSManaged var lastName: String
+    let willChange = PassthroughSubject<Void, Never>()
+    
+    @NSManaged var familyName: String
+    @NSManaged var givenName: String
     @NSManaged var organization: String
     @NSManaged var contact: Contact
     @NSManaged var orders: Set<Order>
     @NSManaged var store: Store?
     
+    /// Customer's name or organization.
+    var identity: String {
+        let formatter = PersonNameComponentsFormatter()
+        var components = PersonNameComponents()
+        components.givenName = givenName
+        components.familyName = familyName
+        let identity = formatter.string(from: components)
+        return identity.isEmpty ? organization : identity
+    }
+    
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        firstName = ""
-        lastName = ""
+        familyName = ""
+        givenName = ""
         organization = ""
         orders = []
         contact = Contact(context: managedObjectContext!)
+    }
+    
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        willChange.send()
     }
 }
 

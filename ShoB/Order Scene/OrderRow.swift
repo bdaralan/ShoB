@@ -12,10 +12,12 @@ import CoreData
 
 struct OrderRow: View {
     
+    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
+    
     /// The order to view or update.
     @ObjectBinding var order: Order
     
-    var onSave: (Order) -> Void
+    var onSave: (OrderForm.Model) -> Void
     
     @State private var orderModel = OrderForm.Model()
     
@@ -25,6 +27,8 @@ struct OrderRow: View {
     var body: some View {
         NavigationLink(destination: orderDetailView) { // row content
             VStack(alignment: .leading) {
+                Text("Customer: \(order.customer?.identity ?? "None")")
+                
                 Text("Order Date:\t \(formatter.string(from: order.orderDate))")
                 
                 if order.deliveryDate == nil {
@@ -52,13 +56,25 @@ struct OrderRow: View {
     
     var orderDetailView: some View {
         OrderDetailView(order: order, model: $orderModel, onSave: {
-            self.onSave(self.order)
+            self.onSave(self.orderModel)
         })
-        .onAppear { // assign the order to the model.
-            print("rowContent.onAppear")
+        .onAppear {
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
+            print("DEVELOPER NOTE: OrderRow.orderDetailView.onAppear")
+            
+            // assign the order to the model.
             self.orderModel = .init(order: self.order)
+            
+            // set block to assign customer to order when a customer is selected
+            self.orderModel.willSetCustomerURI = { uri in
+                guard let context = self.order.managedObjectContext else { return }
+                if uri == OrderForm.Model.customerURINone {
+                    self.order.customer = nil
+                } else {
+                    self.order.customer = self.customerDataSource.object(forURI: uri, in: context)
+                }
+            }
         }
     }
 }

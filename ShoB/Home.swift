@@ -43,6 +43,31 @@ struct Home: View {
         return dataSource
     }()
     
+    @ObjectBinding var customerDataSource: FetchedDataSource<Customer> = {
+        let dataSource = FetchedDataSource<Customer>(context: CoreDataStack.current.mainContext)
+        let request = dataSource.fetchController.fetchRequest
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [
+            .init(key: #keyPath(Customer.givenName), ascending: true),
+            .init(key: #keyPath(Customer.familyName), ascending: true)
+        ]
+        dataSource.performFetch()
+        
+        // reset code
+        dataSource.fetchController.fetchedObjects?.forEach {
+            dataSource.context.delete($0)
+        }
+        
+        let customer1 = Customer(context: dataSource.context)
+        customer1.organization = "C1"
+        let customer2 = Customer(context: dataSource.context)
+        customer2.organization = "C2"
+        
+        dataSource.context.quickSave()
+        
+        return dataSource
+    }()
+    
     @State private var selectedTab = 0
     
     
@@ -55,6 +80,7 @@ struct Home: View {
                 OrderListView()
                     .environmentObject(orderDataSource)
                     .environmentObject(saleItemDataSource)
+                    .environmentObject(customerDataSource)
                     .navigationBarTitle("Orders", displayMode: .large)
             }
             .tabItem {

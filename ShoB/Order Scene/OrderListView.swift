@@ -16,6 +16,8 @@ struct OrderListView: View {
     
     /// Used to display sale item list when create new order.
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
+    
+    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
 
     @State private var currentSegment = Segment.today
     
@@ -41,14 +43,7 @@ struct OrderListView: View {
             
             // MARK: Order Rows
             ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
-                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onSave: { order in
-                    if order.hasPersistentChangedValues {
-                        self.dataSource.cud.saveUpdateContext()
-                    } else {
-                        self.dataSource.cud.discardUpdateContext()
-                    }
-                    order.willChange.send()
-                })
+                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onSave: self.updateOrder)
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
@@ -85,6 +80,7 @@ struct OrderListView: View {
                 onCancel: dismissPlaceOrderForm
             )
             .environmentObject(saleItemDataSource)
+            .environmentObject(customerDataSource)
         }
     }
     
@@ -101,8 +97,26 @@ struct OrderListView: View {
     
     /// Save the new order to the data source.
     func saveNewOrder() {
+        guard let order = newOrderModel.order, let context = order.managedObjectContext else { return }
+        
+        // assign order's customer if a customer is selected
+        if newOrderModel.isCustomerSelected,
+            let customer = customerDataSource.object(forURI: newOrderModel.customerURI, in: context) {
+            order.customer = customer
+        }
+        
         dataSource.cud.saveCreateContext()
         showPlaceOrderForm = false
+    }
+    
+    func updateOrder(_ model: OrderForm.Model) {
+        guard let order = model.order else { return }
+        if order.hasPersistentChangedValues {
+            self.dataSource.cud.saveUpdateContext()
+        } else {
+            self.dataSource.cud.discardUpdateContext()
+        }
+        order.willChange.send()
     }
 }
 
