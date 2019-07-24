@@ -222,8 +222,8 @@ struct OrderForm: View {
             model.order?.isMarkedHasChangedValues = orderItem.hasPersistentChangedValues
             model.order?.willChange.send()
             
-            // set orderItem to nil to void updating the item (safeguard)
-            // is not set to .init() to prevent UI reloading while it is dismissing
+            // set orderItem to nil to avoid updating the item (safeguard)
+            // the model is not set to .init() to prevent UI reloading while it is dismissing
             // because of @State
             editOrderItemModel.orderItem = nil
         }
