@@ -28,6 +28,9 @@ class Order: NSManagedObject, BindableObject {
     var total: Cent {
         return orderItems.map({ $0.price * $0.quantity }).reduce(0, +)
     }
+    
+    /// Used to manually mark order as has changes.
+    var isMarkedHasChangedValues = false
 
     
     override func awakeFromInsert() {
@@ -43,6 +46,11 @@ class Order: NSManagedObject, BindableObject {
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
         willChange.send()
+    }
+    
+    override func didSave() {
+        super.didSave()
+        isMarkedHasChangedValues = false
     }
 }
 
