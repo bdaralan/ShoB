@@ -7,11 +7,14 @@
 //
 //
 
-import Foundation
 import CoreData
+import SwiftUI
+import Combine
 
 
-class OrderItem: NSManagedObject {
+class OrderItem: NSManagedObject, BindableObject {
+    
+    let willChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -28,6 +31,12 @@ class OrderItem: NSManagedObject {
         name = ""
         price = 0
         quantity = 0
+    }
+    
+    
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        willChange.send()
     }
 }
 
