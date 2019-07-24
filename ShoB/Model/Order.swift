@@ -30,7 +30,7 @@ class Order: NSManagedObject, BindableObject {
     }
     
     /// Used to manually mark order as has changes.
-    var isMarkedHasChangedValues = false
+    var isMarkedValuesChanged = false
 
     
     override func awakeFromInsert() {
@@ -50,7 +50,7 @@ class Order: NSManagedObject, BindableObject {
     
     override func didSave() {
         super.didSave()
-        isMarkedHasChangedValues = false
+        isMarkedValuesChanged = false
     }
 }
 

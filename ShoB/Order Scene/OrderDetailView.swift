@@ -31,7 +31,7 @@ struct OrderDetailView: View, EditableForm {
     // MARK: - Bodh Component
     
     var saveNavItem: some View {
-        saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedHasChangedValues)
+        saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedValuesChanged)
     }
 }
 

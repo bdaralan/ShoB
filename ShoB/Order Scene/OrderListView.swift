@@ -103,7 +103,7 @@ struct OrderListView: View {
     
     func updateOrder(_ model: OrderForm.Model) {
         guard let order = model.order else { return }
-        if order.hasPersistentChangedValues || order.isMarkedHasChangedValues {
+        if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
             self.dataSource.cud.saveUpdateContext()
         } else {
             self.dataSource.cud.discardUpdateContext()

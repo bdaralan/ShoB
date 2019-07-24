@@ -214,13 +214,14 @@ struct OrderForm: View {
     
     /// Dismiss the presenting add or edit order form sheet and clean up as needed.
     func dismissOrderItemFormSheet() {
-        // the sheet is editOrderItemForm else it is addOrderItemForm
-        if let orderItem = editOrderItemModel.orderItem {
+        // clean up if the sheet is editOrderItemForm, else it is addOrderItemForm
+        if editOrderItemModel.orderItem != nil, let order = model.order {
             // manually mark order as has changed if its item has changed
             // because hasPersistentChangedValues only check the object property
             // but not its array's object's property
-            model.order?.isMarkedHasChangedValues = orderItem.hasPersistentChangedValues
-            model.order?.willChange.send()
+            let hasOrderItemsChanged = order.orderItems.map({ $0.hasPersistentChangedValues }).contains(true)
+            order.isMarkedValuesChanged = hasOrderItemsChanged
+            order.willChange.send()
             
             // set orderItem to nil to avoid updating the item (safeguard)
             // the model is not set to .init() to prevent UI reloading while it is dismissing
