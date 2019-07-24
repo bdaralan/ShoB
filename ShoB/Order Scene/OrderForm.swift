@@ -191,9 +191,22 @@ struct OrderForm: View {
     
     var editOrderItemForm: some View {
         NavigationView {
-            SaleItemForm(model: $editOrderItemModel, mode: .orderItem)
-                .navigationBarTitle("Edit Item", displayMode: .inline)
-                .navigationBarItems(trailing: Button("Done", action: dismissOrderItemFormSheet))
+            Form {
+                Section {
+                    SaleItemForm.BodyView(model: $editOrderItemModel, mode: .orderItem)
+                }
+                Section {
+                    Button(action: deleteOrderItemFromOrder) {
+                        HStack(alignment: .center) {
+                            Spacer()
+                            Text("Remove From Order").foregroundColor(.red)
+                            Spacer()
+                        }
+                    }
+                }
+            }
+            .navigationBarTitle("Edit Item", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Done", action: dismissOrderItemFormSheet))
         }
     }
     
@@ -229,6 +242,14 @@ struct OrderForm: View {
             editOrderItemModel.orderItem = nil
         }
         showOrderItemForm = false
+    }
+    
+    /// Delete the current editing order item.
+    func deleteOrderItemFromOrder() {
+        guard let itemToDelete = editOrderItemModel.orderItem else { return }
+        guard let context = itemToDelete.managedObjectContext else { return }
+        context.delete(itemToDelete)
+        dismissOrderItemFormSheet()
     }
 }
 
