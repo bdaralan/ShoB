@@ -1,11 +1,11 @@
 # ShoB
 
-SwiftUI + CoreData AutoSync Project
+SwiftUI + CoreData & iCloud AutoSync Project
 
 ## Goal
 
 - [ ] 100% SwiftUI
-- [ ] Intergrage CoreData AutoSync
+- [ ] Intergrage CoreData & iCloud AutoSync
 - [ ] Add CloudKit Share
 - [ ] Deploy
 
