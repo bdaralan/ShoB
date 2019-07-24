@@ -65,6 +65,16 @@ struct OrderRow: View {
             
             // assign the order to the model.
             self.orderModel = .init(order: self.order)
+            
+//            // set block to assign customer to order when a customer is selected
+//            self.orderModel.willSetCustomerURI = { uri in
+//                guard let context = self.order.managedObjectContext else { return }
+//                if uri == OrderForm.Model.customerURINone {
+//                    self.order.customer = nil
+//                } else {
+//                    self.order.customer = self.customerDataSource.object(forURI: uri, in: context)
+//                }
+//            }
         }
     }
 }

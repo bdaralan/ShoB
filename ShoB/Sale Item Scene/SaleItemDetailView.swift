@@ -22,7 +22,7 @@ struct SaleItemDetailView: View, EditableForm {
     // MARK: - Body
     
     var body: some View {
-        SaleItemForm(model: $model, mode: .createSaleItem)
+        SaleItemForm(model: $model, mode: .saleItem)
             .navigationBarTitle("Item Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
     }

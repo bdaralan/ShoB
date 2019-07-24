@@ -14,6 +14,7 @@ extension SaleItemForm {
     struct Model {
         
         weak var saleItem: SaleItem?
+        
         weak var orderItem: OrderItem?
         
         var name = "" {
@@ -53,7 +54,7 @@ extension SaleItemForm {
             self.orderItem = item
             name = item.name
             price = "\(Currency(item.price))"
-            quantity = Int(64)
+            quantity = Int(item.quantity)
         }
         
         

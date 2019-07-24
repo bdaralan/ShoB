@@ -22,7 +22,7 @@ struct CreateSaleItemForm : View, CreatableForm {
     // MARK: - Body
     
     var body: some View {
-        SaleItemForm(model: $model, mode: .createSaleItem)
+        SaleItemForm(model: $model, mode: .saleItem)
             .navigationBarTitle("New Item", displayMode: .inline)
             .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Add"))
     }

@@ -29,7 +29,7 @@ struct SaleItemForm: View {
 #if DEBUG
 struct SaleItemForm_Previews : PreviewProvider {
     static var previews: some View {
-        SaleItemForm(model: .constant(.init()), mode: .createSaleItem)
+        SaleItemForm(model: .constant(.init()), mode: .saleItem)
     }
 }
 #endif

@@ -24,7 +24,14 @@ struct OrderForm: View {
     /// Model used to create and add item to the order.
     @State private var newOrderItemModel = SaleItemForm.Model()
     
-    @State private var showAddOrderItemForm = false
+    /// Model used to edit order's item.
+    @State private var editOrderItemModel = SaleItemForm.Model()
+    
+    /// Flag used to show order item form sheet, either add or edit item form.
+    @State private var showOrderItemForm = false
+    
+    /// The order item form sheet, either add or edit item.
+    @State private var sheetOrderItemForm = AnyView(EmptyView())
     
     
     // MARK: - Body
@@ -80,18 +87,33 @@ struct OrderForm: View {
             Section(header: Text("ORDER ITEMS")) {
                 
                 // MARK: Add Button
-                Button(action: { self.showAddOrderItemForm = true }, label: {
+                Button(action: {
+                    self.newOrderItemModel = .init()
+                    self.sheetOrderItemForm = AnyView(self.addOrderItemForm)
+                    self.showOrderItemForm = true
+                }, label: {
                     HStack {
                         Text("Add Item")
                         Spacer()
-                        Image(systemName: "plus.circle").imageScale(.medium)
+                        Image(systemName: "plus.circle").imageScale(.large)
                     }
                 })
                 
                 // MARK: Order Item List
                 if model.order != nil {
                     ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
-                        NavigationLink("\(item.name) | \(item.subtotal)", destination: Text("\(item.name)"))
+                        Button(action: {
+                            self.editOrderItemModel = .init(item: item)
+                            self.sheetOrderItemForm = AnyView(self.editOrderItemForm)
+                            self.showOrderItemForm = true
+                        }, label: {
+                            HStack {
+                                Text("\(item.name) | \(item.subtotal)")
+                                Spacer()
+                                Image(systemName: "square.and.pencil").imageScale(.large)
+                            }
+                            .accentColor(.primary)
+                        })
                     }
                 }
             }
@@ -108,10 +130,11 @@ struct OrderForm: View {
             }
         }
         .sheet(
-            isPresented: $showAddOrderItemForm,
-            onDismiss: dismissAddOrderItemForm,
-            content: { self.addOrderItemForm }
+            isPresented: $showOrderItemForm,
+            onDismiss: dismissOrderItemFormSheet,
+            content: { self.sheetOrderItemForm }
         )
+        
     }
     
     
@@ -122,7 +145,7 @@ struct OrderForm: View {
             Form {
                 // Input Section
                 Section(header: Text("ORDER ITEM")) {
-                    SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .addItemToOrder)
+                    SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .orderItem)
                 }
                 
                 // Sale Item List Section
@@ -141,12 +164,12 @@ struct OrderForm: View {
                     }
                 }
             }
-            .navigationBarTitle("Order's Item", displayMode: .inline)
-            .navigationBarItems(leading: cancelOrderItemNavItem, trailing: addOrderItemNavItem)
+            .navigationBarTitle("Add Item", displayMode: .inline)
+            .navigationBarItems(leading: addOrderItemFormCancelNavItem, trailing: addOrderItemFormAddNavItem)
         }
     }
     
-    var addOrderItemNavItem: some View {
+    var addOrderItemFormAddNavItem: some View {
         Button("Add", action: {
             guard let order = self.model.order, let context = order.managedObjectContext else { return }
             
@@ -158,12 +181,20 @@ struct OrderForm: View {
             // send change to reload form's Update button's state
             order.willChange.send()
             
-            self.dismissAddOrderItemForm()
+            self.dismissOrderItemFormSheet()
         })
     }
     
-    var cancelOrderItemNavItem: some View {
-        Button("Cancel", action: dismissAddOrderItemForm)
+    var addOrderItemFormCancelNavItem: some View {
+        Button("Cancel", action: dismissOrderItemFormSheet)
+    }
+    
+    var editOrderItemForm: some View {
+        NavigationView {
+            SaleItemForm(model: $editOrderItemModel, mode: .orderItem)
+                .navigationBarTitle("Edit Item", displayMode: .inline)
+                .navigationBarItems(trailing: Button("Done", action: dismissOrderItemFormSheet))
+        }
     }
     
     func customerPickerRow(forURI uri: URL) -> some View {
@@ -181,9 +212,22 @@ struct OrderForm: View {
     
     // MARK: - Method
     
-    func dismissAddOrderItemForm() {
-        self.showAddOrderItemForm = false
-        self.newOrderItemModel = .init()
+    /// Dismiss the presenting add or edit order form sheet and clean up as needed.
+    func dismissOrderItemFormSheet() {
+        // the sheet is editOrderItemForm else it is addOrderItemForm
+        if let orderItem = editOrderItemModel.orderItem {
+            // manually mark order as has changed if its item has changed
+            // because hasPersistentChangedValues only check the object property
+            // but not its array's object's property
+            model.order?.isMarkedHasChangedValues = orderItem.hasPersistentChangedValues
+            model.order?.willChange.send()
+            
+            // set orderItem to nil to void updating the item (safeguard)
+            // is not set to .init() to prevent UI reloading while it is dismissing
+            // because of @State
+            editOrderItemModel.orderItem = nil
+        }
+        showOrderItemForm = false
     }
 }
 

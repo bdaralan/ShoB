@@ -24,11 +24,11 @@ extension SaleItemForm {
         }
         
         var shouldEnableNamePriceTextFields: Bool {
-            mode == .createSaleItem
+            mode == .saleItem
         }
         
         var nameTextFieldPlaceholder: String {
-            mode == .createSaleItem ? "Name" : "Select an item"
+            mode == .saleItem ? "Name" : "Select an item"
         }
         
         
@@ -52,7 +52,7 @@ extension SaleItemForm {
                 }
                 
                 // MARK: Subtotal & Quatity
-                if mode == .addItemToOrder {
+                if mode == .orderItem {
                     HStack {
                         Text("Subtotal").bold()
                         Spacer()
@@ -91,7 +91,7 @@ extension SaleItemForm {
     }
     
     enum Mode {
-        case createSaleItem
-        case addItemToOrder
+        case saleItem
+        case orderItem
     }
 }
