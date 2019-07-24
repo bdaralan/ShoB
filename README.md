@@ -8,3 +8,7 @@ SwiftUI + CoreData AutoSync Project
 - [ ] Intergrage CoreData AutoSync
 - [ ] Add CloudKit Share
 - [ ] Deploy
+
+## Preview
+
+![Order Scene Preview](Preview/shob-order-scene-preview.png)
