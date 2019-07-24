@@ -16,9 +16,6 @@ extension OrderForm {
         weak var order: Order?
         
         /// Customer's managed object URI.
-        ///
-        /// Set this property does not update the order's customer property.
-        ///
         /// The default is `Self.customerURINone`.
         var customerURI = customerURINone {
             didSet { order?.customer = customer(forURI: customerURI) }
