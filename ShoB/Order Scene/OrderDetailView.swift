@@ -24,7 +24,14 @@ struct OrderDetailView: View, EditableForm {
     var body: some View {
         OrderForm(model: $model)
             .navigationBarTitle("Order Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: order.hasPersistentChangedValues))
+            .navigationBarItems(trailing: saveNavItem)
+    }
+    
+    
+    // MARK: - Bodh Component
+    
+    var saveNavItem: some View {
+        saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedHasChangedValues)
     }
 }
 
