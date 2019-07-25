@@ -23,6 +23,9 @@ class Contact: NSManagedObject, BindableObject {
     @NSManaged private(set) var customer: Customer?
     @NSManaged private(set) var store: Store?
     
+    /// A flag to indicate whether its property objects should send change when its value changed.
+    var shouldPropertyObjectSendWillChange = false
+    
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -35,6 +38,8 @@ class Contact: NSManagedObject, BindableObject {
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
         willChange.send()
+        
+        guard shouldPropertyObjectSendWillChange else { return }
         customer?.willChange.send()
         store?.willChange.send()
     }

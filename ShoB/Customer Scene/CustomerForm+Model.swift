@@ -42,6 +42,8 @@ extension CustomerForm {
         
         init(customer: Customer? = nil) {
             guard let customer = customer else { return }
+            customer.contact.shouldPropertyObjectSendWillChange = true
+            
             self.customer = customer
             familyName = customer.familyName
             givenName = customer.givenName
