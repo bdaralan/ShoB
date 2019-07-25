@@ -47,11 +47,6 @@ class Order: NSManagedObject, BindableObject {
         super.didChangeValue(forKey: key)
         willChange.send()
     }
-    
-    override func didSave() {
-        super.didSave()
-        isMarkedValuesChanged = false
-    }
 }
 
 
