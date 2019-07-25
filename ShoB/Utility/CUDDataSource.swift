@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 
-/// A data source use to create, update, or delete object.
+/// A data source with contexts used to create, update, or delete object.
 class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
     
     /// Publisher
@@ -20,16 +20,16 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
     /// The source context.
     let sourceContext: NSManagedObjectContext
     
-    /// The context used to place new order.
+    /// The context used to create new object.
     let createContext: NSManagedObjectContext
     
-    /// The context used to view or edit existing orders.
+    /// The context used to view or edit existing object.
     let updateContext: NSManagedObjectContext
     
     /// A new object to be created.
     ///
-    /// This object is `nil` until `prepareNewObject()` is called.
-    /// It becomes `nil` again after `discardNewObject()` is called.
+    /// - This object is `nil` until `prepareNewObject()` is called.
+    /// - Call `discardNewObject()` to set it to `nil`.
     private(set) var newObject: T?
     
     
@@ -53,23 +53,6 @@ class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
         guard newObject == nil else { return }
         newObject = T(context: createContext)
     }
-    
-    /// Save changes of the given context.
-    /// - Parameter context: Must be the `createContext` or `updateContext`.
-    func saveChanges(for context: NSManagedObjectContext) {
-        guard context === createContext || context === updateContext else { return }
-        guard context.hasChanges else { return }
-        context.quickSave()
-        sourceContext.quickSave()
-    }
-    
-    /// Discard changes of the given context.
-    /// - Parameter context: Must be the `createContext` or `updateContext`.
-    func discardChanges(for context: NSManagedObjectContext) {
-        guard context === createContext || context === updateContext else { return }
-        guard context.hasChanges else { return }
-        context.rollback()
-    }
 }
 
 
@@ -91,5 +74,22 @@ extension CUDDataSource {
     
     func discardUpdateContext() {
         discardChanges(for: updateContext)
+    }
+    
+    /// Save changes of the given context.
+    /// - Parameter context: Must be the `createContext` or `updateContext`.
+    private func saveChanges(for context: NSManagedObjectContext) {
+        guard context === createContext || context === updateContext else { return }
+        guard context.hasChanges else { return }
+        context.quickSave()
+        sourceContext.quickSave()
+    }
+    
+    /// Discard changes of the given context.
+    /// - Parameter context: Must be the `createContext` or `updateContext`.
+    private func discardChanges(for context: NSManagedObjectContext) {
+        guard context === createContext || context === updateContext else { return }
+        guard context.hasChanges else { return }
+        context.rollback()
     }
 }
