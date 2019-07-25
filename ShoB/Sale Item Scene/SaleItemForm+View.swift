@@ -37,22 +37,15 @@ extension SaleItemForm {
         var body: some View {
             Section {
                 // MARK: Name & Price
-                HStack {
-                    Text("Name")
-                    TextField(nameTextFieldPlaceholder, text: $model.name)
-                        .multilineTextAlignment(.trailing)
-                        .disabled(!shouldEnableNamePriceTextFields)
+                Group {
+                    VertialTextField(nameTextFieldPlaceholder, text: $model.name)
+                    VertialTextField("Price", placeholder: "$0.00", text: $model.price)
                 }
-                
-                HStack {
-                    Text("Price")
-                    TextField("$0.00", text: $model.price)
-                        .multilineTextAlignment(.trailing)
-                        .disabled(!shouldEnableNamePriceTextFields)
-                }
+                .disabled(!shouldEnableNamePriceTextFields)
                 
                 // MARK: Subtotal & Quatity
                 if mode == .orderItem {
+                    // Subtotal
                     HStack {
                         Text("Subtotal").bold()
                         Spacer()
@@ -60,33 +53,37 @@ extension SaleItemForm {
                     }
                     
                     HStack {
-                        Text("Quantity")
-                        Spacer()
-                        Text("\(model.quantity)")
-                    }
-                    
-                    HStack { // quantity stepper row
-                        Text("Tab here to change")
-                            .foregroundColor(.secondary)
-                            .tapAction { self.toggleQuantityStepByValue() }
+                        // Quantity
+                        VStack(alignment: .leading) {
+                            Text("\(model.quantity)")
+                                .padding(.top, VertialTextField.topPadding)
+                            Text("Quantity")
+                                .font(.caption)
+                                .foregroundColor(VertialTextField.labelColor)
+                        }
                         
                         Spacer()
                         
-                        Image(systemName: "\(self.quantityStepByValue).circle")
-                            .imageScale(.large)
-                            .foregroundColor(model.name.isEmpty ? .secondary : .primary)
-                        
-                        Stepper("", value: $model.quantity, in: quantityStepperRange, step: quantityStepByValue)
+                        // SegmentControl and Stepper
+                        HStack {
+                            quantityStepByValueSegmentControl
+                            Stepper("", value: $model.quantity, in: quantityStepperRange, step: quantityStepByValue)
+                        }
                     }
                 }
             }
         }
         
         
-        // MARK: - Method
+        // MARK: - Body Component
         
-        func toggleQuantityStepByValue() {
-            quantityStepByValue = quantityStepByValue == 1 ? 5 : 1
+        var quantityStepByValueSegmentControl: some View {
+            SegmentedControl(selection: $quantityStepByValue) {
+                ForEach([1, 5]) { stepValue in
+                    Text("\(stepValue)").tag(stepValue)
+                }
+            }
+            .frame(minWidth: 100)
         }
     }
     

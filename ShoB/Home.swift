@@ -59,9 +59,9 @@ struct Home: View {
         }
         
         let customer1 = Customer(context: dataSource.context)
-        customer1.organization = "C1"
+        customer1.givenName = "C1"
         let customer2 = Customer(context: dataSource.context)
-        customer2.organization = "C2"
+        customer2.givenName = "C2"
         
         dataSource.context.quickSave()
         
@@ -74,7 +74,7 @@ struct Home: View {
     // MARK: - Body
     
     var body: some View {
-        TabbedView(selection: $selectedTab) {
+        TabbedView {
             // MARK: Order List
             NavigationView {
                 OrderListView()

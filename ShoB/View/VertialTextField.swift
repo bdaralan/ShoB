@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct VertialTextField: View {
     
     /// The binding text for the text field.
@@ -37,14 +38,23 @@ struct VertialTextField: View {
         VStack(alignment: .leading) {
             TextField(placeholder ?? label, text: $text)
                 .multilineTextAlignment(.leading)
-                .padding(.top, 4)
+                .padding(.top, Self.topPadding)
                 .textContentType(textContentType)
             Text(label)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(Self.labelColor)
         }
     }
 }
+
+
+extension VertialTextField {
+    
+    static let topPadding: Length = 4
+    
+    static let labelColor: Color = .secondary
+}
+
 
 #if DEBUG
 struct InputField_Previews: PreviewProvider {

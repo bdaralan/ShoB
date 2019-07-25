@@ -7,11 +7,14 @@
 //
 //
 
-import Foundation
 import CoreData
+import SwiftUI
+import Combine
 
 
-class Store: NSManagedObject {
+class Store: NSManagedObject, BindableObject {
+    
+    let willChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var name: String
     @NSManaged var contact: Contact
@@ -27,6 +30,12 @@ class Store: NSManagedObject {
         orders = []
         customers = []
         contact = Contact(context: managedObjectContext!)
+    }
+    
+    
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        willChange.send()
     }
 }
 

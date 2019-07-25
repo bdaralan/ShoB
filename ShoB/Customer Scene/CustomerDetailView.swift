@@ -8,16 +8,35 @@
 
 import SwiftUI
 
-struct CustomerDetailView: View {
+
+struct CustomerDetailView: View, EditableForm {
+    
+    @ObjectBinding var customer: Customer
+    
+    @Binding var model: CustomerForm.Model
+    
+    var onSave: () -> Void
+    
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+        CustomerForm(model: $model)
+            .navigationBarTitle("Customer Details", displayMode: .inline)
+            .navigationBarItems(trailing: saveNavItem)
+    }
+    
+    
+    var saveNavItem: some View {
+        let customerHasChanged = customer.hasPersistentChangedValues
+        let contactHasChanged = customer.contact.hasPersistentChangedValues
+        return saveNavItem(title: "Update", enable: customerHasChanged || contactHasChanged)
     }
 }
 
 #if DEBUG
 struct CustomerDetailView_Previews: PreviewProvider {
+    static let customer = Customer(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CustomerDetailView()
+        CustomerDetailView(customer: customer, model: .constant(.init()), onSave: {})
     }
 }
 #endif

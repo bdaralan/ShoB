@@ -39,7 +39,7 @@ struct OrderForm: View {
     var body: some View {
         Form {
             // MARK: Customer Section
-            Section(header: Text("CUSTOMER")) {
+            Section(header: Text.topSection("CUSTOMER")) {
                 Picker("Customer", selection: $model.customerURI) {
                     ForEach([Model.customerURINone] + customerDataSource.fetchedObjectURIs(), id: \.self) { uri in
                         self.customerPickerRow(forURI: uri)
@@ -144,7 +144,7 @@ struct OrderForm: View {
         NavigationView {
             Form {
                 // Input Section
-                Section(header: Text("ORDER ITEM")) {
+                Section(header: Text.topSection("ORDER ITEM")) {
                     SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .orderItem)
                 }
                 

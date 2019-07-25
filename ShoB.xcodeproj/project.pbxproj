@@ -12,6 +12,9 @@
 		B405260422E902C7007E2325 /* CustomerForm+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260322E902C7007E2325 /* CustomerForm+Model.swift */; };
 		B405260722E90A41007E2325 /* CurrencyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260622E90A41007E2325 /* CurrencyWrapper.swift */; };
 		B405260922E90A68007E2325 /* AlwaysLowercasedWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260822E90A68007E2325 /* AlwaysLowercasedWrapper.swift */; };
+		B405260B22E90EF0007E2325 /* CustomerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260A22E90EF0007E2325 /* CustomerDetailView.swift */; };
+		B405260D22E910B6007E2325 /* CustomerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260C22E910B6007E2325 /* CustomerRow.swift */; };
+		B405261122E938E9007E2325 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405261022E938E9007E2325 /* Text.swift */; };
 		B40EFDDC22B4B64D00C0BAC8 /* OrderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0322E28F6900E91F08 /* SaleItemForm+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */; };
@@ -58,6 +61,9 @@
 		B405260322E902C7007E2325 /* CustomerForm+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomerForm+Model.swift"; sourceTree = "<group>"; };
 		B405260622E90A41007E2325 /* CurrencyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWrapper.swift; sourceTree = "<group>"; };
 		B405260822E90A68007E2325 /* AlwaysLowercasedWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlwaysLowercasedWrapper.swift; sourceTree = "<group>"; };
+		B405260A22E90EF0007E2325 /* CustomerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerDetailView.swift; sourceTree = "<group>"; };
+		B405260C22E910B6007E2325 /* CustomerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerRow.swift; sourceTree = "<group>"; };
+		B405261022E938E9007E2325 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListView.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SaleItemForm+View.swift"; sourceTree = "<group>"; };
@@ -232,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */,
+				B405261022E938E9007E2325 /* Text.swift */,
 				B4F4D2B722E2452300E849B4 /* Date.swift */,
 			);
 			path = Extension;
@@ -253,9 +260,11 @@
 			isa = PBXGroup;
 			children = (
 				B4932D1022BC53D50010710F /* CustomerListView.swift */,
+				B405260A22E90EF0007E2325 /* CustomerDetailView.swift */,
 				B40525FE22E8FD73007E2325 /* CreateCustomerForm.swift */,
 				B458986E22E8DC5800968659 /* CustomerForm.swift */,
 				B405260322E902C7007E2325 /* CustomerForm+Model.swift */,
+				B405260C22E910B6007E2325 /* CustomerRow.swift */,
 			);
 			path = "Customer Scene";
 			sourceTree = "<group>";
@@ -343,6 +352,8 @@
 				B4B9D15322B2E4A0003FC4E3 /* Customer.swift in Sources */,
 				B4A5D97922CC3AB600695A3F /* OrderDetailView.swift in Sources */,
 				B4F4D2B822E2452300E849B4 /* Date.swift in Sources */,
+				B405261122E938E9007E2325 /* Text.swift in Sources */,
+				B405260B22E90EF0007E2325 /* CustomerDetailView.swift in Sources */,
 				B4F4D2B122E229DA00E849B4 /* EditableForm.swift in Sources */,
 				B405260722E90A41007E2325 /* CurrencyWrapper.swift in Sources */,
 				B4B9D13B22B2DF7D003FC4E3 /* CoreDataStack.swift in Sources */,
@@ -378,6 +389,7 @@
 				B4A5D97C22CD1EC800695A3F /* CUDDataSource.swift in Sources */,
 				B40525FF22E8FD74007E2325 /* CreateCustomerForm.swift in Sources */,
 				B4B9D14F22B2E4A0003FC4E3 /* Store.swift in Sources */,
+				B405260D22E910B6007E2325 /* CustomerRow.swift in Sources */,
 				B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

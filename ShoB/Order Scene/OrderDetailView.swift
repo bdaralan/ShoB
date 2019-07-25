@@ -28,7 +28,7 @@ struct OrderDetailView: View, EditableForm {
     }
     
     
-    // MARK: - Bodh Component
+    // MARK: - Body Component
     
     var saveNavItem: some View {
         saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedValuesChanged)

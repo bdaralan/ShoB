@@ -23,12 +23,10 @@ struct CustomerListView: View {
     var body: some View {
         List {
             ForEach(dataSource.fetchController.fetchedObjects ?? []) { customer in
-                NavigationLink(destination: Text("Customer Info"), label: {
-                    HStack {
-                        Image(systemName: "person.crop.rectangle").imageScale(.large)
-                        Text("\(customer.familyName) \(customer.givenName)")
-                    }
-                })
+                CustomerRow(
+                    customer: customer.get(from: self.dataSource.cud.updateContext),
+                    onSave: self.updateCustomer
+                )
             }
         }
         .navigationBarItems(trailing: createNewCustomerNavItem)
@@ -40,12 +38,12 @@ struct CustomerListView: View {
     }
     
     
-    // MARK: - Bodh Component
+    // MARK: - Body Component
     
     var createCustomerForm: some View {
         CreateCustomerForm(
             model: $newCustomerModel,
-            onCreate: dismissCreateNewCustomerForm,
+            onCreate: saveNewCustomer,
             onCancel: dismissCreateNewCustomerForm
         )
     }
@@ -69,6 +67,21 @@ struct CustomerListView: View {
     func dismissCreateNewCustomerForm() {
         dataSource.cud.discardCreateContext()
         showCreateCustomerForm = false
+    }
+    
+    func saveNewCustomer() {
+        dataSource.cud.saveCreateContext()
+        showCreateCustomerForm = false
+    }
+    
+    func updateCustomer(_ model: CustomerForm.Model) {
+        guard let customer = model.customer else { return }
+        if customer.hasPersistentChangedValues || customer.contact.hasPersistentChangedValues {
+            dataSource.cud.saveUpdateContext()
+        } else {
+            dataSource.cud.discardUpdateContext()
+        }
+        customer.willChange.send()
     }
 }
 
