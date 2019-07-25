@@ -21,13 +21,23 @@ struct CustomerRow: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: customerDetailView) { // row context
-            HStack {
-                Image(systemName: "person.crop.rectangle").imageScale(.large)
-                Text("\(customer.familyName) | \(customer.givenName) | \(customer.organization)")
-                Text("\(customer.contact.phone)")
-                Text("\(customer.contact.email)")
-                Text("\(customer.contact.address)")
+        NavigationLink(destination: customerDetailView) { // row content
+            HStack(alignment: .center, spacing: 15) {
+                Image(systemName: "person.crop.circle")
+                    .resizable()
+                    .frame(maxWidth: 35, maxHeight: 35)
+                    
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(customer.identity)")
+                    Group {
+                        customerInfoText(systemImage: "briefcase.fill", text: "\(customer.organization)")
+                        customerInfoText(systemImage: "bubble.left.fill", text: "\(contactString(from: customer.contact))")
+                        customerInfoText(systemImage: "house.fill", text: "\(customer.contact.address)")
+                    }
+                    .font(.caption)
+                }
+                
+                Spacer()
             }
         }
     }
@@ -42,6 +52,22 @@ struct CustomerRow: View {
         .onAppear {
             self.model = .init(customer: self.customer)
         }
+    }
+    
+    func customerInfoText(systemImage name: String, text: String) -> some View {
+        HStack {
+            Image(systemName: name)
+            Text(text.replaceEmpty(with: "N/A"))
+        }
+    }
+    
+    
+    // MARK: - Method
+    
+    func contactString(from contact: Contact) -> String {
+        var contacts = [contact.phone, contact.email]
+        contacts.removeAll(where: { $0.isEmpty })
+        return contacts.joined(separator: " | ")
     }
 }
 
