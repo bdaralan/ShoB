@@ -11,4 +11,4 @@ SwiftUI + CoreData & iCloud AutoSync Project
 
 ## Preview
 
-![Order Scene Preview](Preview/shob-preview.png)
+![Preview](Preview/shob-preview.png)
