@@ -29,43 +29,43 @@ struct OrderRow: View {
             VStack(alignment: .leading) {
                 // MARK: Customer & Note
                 HStack {
-                    Image(systemName: "person.crop.circle")
+                    Image.SFCustomer.profile
                     Text("\(order.customer?.identity ?? "None")")
                         .foregroundColor(order.customer == nil ? .secondary : .primary)
                     if !order.note.isEmpty {
                         Spacer()
-                        Image(systemName: "doc.text")
+                        Image.SFOrder.note
                     }
                 }
                 .font(.title)
                 
                 // MARK: Order Date
                 HStack {
-                    Image(systemName: "calendar")
+                    Image.SFOrder.orderDate
                     Text("\(order.orderDate, formatter: dateFormatter)")
                 }
                 
                 // MARK: Delivery Date
                 HStack {
-                    Image(systemName: "car.fill")
+                    Image.SFOrder.delivery
                     Text(order.deliveryDate == nil ? "No" : "\(order.deliveryDate!, formatter: dateFormatter)")
                 }
                 
                 // MARK: Delivered Date
                 HStack {
-                    Image(systemName: "cube.box.fill")
+                    Image.SFOrder.delivered
                     Text(order.deliveredDate == nil ? "No" : "\(order.deliveredDate!, formatter: dateFormatter)")
                 }
                 
                 // MARK: Total & Discount
                 HStack {
-                    Image(systemName: "plus.circle")
+                    Image.SFOrder.totalBeforeDiscount
                     Text(verbatim: "\(Currency(order.total))")
                     spacerDivider
-                    Image(systemName: "minus.circle")
+                    Image.SFOrder.discount
                     Text(verbatim: "\(Currency(order.discount))")
                     spacerDivider
-                    Image(systemName: "equal.circle")
+                    Image.SFOrder.totalAfterDiscount
                     Text(verbatim: "\(Currency(order.total - order.discount))").bold()
                 }
             }
