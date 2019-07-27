@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// The root view of the application.
 struct Home: View {
     
     @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {

@@ -12,6 +12,7 @@ import SwiftUI
 import Combine
 
 
+/// A customer of a store.
 class Customer: NSManagedObject, BindableObject {
     
     let willChange = PassthroughSubject<Void, Never>()

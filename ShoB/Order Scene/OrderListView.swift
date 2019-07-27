@@ -10,6 +10,7 @@ import SwiftUI
 import CoreData
 
 
+/// A view that displays store's orders in a list.
 struct OrderListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<Order>

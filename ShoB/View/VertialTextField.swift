@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A text field with a description label below it.
 struct VertialTextField: View {
     
     /// The binding text for the text field.

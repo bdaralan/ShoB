@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays order's details.
 struct OrderDetailView: View, EditableForm {
     
     @ObjectBinding var order: Order

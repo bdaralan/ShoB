@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays store's customer in a list.
 struct CustomerListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<Customer>

@@ -11,7 +11,7 @@ import Combine
 import CoreData
 
 
-/// A form use to view and editing order.
+/// A form used to view and edit order.
 struct OrderForm: View {
     
     @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>

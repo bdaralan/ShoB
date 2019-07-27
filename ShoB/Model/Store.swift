@@ -12,6 +12,11 @@ import SwiftUI
 import Combine
 
 
+/// User's store.
+///
+/// An object that holds user's records including
+/// sale items, orders, and customers.
+///
 class Store: NSManagedObject, BindableObject {
     
     let willChange = PassthroughSubject<Void, Never>()

@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays sale item's details.
 struct SaleItemDetailView: View, EditableForm {
     
     @ObjectBinding var saleItem: SaleItem

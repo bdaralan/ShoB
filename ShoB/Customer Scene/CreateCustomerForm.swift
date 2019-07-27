@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view used to create new customer.
 struct CreateCustomerForm: View, CreatableForm {
     
     @Binding var model: CustomerForm.Model

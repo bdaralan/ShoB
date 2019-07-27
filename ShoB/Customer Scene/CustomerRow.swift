@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays customer in a list row.
 struct CustomerRow: View {
     
     @ObjectBinding var customer: Customer

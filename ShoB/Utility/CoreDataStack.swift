@@ -13,6 +13,7 @@ import CoreData
 typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
 
 
+/// The core data stack that manages user's object graph.
 class CoreDataStack: NSObject {
     
     static private(set) var current = CoreDataStack(userIdentityToken: FileManager.default.ubiquityIdentityToken)

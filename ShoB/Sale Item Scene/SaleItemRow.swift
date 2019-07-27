@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays sale item in a list row.
 struct SaleItemRow: View {
     
     /// The source item to view or update.

@@ -12,6 +12,7 @@ import SwiftUI
 import Combine
 
 
+/// A sale item of a store.
 class SaleItem: NSManagedObject, BindableObject {
     
     let willChange = PassthroughSubject<Void, Never>()

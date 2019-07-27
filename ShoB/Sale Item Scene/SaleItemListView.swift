@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view that displays store's sale items in a list.
 struct SaleItemListView: View {
     
     @EnvironmentObject var dataSource: FetchedDataSource<SaleItem>

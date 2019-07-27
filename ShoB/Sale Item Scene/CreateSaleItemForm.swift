@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view used to create new sale item.
 struct CreateSaleItemForm : View, CreatableForm {
     
     /// The model to create sale item.

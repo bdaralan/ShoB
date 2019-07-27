@@ -11,6 +11,7 @@ import SwiftUI
 
 extension View {
     
+    /// Flat view to `AnyView`.
     func toAnyView() -> AnyView {
         AnyView(self)
     }

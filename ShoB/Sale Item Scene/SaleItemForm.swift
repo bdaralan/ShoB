@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A view used to view or edit sale item.
 struct SaleItemForm: View {
     
     @Binding var model: Model

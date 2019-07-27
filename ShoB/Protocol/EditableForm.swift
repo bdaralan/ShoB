@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A protocol for form view that allows editing object.
 protocol EditableForm {
     
     /// Triggered when the save button is tapped.

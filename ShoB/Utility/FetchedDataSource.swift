@@ -11,10 +11,12 @@ import CoreData
 import Combine
 
 
+/// A data source used to fetch user's object graph.
 class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, BindableObject, NSFetchedResultsControllerDelegate {
     
     let willChange = PassthroughSubject<Void, Never>()
     
+    /// The context to work with.
     let context: NSManagedObjectContext
     
     let fetchController: NSFetchedResultsController<T>
@@ -23,6 +25,8 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
     let cud: CUDDataSource<T>
     
     
+    /// Construct data source with a context and a request.
+    /// - Parameter context: The context to work with.
     init(context: NSManagedObjectContext) {
         self.context = context
         
@@ -47,6 +51,7 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
         willChange.send()
     }
     
+    /// Perform fetch on the `fetchController`.
     func performFetch() {
         do {
             try fetchController.performFetch()
@@ -56,6 +61,7 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
         willChange.send()
     }
     
+    /// Fetched objects' CoreData URIs.
     func fetchedObjectURIs() -> [URL] {
         fetchController.fetchedObjects?.compactMap({ $0.objectID.uriRepresentation() }) ?? []
     }

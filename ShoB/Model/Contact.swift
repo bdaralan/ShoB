@@ -12,6 +12,7 @@ import SwiftUI
 import Combine
 
 
+/// A contact infomation.
 class Contact: NSManagedObject, BindableObject {
     
     let willChange = PassthroughSubject<Void, Never>()

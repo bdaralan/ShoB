@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+
+/// A view used to view or edit customer.
 struct CustomerForm: View {
     
     @Binding var model: Model

@@ -12,6 +12,7 @@ import SwiftUI
 import Combine
 
 
+/// An item of an order.
 class OrderItem: NSManagedObject, BindableObject {
     
     let willChange = PassthroughSubject<Void, Never>()

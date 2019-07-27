@@ -11,7 +11,7 @@ import Foundation
 
 extension Date {
     
-    /// Current date object contains only year, month, day, hour, and minute.
+    /// Current date object with components year, month, day, hour, and minute.
     static var currentYMDHM: Date {
         let calendar = Calendar.current
         let now = Date()

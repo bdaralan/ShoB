@@ -17,6 +17,7 @@ typealias Cent = Int64
 typealias Dollar = Int64
 
 
+/// Dollar currency object.
 struct Currency: Equatable, CustomStringConvertible {
     
     /// Total amount in cent.
@@ -37,6 +38,7 @@ struct Currency: Equatable, CustomStringConvertible {
         return cent > 0
     }
     
+    /// Check if the amount is below zero.
     var isNegative: Bool {
         return amount < 0
     }
@@ -48,8 +50,8 @@ struct Currency: Equatable, CustomStringConvertible {
     }
     
     
-    init(_ amountInCent: Cent) {
-        self.amount = amountInCent
+    init(_ amount: Cent) {
+        self.amount = amount
     }
     
     /// Construct with dollar string. Example: $1.00 or 2.00.

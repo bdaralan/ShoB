@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A protocol for form view that allows creating new object.
 protocol CreatableForm {
     
     /// Triggered when the create button is tapped.
