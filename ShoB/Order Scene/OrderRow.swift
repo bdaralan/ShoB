@@ -27,26 +27,47 @@ struct OrderRow: View {
     var body: some View {
         NavigationLink(destination: orderDetailView) { // row content
             VStack(alignment: .leading) {
-                Text("Customer: \(order.customer?.identity ?? "None")")
+                // MARK: Customer & Note
+                HStack {
+                    Image(systemName: "person.crop.circle")
+                    Text("\(order.customer?.identity ?? "None")")
+                        .foregroundColor(order.customer == nil ? .secondary : .primary)
+                    if !order.note.isEmpty {
+                        Spacer()
+                        Image(systemName: "doc.text")
+                    }
+                }
+                .font(.title)
                 
-                Text("Order Date:\t \(formatter.string(from: order.orderDate))")
-                
-                if order.deliveryDate == nil {
-                    Text("Deliver:\t No")
-                } else {
-                    Text("Delivery Date:\t \(formatter.string(from: order.deliveryDate!))")
+                // MARK: Order Date
+                HStack {
+                    Image(systemName: "calendar")
+                    Text("\(order.orderDate, formatter: dateFormatter)")
                 }
                 
-                
-                if order.deliveredDate == nil {
-                    Text("Delivered:\t No")
-                } else {
-                    Text("Delivery Date:\t \(formatter.string(from: order.deliveredDate!))")
+                // MARK: Delivery Date
+                HStack {
+                    Image(systemName: "car.fill")
+                    Text(order.deliveryDate == nil ? "No" : "\(order.deliveryDate!, formatter: dateFormatter)")
                 }
                 
-                Text("Discount: \(order.discount)")
+                // MARK: Delivered Date
+                HStack {
+                    Image(systemName: "cube.box.fill")
+                    Text(order.deliveredDate == nil ? "No" : "\(order.deliveredDate!, formatter: dateFormatter)")
+                }
                 
-                Text("Note: \(order.note)")
+                // MARK: Total & Discount
+                HStack {
+                    Image(systemName: "plus.circle")
+                    Text(verbatim: "\(Currency(order.total))")
+                    spacerDivider
+                    Image(systemName: "minus.circle")
+                    Text(verbatim: "\(Currency(order.discount))")
+                    spacerDivider
+                    Image(systemName: "equal.circle")
+                    Text(verbatim: "\(Currency(order.total - order.discount))").bold()
+                }
             }
         }
     }
@@ -65,22 +86,20 @@ struct OrderRow: View {
             
             // assign the order to the model.
             self.orderModel = .init(order: self.order)
-            
-//            // set block to assign customer to order when a customer is selected
-//            self.orderModel.willSetCustomerURI = { uri in
-//                guard let context = self.order.managedObjectContext else { return }
-//                if uri == OrderForm.Model.customerURINone {
-//                    self.order.customer = nil
-//                } else {
-//                    self.order.customer = self.customerDataSource.object(forURI: uri, in: context)
-//                }
-//            }
+        }
+    }
+    
+    var spacerDivider: some View {
+        Group {
+            Spacer()
+            Divider()
+            Spacer()
         }
     }
 }
 
 
-fileprivate let formatter: DateFormatter = {
+fileprivate let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
     formatter.timeStyle = .short
