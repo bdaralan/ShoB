@@ -23,21 +23,21 @@ struct CustomerRow: View {
     var body: some View {
         NavigationLink(destination: customerDetailView) { // row content
             HStack(alignment: .center, spacing: 15) {
+                // MARK: Profile Image
                 Image(systemName: "person.crop.circle")
                     .resizable()
                     .frame(maxWidth: 35, maxHeight: 35)
                     
+                // MARK: Identity & Contact
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(customer.identity)")
+                    identityText
                     Group {
-                        customerInfoText(systemImage: "briefcase.fill", text: "\(customer.organization)")
-                        customerInfoText(systemImage: "bubble.left.fill", text: "\(contactString(from: customer.contact))")
-                        customerInfoText(systemImage: "house.fill", text: "\(customer.contact.address)")
+                        organizationText
+                        contactsText
+                        addressText
                     }
                     .font(.caption)
                 }
-                
-                Spacer()
             }
         }
     }
@@ -54,22 +54,54 @@ struct CustomerRow: View {
         }
     }
     
-    func customerInfoText(systemImage name: String, text: String) -> some View {
+    var identityText: some View {
+        Text("\(customer.identity)").fontWeight(.semibold)
+    }
+    
+    var contactsText: some View {
+        let phone = customer.contact.phone
+        let email = customer.contact.email
+        
+        switch !phone.isEmpty || !email.isEmpty {
+        
+        case true where !phone.isEmpty && !email.isEmpty:
+            return HStack {
+                Image(systemName: "bubble.left")
+                Text(phone)
+                Divider()
+                Image(systemName: "paperplane")
+                Text(email)
+            }
+            .toAnyView()
+        
+        case true where !phone.isEmpty && email.isEmpty:
+            return infoText(systemImage: "bubble.left", text: phone).toAnyView()
+        
+        case true where !email.isEmpty && phone.isEmpty:
+            return infoText(systemImage: "paperplane", text: email).toAnyView()
+            
+        default: return EmptyView().toAnyView()
+        }
+    }
+    
+    var organizationText: some View {
+        guard !customer.organization.isEmpty else { return EmptyView().toAnyView() }
+        return infoText(systemImage: "briefcase", text: "\(customer.organization)").toAnyView()
+    }
+    
+    var addressText: some View {
+        guard !customer.contact.address.isEmpty else { return EmptyView().toAnyView() }
+        return infoText(systemImage: "mappin.and.ellipse", text: "\(customer.contact.address)").toAnyView()
+    }
+    
+    func infoText(systemImage name: String, text: String) -> some View {
         HStack {
             Image(systemName: name)
             Text(text.replaceEmpty(with: "N/A"))
         }
     }
-    
-    
-    // MARK: - Method
-    
-    func contactString(from contact: Contact) -> String {
-        var contacts = [contact.phone, contact.email]
-        contacts.removeAll(where: { $0.isEmpty })
-        return contacts.joined(separator: " | ")
-    }
 }
+
 
 #if DEBUG
 struct CustomerRow_Previews: PreviewProvider {

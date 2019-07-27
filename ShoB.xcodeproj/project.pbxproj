@@ -25,6 +25,7 @@
 		B449978622CDE1E000126116 /* CreateSaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978522CDE1E000126116 /* CreateSaleItemForm.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
+		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48E584722EA452900B9FEAB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48E584622EA452900B9FEAB /* String.swift */; };
 		B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4932D1022BC53D50010710F /* CustomerListView.swift */; };
 		B4A5D97522CBF7F200695A3F /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A5D97422CBF7F200695A3F /* Home.swift */; };
@@ -75,6 +76,7 @@
 		B449978522CDE1E000126116 /* CreateSaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSaleItemForm.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
+		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48E584622EA452900B9FEAB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		B4932D1022BC53D50010710F /* CustomerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerListView.swift; sourceTree = "<group>"; };
 		B4A5D97422CBF7F200695A3F /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			children = (
 				B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */,
 				B405261022E938E9007E2325 /* Text.swift */,
+				B48919F022EBD50F00778DA3 /* AnyView.swift */,
 				B48E584622EA452900B9FEAB /* String.swift */,
 				B4F4D2B722E2452300E849B4 /* Date.swift */,
 			);
@@ -395,6 +398,7 @@
 				B4B9D14F22B2E4A0003FC4E3 /* Store.swift in Sources */,
 				B405260D22E910B6007E2325 /* CustomerRow.swift in Sources */,
 				B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */,
+				B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
