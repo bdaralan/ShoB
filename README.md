@@ -2,12 +2,17 @@
 
 SwiftUI + CoreData & iCloud AutoSync Project
 
+## Status
+
+In progress...
+
 ## Goal
 
 - [ ] 100% SwiftUI
 - [ ] Intergrage CoreData & iCloud AutoSync
 - [ ] Add CloudKit Share
 - [ ] Markdown Support
+- [ ] Generate Invoice PDF
 - [ ] Deploy
 
 ## Preview
