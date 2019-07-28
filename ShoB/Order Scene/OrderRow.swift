@@ -30,9 +30,12 @@ struct OrderRow: View {
             VStack(alignment: .leading) {
                 // MARK: Customer & Note
                 HStack {
-                    Image.SFCustomer.profile
-                    Text("\(order.customer?.identity ?? "None")")
-                        .foregroundColor(order.customer == nil ? .secondary : .primary)
+                    Group {
+                        Image.SFCustomer.profile
+                        Text("\(order.customer?.identity ?? "None")")
+                    }
+                    .foregroundColor(order.customer == nil ? .secondary : .primary)
+                        
                     if !order.note.isEmpty {
                         Spacer()
                         Image.SFOrder.note
