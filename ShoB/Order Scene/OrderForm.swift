@@ -108,12 +108,7 @@ struct OrderForm: View {
                             self.modalPresentationSheet = self.editOrderItemForm.toAnyView()
                             self.showModalPresentationSheet = true
                         }, label: {
-                            HStack {
-                                Text("\(item.name) | \(item.subtotal)")
-                                Spacer()
-                                Image(systemName: "square.and.pencil").imageScale(.large)
-                            }
-                            .accentColor(.primary)
+                            self.orderItemRow(for: item)
                         })
                     }
                 }
@@ -244,6 +239,16 @@ struct OrderForm: View {
         }
     }
     
+    var customerSelectionDeselectNavItem: some View {
+        Button(action: { self.selectCustomer(nil) }) {
+            Image(systemName: "person.crop.circle.badge.xmark").imageScale(.large)
+        }
+    }
+    
+    var customerSelectionCancelNavItem: some View {
+        Button("Cancel", action: { self.showModalPresentationSheet = false })
+    }
+    
     func customerSelectionRow(for customer: Customer) -> some View {
         Button(action: { self.selectCustomer(customer) }) {
             HStack {
@@ -257,14 +262,16 @@ struct OrderForm: View {
         .buttonStyle(.plain)
     }
     
-    var customerSelectionDeselectNavItem: some View {
-        Button(action: { self.selectCustomer(nil) }) {
-            Image(systemName: "person.crop.circle.badge.xmark").imageScale(.large)
+    func orderItemRow(for item: OrderItem) -> some View {
+        HStack {
+            Text("\(item.quantity) x \(item.name)")
+            Spacer()
+            Text(verbatim: "\(Currency(item.subtotal))")
+            Image(systemName: "square.and.pencil")
+                .imageScale(.large)
+                .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
-    }
-    
-    var customerSelectionCancelNavItem: some View {
-        Button("Cancel", action: { self.showModalPresentationSheet = false })
+        .accentColor(.primary)
     }
     
     
