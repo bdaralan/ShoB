@@ -224,11 +224,12 @@ struct OrderForm: View {
     
     var currentCustomerRowNone: some View {
         HStack {
-            Image.SFCustomer.profile.accentColor(.primary)
-            Text("None").foregroundColor(.secondary)
+            Image.SFCustomer.profile
+            Text("None")
             Spacer()
-            Text("Select Customer").foregroundColor(.secondary)
+            Text("Select Customer")
         }
+        .foregroundColor(.secondary)
     }
     
     var customerSelectionList: some View {
