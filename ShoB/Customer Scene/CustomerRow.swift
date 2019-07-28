@@ -23,7 +23,7 @@ struct CustomerRow: View {
     
     var body: some View {
         NavigationLink(destination: customerDetailView) {
-            CustomerRowContentView(customer: customer)
+            CustomerRow.ContentView(customer: customer)
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  CustomerRowContentView.swift
+//  CustomerRow+ContentView.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/27/19.
@@ -8,9 +8,18 @@
 
 import SwiftUI
 
-struct CustomerRowContentView: View {
+
+extension CustomerRow {
     
-    @ObjectBinding var customer: Customer
+    /// The content view of the customer row.
+    struct ContentView: View {
+        
+        @ObjectBinding var customer: Customer
+    }
+}
+
+
+extension CustomerRow.ContentView {
     
     var body: some View {
         HStack(alignment: .center, spacing: 15) {
@@ -39,7 +48,7 @@ struct CustomerRowContentView: View {
             }
         }
     }
-    
+
     var contactsText: some View {
         let phone = customer.contact.phone
         let email = customer.contact.email
@@ -73,12 +82,3 @@ struct CustomerRowContentView: View {
         }
     }
 }
-
-#if DEBUG
-struct CustomerRowContentView_Previews: PreviewProvider {
-    static let customer = Customer()
-    static var previews: some View {
-        CustomerRowContentView(customer: customer)
-    }
-}
-#endif
