@@ -11,6 +11,12 @@ import SwiftUI
 
 extension SaleItemForm {
     
+    enum Mode {
+        case saleItem
+        case orderItem
+    }
+    
+    /// The body view of the sale item form.
     struct BodyView: View {
         
         @Binding var model: SaleItemForm.Model
@@ -30,65 +36,63 @@ extension SaleItemForm {
         var nameTextFieldPlaceholder: String {
             mode == .saleItem ? "Name" : "Select an item"
         }
-        
-        
-        // MARK: - Body
-        
-        var body: some View {
-            Section {
-                // MARK: Name & Price
-                Group {
-                    VertialTextField(nameTextFieldPlaceholder, text: $model.name)
-                    VertialTextField("Price", placeholder: "$0.00", text: $model.price)
+    }
+}
+
+
+extension SaleItemForm.BodyView {
+    
+    // MARK: - Body
+    
+    var body: some View {
+        Section {
+            // MARK: Name & Price
+            Group {
+                VertialTextField(nameTextFieldPlaceholder, text: $model.name)
+                VertialTextField("Price", placeholder: "$0.00", text: $model.price)
+            }
+            .disabled(!shouldEnableNamePriceTextFields)
+            
+            // MARK: Subtotal & Quatity
+            if mode == .orderItem {
+                // Subtotal
+                HStack {
+                    Text("Subtotal").bold()
+                    Spacer()
+                    Text("\(model.subtotal)").bold()
                 }
-                .disabled(!shouldEnableNamePriceTextFields)
                 
-                // MARK: Subtotal & Quatity
-                if mode == .orderItem {
-                    // Subtotal
-                    HStack {
-                        Text("Subtotal").bold()
-                        Spacer()
-                        Text("\(model.subtotal)").bold()
+                HStack {
+                    // Quantity
+                    VStack(alignment: .leading) {
+                        Text("\(model.quantity)")
+                            .padding(.top, VertialTextField.topPadding)
+                        Text("Quantity")
+                            .font(.caption)
+                            .foregroundColor(VertialTextField.labelColor)
                     }
                     
+                    Spacer()
+                    
+                    // SegmentControl and Stepper
                     HStack {
-                        // Quantity
-                        VStack(alignment: .leading) {
-                            Text("\(model.quantity)")
-                                .padding(.top, VertialTextField.topPadding)
-                            Text("Quantity")
-                                .font(.caption)
-                                .foregroundColor(VertialTextField.labelColor)
-                        }
-                        
-                        Spacer()
-                        
-                        // SegmentControl and Stepper
-                        HStack {
-                            quantityStepByValueSegmentControl
-                            Stepper("", value: $model.quantity, in: quantityStepperRange, step: quantityStepByValue)
-                        }
+                        quantityStepByValueSegmentControl
+                        Stepper("", value: $model.quantity, in: quantityStepperRange, step: quantityStepByValue)
                     }
                 }
             }
-        }
-        
-        
-        // MARK: - Body Component
-        
-        var quantityStepByValueSegmentControl: some View {
-            SegmentedControl(selection: $quantityStepByValue) {
-                ForEach([1, 5]) { stepValue in
-                    Text("\(stepValue)").tag(stepValue)
-                }
-            }
-            .frame(minWidth: 100)
         }
     }
     
-    enum Mode {
-        case saleItem
-        case orderItem
+    
+    // MARK: - Body Component
+    
+    var quantityStepByValueSegmentControl: some View {
+        SegmentedControl(selection: $quantityStepByValue) {
+            ForEach([1, 5]) { stepValue in
+                Text("\(stepValue)").tag(stepValue)
+            }
+        }
+        .frame(minWidth: 100)
     }
 }
