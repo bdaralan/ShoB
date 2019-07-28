@@ -28,10 +28,15 @@ struct OrderForm: View {
     @State private var editOrderItemModel = SaleItemForm.Model()
     
     /// Flag used to show order item form sheet, either add or edit item form.
-    @State private var showOrderItemForm = false
+    @State private var showModalPresentationSheet = false
     
-    /// The order item form sheet, either add or edit item.
-    @State private var sheetOrderItemForm = AnyView(EmptyView())
+    /// A modal presentation sheet.
+    ///
+    /// The sheet can be set and used to present:
+    /// - order item form
+    /// - add or edit item form
+    /// - customer selection list
+    @State private var modalPresentationSheet = EmptyView().toAnyView()
     
     
     // MARK: - Body
@@ -40,11 +45,7 @@ struct OrderForm: View {
         Form {
             // MARK: Customer Section
             Section(header: Text.topSection("CUSTOMER")) {
-                Picker("Customer", selection: $model.customerURI) {
-                    ForEach([Model.customerURINone] + customerDataSource.fetchedObjectURIs(), id: \.self) { uri in
-                        self.customerPickerRow(forURI: uri)
-                    }
-                }
+                currentCustomerRow
             }
             
             // MARK: Date Section
@@ -89,8 +90,8 @@ struct OrderForm: View {
                 // MARK: Add Button
                 Button(action: {
                     self.newOrderItemModel = .init()
-                    self.sheetOrderItemForm = AnyView(self.addOrderItemForm)
-                    self.showOrderItemForm = true
+                    self.modalPresentationSheet = self.addOrderItemForm.toAnyView()
+                    self.showModalPresentationSheet = true
                 }, label: {
                     HStack {
                         Text("Add Item")
@@ -104,8 +105,8 @@ struct OrderForm: View {
                     ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
                         Button(action: {
                             self.editOrderItemModel = .init(item: item)
-                            self.sheetOrderItemForm = AnyView(self.editOrderItemForm)
-                            self.showOrderItemForm = true
+                            self.modalPresentationSheet = self.editOrderItemForm.toAnyView()
+                            self.showModalPresentationSheet = true
                         }, label: {
                             HStack {
                                 Text("\(item.name) | \(item.subtotal)")
@@ -130,9 +131,9 @@ struct OrderForm: View {
             }
         }
         .sheet(
-            isPresented: $showOrderItemForm,
+            isPresented: $showModalPresentationSheet,
             onDismiss: dismissOrderItemFormSheet,
-            content: { self.sheetOrderItemForm }
+            content: { self.modalPresentationSheet }
         )
         
     }
@@ -210,16 +211,59 @@ struct OrderForm: View {
         }
     }
     
-    func customerPickerRow(forURI uri: URL) -> some View {
-        if let customer = model.customer(forURI: uri) {
-            return Text("\(customer.identity)")
-                .tag(uri)
-                .foregroundColor(.primary)
+    var currentCustomerRow: some View {
+        if let customer = model.order?.customer {
+            return Button(action: showCustomerSelectionList, label: { CustomerRow.ContentView(customer: customer) })
+                .buttonStyle(.plain)
+                .toAnyView()
+        } else {
+            return Button(action: showCustomerSelectionList, label: { currentCustomerRowNone })
+                .toAnyView()
         }
-        
-        return Text("None")
-            .tag(Model.customerURINone)
-            .foregroundColor(.secondary)
+    }
+    
+    var currentCustomerRowNone: some View {
+        HStack {
+            Image.SFCustomer.profile.accentColor(.primary)
+            Text("None").foregroundColor(.secondary)
+            Spacer()
+            Text("Select Customer").foregroundColor(.secondary)
+        }
+    }
+    
+    var customerSelectionList: some View {
+        NavigationView {
+            List {
+                ForEach(customerDataSource.fetchController.fetchedObjects ?? []) { customer in
+                    self.customerSelectionRow(for: customer)
+                }
+            }
+            .navigationBarTitle("Select Customer", displayMode: .inline)
+            .navigationBarItems(leading: customerSelectionCancelNavItem, trailing: customerSelectionDeselectNavItem)
+        }
+    }
+    
+    func customerSelectionRow(for customer: Customer) -> some View {
+        Button(action: { self.selectCustomer(customer) }) {
+            HStack {
+                CustomerRow.ContentView(customer: customer)
+                if customer.objectID == self.model.order?.customer?.objectID {
+                    Spacer()
+                    Image(systemName: "checkmark")
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
+    
+    var customerSelectionDeselectNavItem: some View {
+        Button(action: { self.selectCustomer(nil) }) {
+            Image(systemName: "person.crop.circle.badge.xmark").imageScale(.large)
+        }
+    }
+    
+    var customerSelectionCancelNavItem: some View {
+        Button("Cancel", action: { self.showModalPresentationSheet = false })
     }
     
     
@@ -227,7 +271,7 @@ struct OrderForm: View {
     
     /// Dismiss the presenting add or edit order form sheet and clean up as needed.
     func dismissOrderItemFormSheet() {
-        // clean up if the sheet is editOrderItemForm, else it is addOrderItemForm
+        // clean up if the sheet is editOrderItemForm, else it is addOrderItemForm or customerSelectionList
         if editOrderItemModel.orderItem != nil, let order = model.order {
             // manually mark order as has changed if its item has changed
             // because hasPersistentChangedValues only check the object property
@@ -241,7 +285,8 @@ struct OrderForm: View {
             // because of @State
             editOrderItemModel.orderItem = nil
         }
-        showOrderItemForm = false
+        
+        showModalPresentationSheet = false
     }
     
     /// Delete the current editing order item.
@@ -250,6 +295,20 @@ struct OrderForm: View {
         guard let context = itemToDelete.managedObjectContext else { return }
         context.delete(itemToDelete)
         dismissOrderItemFormSheet()
+    }
+    
+    func selectCustomer(_ customer: Customer?) {
+        if let customer = customer, let order = model.order, let context = order.managedObjectContext {
+            order.customer = customer.get(from: context)
+        } else {
+            model.order?.customer = nil
+        }
+        showModalPresentationSheet = false
+    }
+    
+    func showCustomerSelectionList() {
+        modalPresentationSheet = customerSelectionList.toAnyView()
+        showModalPresentationSheet = true
     }
 }
 
