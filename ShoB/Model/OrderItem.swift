@@ -13,9 +13,7 @@ import Combine
 
 
 /// An item of an order.
-class OrderItem: NSManagedObject, BindableObject {
-    
-    let willChange = PassthroughSubject<Void, Never>()
+class OrderItem: NSManagedObject, Identifiable {
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -29,7 +27,7 @@ class OrderItem: NSManagedObject, BindableObject {
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
-        willChange.send()
+        objectWillChange.send()
     }
 }
 

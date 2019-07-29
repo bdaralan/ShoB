@@ -12,9 +12,7 @@ import Combine
 
 
 /// A data source used to fetch user's object graph.
-class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, BindableObject, NSFetchedResultsControllerDelegate {
-    
-    let willChange = PassthroughSubject<Void, Never>()
+class FetchedDataSource<T: NSManagedObject>: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     /// The context to work with.
     let context: NSManagedObjectContext
@@ -48,7 +46,7 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
     
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        willChange.send()
+        objectWillChange.send()
     }
     
     /// Perform fetch on the `fetchController`.
@@ -58,7 +56,7 @@ class FetchedDataSource<T: NSManagedObject & BindableObject>: NSObject, Bindable
         } catch {
             print(error)
         }
-        willChange.send()
+        objectWillChange.send()
     }
     
     /// Fetched objects' CoreData URIs.

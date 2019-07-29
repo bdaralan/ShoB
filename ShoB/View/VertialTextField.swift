@@ -51,7 +51,7 @@ struct VertialTextField: View {
 
 extension VertialTextField {
     
-    static let topPadding: Length = 4
+    static let topPadding: CGFloat = 4
     
     static let labelColor: Color = .secondary
 }

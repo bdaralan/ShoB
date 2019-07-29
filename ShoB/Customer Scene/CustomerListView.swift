@@ -82,7 +82,7 @@ struct CustomerListView: View {
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        customer.willChange.send()
+        customer.objectWillChange.send()
     }
 }
 

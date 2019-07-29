@@ -12,7 +12,7 @@ import SwiftUI
 /// The root view of the application.
 struct Home: View {
     
-    @ObjectBinding var orderDataSource: FetchedDataSource<Order> = {
+    @ObservedObject var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
@@ -21,7 +21,7 @@ struct Home: View {
         return dataSource
     }()
     
-    @ObjectBinding var saleItemDataSource: FetchedDataSource<SaleItem> = {
+    @ObservedObject var saleItemDataSource: FetchedDataSource<SaleItem> = {
         let dataSource = FetchedDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
@@ -30,7 +30,7 @@ struct Home: View {
         return dataSource
     }()
     
-    @ObjectBinding var customerDataSource: FetchedDataSource<Customer> = {
+    @ObservedObject var customerDataSource: FetchedDataSource<Customer> = {
         let dataSource = FetchedDataSource<Customer>(context: CoreDataStack.current.mainContext)
         let request = dataSource.fetchController.fetchRequest
         request.predicate = .init(value: true)
@@ -48,7 +48,7 @@ struct Home: View {
     // MARK: - Body
     
     var body: some View {
-        TabbedView {
+        TabView {
             // MARK: Order List
             NavigationView {
                 OrderListView()

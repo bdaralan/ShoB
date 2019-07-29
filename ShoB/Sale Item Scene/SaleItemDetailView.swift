@@ -12,7 +12,7 @@ import SwiftUI
 /// A view that displays sale item's details.
 struct SaleItemDetailView: View, EditableForm {
     
-    @ObjectBinding var saleItem: SaleItem
+    @ObservedObject var saleItem: SaleItem
     
     /// The model to view or edit sale item.
     @Binding var model: SaleItemForm.Model

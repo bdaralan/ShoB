@@ -35,15 +35,16 @@ struct OrderListView: View {
     
     var body: some View {
         List {
-            // MARK: Segment Control
-            SegmentedControl(selection: $currentSegment) {
+            // MARK: Segment Picker
+            Picker("", selection: $currentSegment) {
                 ForEach(segments, id: \.self) { segment in
                     Text(segment.rawValue).tag(segment)
                 }
             }
+            .pickerStyle(SegmentedPickerStyle())
             
             // MARK: Order Rows
-            ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
+            ForEach(dataSource.fetchController.fetchedObjects ?? [], id: \.self) { order in
                 OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onSave: self.updateOrder)
             }
         }
@@ -110,7 +111,7 @@ struct OrderListView: View {
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        order.willChange.send()
+        order.objectWillChange.send()
     }
 }
 

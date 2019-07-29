@@ -12,10 +12,7 @@ import Combine
 
 
 /// A data source with contexts used to create, update, or delete object.
-class CUDDataSource<T: NSManagedObject & BindableObject>: BindableObject {
-    
-    /// Publisher
-    let willChange = PassthroughSubject<Void, Never>()
+class CUDDataSource<T: NSManagedObject>: ObservableObject {
     
     /// The source context.
     let sourceContext: NSManagedObjectContext

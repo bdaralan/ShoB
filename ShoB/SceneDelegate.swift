@@ -28,6 +28,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         // ADD sample data
+        guard UserDefaults.standard.bool(forKey: "hasImportedSampleData") == false else { return }
+        UserDefaults.standard.set(true, forKey: "hasImportedSampleData")
+        
         let context = CoreDataStack.current.mainContext
         
         let smapleItemUrl = Bundle.main.url(forResource: "sale-item-sample-data", withExtension: "json")!

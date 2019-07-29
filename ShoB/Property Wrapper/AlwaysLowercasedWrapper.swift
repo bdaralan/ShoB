@@ -20,7 +20,7 @@ struct AlwaysLowercasedWrapper {
     }
     
     
-    init(initialValue: String = "") {
-        wrappedValue = initialValue
+    init(wrappedValue: String = "") {
+        self.wrappedValue = wrappedValue
     }
 }

@@ -14,7 +14,7 @@ extension CustomerRow {
     /// The content view of the customer row.
     struct ContentView: View {
         
-        @ObjectBinding var customer: Customer
+        @ObservedObject var customer: Customer
     }
 }
 

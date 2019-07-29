@@ -74,9 +74,9 @@ extension SaleItemForm.BodyView {
                     
                     Spacer()
                     
-                    // SegmentControl and Stepper
+                    // Segment Picker and Stepper
                     HStack {
-                        quantityStepByValueSegmentControl
+                        quantityStepByValueSegmentPicker
                         Stepper("", value: $model.quantity, in: quantityStepperRange, step: quantityStepByValue)
                     }
                 }
@@ -87,12 +87,13 @@ extension SaleItemForm.BodyView {
     
     // MARK: - Body Component
     
-    var quantityStepByValueSegmentControl: some View {
-        SegmentedControl(selection: $quantityStepByValue) {
-            ForEach([1, 5]) { stepValue in
+    var quantityStepByValueSegmentPicker: some View {
+        Picker("", selection: $quantityStepByValue) {
+            ForEach([1, 5], id: \.self) { stepValue in
                 Text("\(stepValue)").tag(stepValue)
             }
         }
+        .pickerStyle(SegmentedPickerStyle())
         .frame(minWidth: 100)
     }
 }

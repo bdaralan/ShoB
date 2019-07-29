@@ -12,7 +12,7 @@ import SwiftUI
 /// A view that displays customer in a list row.
 struct CustomerRow: View {
     
-    @ObjectBinding var customer: Customer
+    @ObservedObject var customer: Customer
     
     @State private var model = CustomerForm.Model()
     

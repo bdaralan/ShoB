@@ -16,7 +16,7 @@ struct OrderRow: View {
     @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
     
     /// The order to view or update.
-    @ObjectBinding var order: Order
+    @ObservedObject var order: Order
     
     var onSave: (OrderForm.Model) -> Void
     

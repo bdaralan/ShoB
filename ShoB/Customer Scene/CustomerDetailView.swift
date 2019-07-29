@@ -12,7 +12,7 @@ import SwiftUI
 /// A view that displays customer's details.
 struct CustomerDetailView: View, EditableForm {
     
-    @ObjectBinding var customer: Customer
+    @ObservedObject var customer: Customer
     
     @Binding var model: CustomerForm.Model
     

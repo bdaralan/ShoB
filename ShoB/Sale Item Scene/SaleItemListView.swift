@@ -28,15 +28,17 @@ struct SaleItemListView: View {
     // MARK: - Body
     
     var body: some View {
-        List(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
-            if self.onItemSelected == nil { // default behavior
-                SaleItemRow(
-                    saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
-                    onSave: self.saveSaleItemRowChanges
-                )
-            
-            } else { // custom behavior
-                Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
+        List {
+            ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
+                if self.onItemSelected == nil { // default behavior
+                    SaleItemRow(
+                        saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
+                        onSave: self.saveSaleItemRowChanges
+                    )
+                    
+                } else { // custom behavior
+                    Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
+                }
             }
         }
         .navigationBarItems(trailing: addNewSaleItemNavItem)
@@ -92,7 +94,7 @@ struct SaleItemListView: View {
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        item.willChange.send()
+        item.objectWillChange.send()
     }
 }
 

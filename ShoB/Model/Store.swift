@@ -17,9 +17,7 @@ import Combine
 /// An object that holds user's records including
 /// sale items, orders, and customers.
 ///
-class Store: NSManagedObject, BindableObject {
-    
-    let willChange = PassthroughSubject<Void, Never>()
+class Store: NSManagedObject, Identifiable {
     
     @NSManaged var name: String
     @NSManaged var phone: String
@@ -32,7 +30,7 @@ class Store: NSManagedObject, BindableObject {
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
-        willChange.send()
+        objectWillChange.send()
     }
 }
 

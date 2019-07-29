@@ -13,7 +13,7 @@ import SwiftUI
 struct SaleItemRow: View {
     
     /// The source item to view or update.
-    @ObjectBinding var saleItem: SaleItem
+    @ObservedObject var saleItem: SaleItem
     
     /// Triggered when the update button is tapped.
     var onSave: (SaleItem) -> Void

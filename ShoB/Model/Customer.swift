@@ -13,9 +13,7 @@ import Combine
 
 
 /// A customer of a store.
-class Customer: NSManagedObject, BindableObject {
-    
-    let willChange = PassthroughSubject<Void, Never>()
+class Customer: NSManagedObject, Identifiable {
     
     @NSManaged var familyName: String
     @NSManaged var givenName: String
@@ -39,7 +37,7 @@ class Customer: NSManagedObject, BindableObject {
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
-        willChange.send()
+        objectWillChange.send()
     }
 }
 

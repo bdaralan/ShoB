@@ -102,7 +102,7 @@ struct OrderForm: View {
                 
                 // MARK: Order Item List
                 if model.order != nil {
-                    ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name }), id: \.self) { item in
+                    ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name })) { item in
                         Button(action: {
                             self.editOrderItemModel = .init(item: item)
                             self.modalPresentationSheet = self.editOrderItemForm.toAnyView()
@@ -175,7 +175,7 @@ struct OrderForm: View {
             self.newOrderItemModel.assign(to: newOrderItem)
             
             // send change to reload form's Update button's state
-            order.willChange.send()
+            order.objectWillChange.send()
             
             self.dismissOrderItemFormSheet()
         })
@@ -209,7 +209,7 @@ struct OrderForm: View {
     var currentCustomerRow: some View {
         if let customer = model.order?.customer {
             return Button(action: showCustomerSelectionList, label: { CustomerRow.ContentView(customer: customer) })
-                .buttonStyle(.plain)
+                .buttonStyle(PlainButtonStyle())
                 .toAnyView()
         } else {
             return Button(action: showCustomerSelectionList, label: { currentCustomerRowNone })
@@ -259,7 +259,7 @@ struct OrderForm: View {
                 }
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
     }
     
     func orderItemRow(for item: OrderItem) -> some View {
@@ -286,7 +286,7 @@ struct OrderForm: View {
             // but not its array's object's property
             let hasOrderItemsChanged = order.orderItems.map({ $0.hasPersistentChangedValues }).contains(true)
             order.isMarkedValuesChanged = hasOrderItemsChanged
-            order.willChange.send()
+            order.objectWillChange.send()
             
             // set orderItem to nil to avoid updating the item (safeguard)
             // the model is not set to .init() to prevent UI reloading while it is dismissing
