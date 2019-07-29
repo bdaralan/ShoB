@@ -77,7 +77,7 @@ struct CustomerListView: View {
     
     func updateCustomer(_ model: CustomerForm.Model) {
         guard let customer = model.customer else { return }
-        if customer.hasPersistentChangedValues || customer.contact.hasPersistentChangedValues {
+        if customer.hasPersistentChangedValues {
             dataSource.cud.saveUpdateContext()
         } else {
             dataSource.cud.discardUpdateContext()

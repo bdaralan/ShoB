@@ -22,14 +22,7 @@ struct CustomerDetailView: View, EditableForm {
     var body: some View {
         CustomerForm(model: $model)
             .navigationBarTitle("Customer Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem)
-    }
-    
-    
-    var saveNavItem: some View {
-        let customerHasChanged = customer.hasPersistentChangedValues
-        let contactHasChanged = customer.contact.hasPersistentChangedValues
-        return saveNavItem(title: "Update", enable: customerHasChanged || contactHasChanged)
+            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: customer.hasPersistentChangedValues))
     }
 }
 

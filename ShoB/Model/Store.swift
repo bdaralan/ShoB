@@ -22,20 +22,12 @@ class Store: NSManagedObject, BindableObject {
     let willChange = PassthroughSubject<Void, Never>()
     
     @NSManaged var name: String
-    @NSManaged var contact: Contact
+    @NSManaged var phone: String
+    @NSManaged var email: String
+    @NSManaged var address: String
     @NSManaged var saleItems: Set<SaleItem>
     @NSManaged var orders: Set<Order>
     @NSManaged var customers: Set<Customer>
-    
-    
-    override func awakeFromInsert() {
-        super.awakeFromInsert()
-        name = ""
-        saleItems = []
-        orders = []
-        customers = []
-        contact = Contact(context: managedObjectContext!)
-    }
     
     
     override func didChangeValue(forKey key: String) {

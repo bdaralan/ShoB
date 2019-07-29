@@ -37,11 +37,6 @@ class Order: NSManagedObject, BindableObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         orderDate = Date.currentYMDHM
-        deliveryDate = nil
-        deliveredDate = nil
-        discount = 0
-        note = ""
-        orderItems = []
     }
     
     override func didChangeValue(forKey key: String) {

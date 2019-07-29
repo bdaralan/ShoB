@@ -40,8 +40,8 @@ extension CustomerRow.ContentView {
                     
                     contactsText
                     
-                    if !customer.contact.address.isEmpty {
-                        infoText(image: Image.SFCustomer.address, text: "\(customer.contact.address)").toAnyView()
+                    if !customer.address.isEmpty {
+                        infoText(image: Image.SFCustomer.address, text: "\(customer.address)").toAnyView()
                     }
                 }
                 .font(.caption)
@@ -50,8 +50,8 @@ extension CustomerRow.ContentView {
     }
 
     var contactsText: some View {
-        let phone = customer.contact.phone
-        let email = customer.contact.email
+        let phone = customer.phone
+        let email = customer.email
         
         switch !phone.isEmpty && !email.isEmpty {
             

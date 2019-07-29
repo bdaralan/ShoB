@@ -22,12 +22,6 @@ class SaleItem: NSManagedObject, BindableObject {
     @NSManaged var store: Store?
     
     
-    override func awakeFromInsert() {
-        super.awakeFromInsert()
-        name = ""
-        price = 0
-    }
-    
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
         willChange.send()

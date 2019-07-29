@@ -20,7 +20,9 @@ class Customer: NSManagedObject, BindableObject {
     @NSManaged var familyName: String
     @NSManaged var givenName: String
     @NSManaged var organization: String
-    @NSManaged var contact: Contact
+    @NSManaged var phone: String
+    @NSManaged var email: String
+    @NSManaged var address: String
     @NSManaged var orders: Set<Order>
     @NSManaged var store: Store?
     
@@ -34,15 +36,6 @@ class Customer: NSManagedObject, BindableObject {
         return identity.isEmpty ? organization : identity
     }
     
-    
-    override func awakeFromInsert() {
-        super.awakeFromInsert()
-        familyName = ""
-        givenName = ""
-        organization = ""
-        orders = []
-        contact = Contact(context: managedObjectContext!)
-    }
     
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)

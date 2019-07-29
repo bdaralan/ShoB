@@ -64,17 +64,17 @@ struct Home: View {
             customer1.givenName = "Tristana"
             customer1.familyName = "Yordle"
             customer1.organization = "Sumonner Rift"
-            customer1.contact.phone = "562 111 2222"
-            customer1.contact.email = "trist@email.com"
-            customer1.contact.address = "1234 Rift Ave, Long Beach, CA 90805"
+            customer1.phone = "562 111 2222"
+            customer1.email = "trist@email.com"
+            customer1.address = "1234 Rift Ave, Long Beach, CA 90805"
             
             let customer2 = Customer(context: dataSource.context)
             customer2.givenName = "Sivir"
             customer2.familyName = "Surima"
             customer2.organization = "Sand Empire"
-            customer2.contact.phone = "562 444 5555"
-            customer2.contact.email = "sivir@email.com"
-            customer2.contact.address = "1010 Sand Ave, Long Beach, CA 90805"
+            customer2.phone = "562 444 5555"
+            customer2.email = "sivir@email.com"
+            customer2.address = "1010 Sand Ave, Long Beach, CA 90805"
             
             dataSource.context.quickSave()
         }

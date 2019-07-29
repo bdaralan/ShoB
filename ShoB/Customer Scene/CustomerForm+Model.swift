@@ -27,30 +27,29 @@ extension CustomerForm {
         }
         
         var address = "" {
-            didSet { customer?.contact.address = address }
+            didSet { customer?.address = address }
         }
         
         @AlwaysLowercasedWrapper
         var email = "" {
-            didSet { customer?.contact.email = email }
+            didSet { customer?.email = email }
         }
         
         var phone = "" {
-            didSet { customer?.contact.phone = phone }
+            didSet { customer?.phone = phone }
         }
         
         
         init(customer: Customer? = nil) {
             guard let customer = customer else { return }
-            customer.contact.shouldPropertyObjectSendWillChange = true
             
             self.customer = customer
             familyName = customer.familyName
             givenName = customer.givenName
             organization = customer.organization
-            address = customer.contact.address
-            email = customer.contact.email
-            phone = customer.contact.phone
+            address = customer.address
+            email = customer.email
+            phone = customer.phone
         }
     }
 }

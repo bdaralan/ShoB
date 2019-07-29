@@ -1,54 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14877.5" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Contact" representedClassName=".Contact" syncable="YES">
-        <attribute name="address" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <attribute name="email" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <attribute name="phone" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <relationship name="customer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Customer" inverseName="contact" inverseEntity="Customer"/>
-        <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="contact" inverseEntity="Store"/>
-    </entity>
     <entity name="Customer" representedClassName=".Customer" syncable="YES">
-        <attribute name="familyName" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <attribute name="givenName" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <attribute name="organization" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Contact" inverseName="customer" inverseEntity="Contact"/>
+        <attribute name="address" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="email" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="familyName" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="givenName" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="organization" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="phone" optional="YES" attributeType="String" defaultValueString=""/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Order" inverseName="customer" inverseEntity="Order"/>
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="customers" inverseEntity="Store"/>
     </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
-        <attribute name="deliveredDate" optional="YES" attributeType="Date" defaultDateTimeInterval="-1440932700" usesScalarValueType="NO"/>
-        <attribute name="deliveryDate" optional="YES" attributeType="Date" defaultDateTimeInterval="-1440889500" usesScalarValueType="NO"/>
+        <attribute name="deliveredDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deliveryDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="discount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="note" optional="YES" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="note" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="orderDate" optional="YES" attributeType="Date" defaultDateTimeInterval="582148860" usesScalarValueType="NO"/>
         <relationship name="customer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Customer" inverseName="orders" inverseEntity="Customer"/>
         <relationship name="orderItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OrderItem" inverseName="order" inverseEntity="OrderItem"/>
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="orders" inverseEntity="Store"/>
     </entity>
     <entity name="OrderItem" representedClassName=".OrderItem" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="price" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="quantity" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="order" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Order" inverseName="orderItems" inverseEntity="Order"/>
     </entity>
     <entity name="SaleItem" representedClassName=".SaleItem" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" defaultValueString="N/A"/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="price" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="saleItems" inverseEntity="Store"/>
     </entity>
     <entity name="Store" representedClassName=".Store" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" defaultValueString="N/A"/>
-        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Contact" inverseName="store" inverseEntity="Contact"/>
+        <attribute name="address" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="email" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="phone" optional="YES" attributeType="String" defaultValueString=""/>
         <relationship name="customers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Customer" inverseName="store" inverseEntity="Customer"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Order" inverseName="store" inverseEntity="Order"/>
         <relationship name="saleItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SaleItem" inverseName="store" inverseEntity="SaleItem"/>
     </entity>
     <elements>
-        <element name="Contact" positionX="-63" positionY="-18" width="128" height="118"/>
-        <element name="Customer" positionX="-36" positionY="45" width="128" height="133"/>
+        <element name="Customer" positionX="-36" positionY="45" width="128" height="163"/>
         <element name="Order" positionX="0" positionY="108" width="128" height="163"/>
         <element name="OrderItem" positionX="-9" positionY="99" width="128" height="103"/>
         <element name="SaleItem" positionX="-18" positionY="81" width="128" height="88"/>
-        <element name="Store" positionX="-54" positionY="18" width="128" height="118"/>
+        <element name="Store" positionX="-54" positionY="18" width="128" height="148"/>
     </elements>
 </model>

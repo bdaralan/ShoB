@@ -27,14 +27,6 @@ class OrderItem: NSManagedObject, BindableObject {
     }
     
     
-    override func awakeFromInsert() {
-        super.awakeFromInsert()
-        name = ""
-        price = 0
-        quantity = 0
-    }
-    
-    
     override func didChangeValue(forKey key: String) {
         super.didChangeValue(forKey: key)
         willChange.send()
