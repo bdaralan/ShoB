@@ -18,13 +18,6 @@ struct Home: View {
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
         dataSource.performFetch()
-        
-        // reset code
-//        dataSource.fetchController.fetchedObjects?.forEach {
-//            dataSource.context.delete($0)
-//        }
-//        dataSource.context.quickSave()
-        
         return dataSource
     }()
     
@@ -34,13 +27,6 @@ struct Home: View {
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(SaleItem.name), ascending: true)]
         dataSource.performFetch()
-        
-//        // reset code
-//        dataSource.fetchController.fetchedObjects?.forEach {
-//            dataSource.context.delete($0)
-//        }
-//        dataSource.context.quickSave()
-        
         return dataSource
     }()
     
@@ -53,32 +39,6 @@ struct Home: View {
             .init(key: #keyPath(Customer.familyName), ascending: true)
         ]
         dataSource.performFetch()
-        
-        // reset code
-        if dataSource.fetchController.fetchedObjects!.isEmpty {
-            dataSource.fetchController.fetchedObjects?.forEach {
-                dataSource.context.delete($0)
-            }
-            
-            let customer1 = Customer(context: dataSource.context)
-            customer1.givenName = "Tristana"
-            customer1.familyName = "Yordle"
-            customer1.organization = "Sumonner Rift"
-            customer1.phone = "562 111 2222"
-            customer1.email = "trist@email.com"
-            customer1.address = "1234 Rift Ave, Long Beach, CA 90805"
-            
-            let customer2 = Customer(context: dataSource.context)
-            customer2.givenName = "Sivir"
-            customer2.familyName = "Surima"
-            customer2.organization = "Sand Empire"
-            customer2.phone = "562 444 5555"
-            customer2.email = "sivir@email.com"
-            customer2.address = "1010 Sand Ave, Long Beach, CA 90805"
-            
-            dataSource.context.quickSave()
-        }
-        
         return dataSource
     }()
     
@@ -97,10 +57,8 @@ struct Home: View {
                     .environmentObject(customerDataSource)
                     .navigationBarTitle("Orders", displayMode: .large)
             }
-            .tabItem {
-                Image(systemName: "cube.box.fill")
-                Text("Orders")
-            }.tag(0)
+            .tabItem { tabItem(systemImage: "cube.box.fill", title: "Orders") }
+            .tag(0)
             
             // MARK: Customer List
             NavigationView {
@@ -108,10 +66,8 @@ struct Home: View {
                     .environmentObject(customerDataSource)
                     .navigationBarTitle("Customers", displayMode: .large)
             }
-            .tabItem {
-                Image(systemName: "rectangle.stack.person.crop.fill")
-                Text("Customers")
-            }.tag(1)
+            .tabItem { tabItem(systemImage: "rectangle.stack.person.crop.fill", title: "Customers") }
+            .tag(1)
             
             // MARK: Sale Item List
             NavigationView {
@@ -119,11 +75,14 @@ struct Home: View {
                     .environmentObject(saleItemDataSource)
                     .navigationBarTitle("Items", displayMode: .large)
             }
-            .tabItem {
-                Image(systemName: "list.dash")
-                Text("Items")
-            }.tag(2)
+            .tabItem { tabItem(systemImage: "list.dash", title: "Items") }
+            .tag(2)
         }
+    }
+    
+    
+    func tabItem(systemImage: String, title: String) -> some View {
+        ViewBuilder.buildBlock(Image(systemName: systemImage), Text(title))
     }
 }
 

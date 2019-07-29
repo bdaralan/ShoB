@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Glaze Donut",
+        "price": 90
+    },
+    {
+        "name": "Sugar Twist",
+        "price": 100
+    },
+    {
+        "name": "Chocolate Bar",
+        "price": 100
+    },
+    {
+        "name": "Ham & Cheese Croissant",
+        "price": 300
+    },
+    {
+        "name": "Plain Croissant",
+        "price": 165
+    },
+    {
+        "name": "Strawberry Strudel",
+        "price": 100
+    },
+    {
+        "name": "Coke Can",
+        "price": 100
+    },
+    {
+        "name": "Smart Water",
+        "price": 200
+    },
+    {
+        "name": "Cream Cheese Bagel",
+        "price": 225
+    },
+    {
+        "name": "Ice Coffee",
+        "price": 375
+    }
+]
