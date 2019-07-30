@@ -22,11 +22,13 @@ struct OrderRow: View {
     
     @State private var orderModel = OrderForm.Model()
     
+    @State private var navigationState = NavigationStateHandler()
+    
     
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: orderDetailView) { // row content
+        NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
             VStack(alignment: .leading) {
                 // MARK: Customer & Note
                 HStack {
@@ -90,6 +92,11 @@ struct OrderRow: View {
             
             // assign the order to the model.
             self.orderModel = .init(order: self.order)
+            
+            self.navigationState.onPopped = {
+                guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
+                context.rollback()
+            }
         }
     }
     
