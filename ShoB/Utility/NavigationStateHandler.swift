@@ -27,7 +27,7 @@ import Foundation
 ///             // setup handler in onAppear for now
 ///             // until there is a better place for the setup
 ///             Text("Details").onAppear {
-///                 navigationState.onPopped = {
+///                 self.navigationState.onPopped = {
 ///                     // grab popcorn
 ///                 }
 ///             }
