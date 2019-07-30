@@ -6,7 +6,7 @@
 //  Copyright © 2019 Dara Beng. All rights reserved.
 //
 
-import Combine
+import Foundation
 
 
 /// A state model used to perform actions when a view is pushed to or popped from the NavigationView
