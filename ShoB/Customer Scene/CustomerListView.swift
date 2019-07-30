@@ -59,7 +59,6 @@ struct CustomerListView: View {
         }, label: {
             Image(systemName: "plus").imageScale(.large)
         })
-        .accentColor(.accentColor)
     }
     
     

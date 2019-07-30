@@ -110,6 +110,7 @@ struct OrderForm: View {
                         }, label: {
                             self.orderItemRow(for: item)
                         })
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }
@@ -155,8 +156,8 @@ struct OrderForm: View {
                                 Spacer()
                                 Text(verbatim: "\(Currency(item.price))")
                             }
-                            .accentColor(.primary)
                         })
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }
@@ -271,7 +272,6 @@ struct OrderForm: View {
                 .imageScale(.large)
                 .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
-        .accentColor(.primary)
     }
     
     

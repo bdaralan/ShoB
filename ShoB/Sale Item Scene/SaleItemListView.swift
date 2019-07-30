@@ -62,7 +62,6 @@ struct SaleItemListView: View {
         }, label: {
             Image(systemName: "plus").imageScale(.large)
         })
-        .accentColor(.accentColor)
     }
     
     var createSaleItemForm: some View {

@@ -69,7 +69,6 @@ struct OrderListView: View {
         }, label: {
             Image(systemName: "plus").imageScale(.large)
         })
-        .accentColor(.accentColor)
     }
     
     /// Construct an order form.
