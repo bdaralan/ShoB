@@ -13,13 +13,13 @@ struct NavigationStateHandler {
     
     /// A flag to bind with `NavigationLink.isActive`.
     var isPushed = false {
-        willSet { state = newValue ? .pushed : .popped }
+        didSet { state = isPushed ? .pushed : .popped }
     }
     
     /// The state of the navigation.
     private var state: State? = .none {
-        willSet {
-            switch newValue {
+        didSet {
+            switch state {
             case .pushed: onPushed?()
             case .popped: onPopped?()
             case .none: break
