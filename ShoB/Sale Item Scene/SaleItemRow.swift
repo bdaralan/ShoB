@@ -20,11 +20,13 @@ struct SaleItemRow: View {
     
     @State private var saleItemModel = SaleItemForm.Model()
     
+    @State private var navigationState = NavigationStateHandler()
+    
     
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: saleItemDetailView) { // row content
+        NavigationLink(destination: saleItemDetailView, isActive: $navigationState.isPushed) { // row content
             HStack {
                 Text(saleItem.name)
                 Spacer()
@@ -44,6 +46,12 @@ struct SaleItemRow: View {
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
             self.saleItemModel = .init(item: self.saleItem)
+            
+            // discard changes if user does not tap update button
+            self.navigationState.onPoped = {
+                guard self.saleItem.hasChanges, let context = self.saleItem.managedObjectContext else { return }
+                context.refresh(self.saleItem, mergeChanges: false)
+            }
         }
     }
 }
