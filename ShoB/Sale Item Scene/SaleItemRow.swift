@@ -50,7 +50,7 @@ struct SaleItemRow: View {
             // discard changes if user does not tap update button
             self.navigationState.onPopped = {
                 guard self.saleItem.hasChanges, let context = self.saleItem.managedObjectContext else { return }
-                context.refresh(self.saleItem, mergeChanges: false)
+                context.rollback()
             }
         }
     }
