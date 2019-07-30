@@ -16,13 +16,15 @@ struct CustomerRow: View {
     
     @State private var model = CustomerForm.Model()
     
+    @State private var navigationState = NavigationStateHandler()
+    
     var onSave: (CustomerForm.Model) -> Void
     
     
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: customerDetailView) {
+        NavigationLink(destination: customerDetailView, isActive: $navigationState.isPushed) {
             CustomerRow.ContentView(customer: customer)
         }
     }
@@ -36,6 +38,11 @@ struct CustomerRow: View {
         })
         .onAppear {
             self.model = .init(customer: self.customer)
+            
+            self.navigationState.onPopped = {
+                guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
+                context.rollback()
+            }
         }
     }
 }
