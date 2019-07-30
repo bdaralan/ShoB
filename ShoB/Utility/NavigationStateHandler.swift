@@ -13,7 +13,7 @@ struct NavigationStateHandler {
     
     /// A flag to bind with `NavigationLink.isActive`.
     var isPushed = false {
-        willSet { state = newValue ? .pushed : .poped }
+        willSet { state = newValue ? .pushed : .popped }
     }
     
     /// The state of the navigation.
@@ -21,7 +21,7 @@ struct NavigationStateHandler {
         willSet {
             switch newValue {
             case .pushed: onPushed?()
-            case .poped: onPoped?()
+            case .popped: onPopped?()
             case .none: break
             }
         }
@@ -31,11 +31,11 @@ struct NavigationStateHandler {
     var onPushed: (() -> Void)?
     
     /// An action to perform when poped.
-    var onPoped: (() -> Void)?
+    var onPopped: (() -> Void)?
     
     
     enum State {
         case pushed
-        case poped
+        case popped
     }
 }

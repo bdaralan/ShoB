@@ -48,7 +48,7 @@ struct SaleItemRow: View {
             self.saleItemModel = .init(item: self.saleItem)
             
             // discard changes if user does not tap update button
-            self.navigationState.onPoped = {
+            self.navigationState.onPopped = {
                 guard self.saleItem.hasChanges, let context = self.saleItem.managedObjectContext else { return }
                 context.refresh(self.saleItem, mergeChanges: false)
             }
