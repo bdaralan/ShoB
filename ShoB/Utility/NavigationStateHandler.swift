@@ -9,6 +9,31 @@
 import Combine
 
 
+/// A state model used to perform actions when a view is pushed to or popped from the NavigationView
+///
+/// Code Example:
+///
+///     struct DetailRow: View {
+///
+///         @State private var navigationState = NavigationStateHandler()
+///
+///         var body: some View {
+///             NavigationLink(destination: detailView, isActive: $navigationState.isPushed) {
+///                 Text("View Detials")
+///             }
+///         }
+///
+///         var detailView: some View {
+///             // setup handler in onAppear for now
+///             // until there is a better place for the setup
+///             Text("Details").onAppear {
+///                 navigationState.onPopped = {
+///                     // grab popcorn
+///                 }
+///             }
+///         }
+///     }
+///
 struct NavigationStateHandler {
     
     /// A flag to bind with `NavigationLink.isActive`.
@@ -32,7 +57,10 @@ struct NavigationStateHandler {
     
     /// An action to perform when poped.
     var onPopped: (() -> Void)?
-    
+}
+
+
+private extension NavigationStateHandler {
     
     enum State {
         case pushed
