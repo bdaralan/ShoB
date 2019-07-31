@@ -34,8 +34,8 @@ class CUDDataSource<T: NSManagedObject>: ObservableObject {
     /// - Parameter context: The parent or source context.
     init(context: NSManagedObjectContext) {
         sourceContext = context
-        createContext = sourceContext.newChildContext()
-        updateContext = sourceContext.newChildContext()
+        createContext = context.newChildContext()
+        updateContext = context.newChildContext()
     }
     
     
@@ -53,9 +53,36 @@ class CUDDataSource<T: NSManagedObject>: ObservableObject {
 }
 
 
-// MARK: - Convenient Method
+// MARK: - Method
 
 extension CUDDataSource {
+    
+    // MARK: Object
+    
+    /// Discard object's unsaved changes.
+    /// 
+    /// - Parameter object: The object to discard. Must be in the `updateContext`.
+    func discardChanges(for object: T) {
+        guard object.managedObjectContext === updateContext, object.hasChanges else { return }
+        discardUpdateContext()
+    }
+    
+    /// Delete object's from the context
+    /// - Parameter object: The object to delete. Must be in `sourceContext` or `updateContext`.
+    /// - Parameter saveContext: `true` to save the context.
+    func delete(_ object: T, saveContext: Bool) {
+        guard let context = object.managedObjectContext else { return }
+        guard context === sourceContext || context === updateContext else { return }
+        context.delete(object)
+        
+        guard saveContext else { return }
+        context.quickSave()
+        
+        guard context === updateContext else { return }
+        sourceContext.quickSave()
+    }
+    
+    // MARK: Context
     
     func saveCreateContext() {
         saveChanges(for: createContext)

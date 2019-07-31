@@ -45,22 +45,18 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, ObservableObject, NSFetch
     }
     
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         objectWillChange.send()
     }
     
     /// Perform fetch on the `fetchController`.
     func performFetch() {
+        objectWillChange.send()
+        
         do {
             try fetchController.performFetch()
         } catch {
             print(error)
         }
-        objectWillChange.send()
-    }
-    
-    /// Fetched objects' CoreData URIs.
-    func fetchedObjectURIs() -> [URL] {
-        fetchController.fetchedObjects?.compactMap({ $0.objectID.uriRepresentation() }) ?? []
     }
 }
