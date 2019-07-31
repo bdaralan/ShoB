@@ -15,7 +15,7 @@ import Foundation
 ///
 ///     struct DetailRow: View {
 ///
-///         @State private var navigationState = NavigationStateHandler()
+///         @ObservedObject var navigationState = NavigationStateHandler()
 ///
 ///         var body: some View {
 ///             NavigationLink(destination: detailView, isActive: $navigationState.isPushed) {
@@ -24,20 +24,16 @@ import Foundation
 ///         }
 ///
 ///         var detailView: some View {
-///             // setup handler in onAppear for now
-///             // until there is a better place for the setup
-///             Text("Details").onAppear {
-///                 self.navigationState.onPopped = {
-///                     // grab popcorn
-///                 }
-///             }
+///             navigationState.onPushed = { /* prepare data */ }
+///             navigationState.onPopped = { /* discard unsaved changes */ }
+///             return Text("Details")
 ///         }
 ///     }
 ///
-struct NavigationStateHandler {
+class NavigationStateHandler: ObservableObject {
     
     /// A flag to bind with `NavigationLink.isActive`.
-    var isPushed = false {
+    @Published var isPushed = false {
         didSet { state = isPushed ? .pushed : .popped }
     }
     
