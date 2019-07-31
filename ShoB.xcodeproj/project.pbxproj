@@ -28,6 +28,7 @@
 		B449978422CDDFB600126116 /* SaleItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978322CDDFB600126116 /* SaleItemDetailView.swift */; };
 		B449978622CDE1E000126116 /* CreateSaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978522CDE1E000126116 /* CreateSaleItemForm.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
+		B451060F22F221070047F3F8 /* RowCenterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* RowCenterButton.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F322EBFF4100778DA3 /* Constant+Image.swift */; };
@@ -84,6 +85,7 @@
 		B449978322CDDFB600126116 /* SaleItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemDetailView.swift; sourceTree = "<group>"; };
 		B449978522CDE1E000126116 /* CreateSaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSaleItemForm.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
+		B451060E22F221070047F3F8 /* RowCenterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowCenterButton.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48919F322EBFF4100778DA3 /* Constant+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constant+Image.swift"; sourceTree = "<group>"; };
@@ -186,6 +188,14 @@
 			path = "Sample Data";
 			sourceTree = "<group>";
 		};
+		B451061022F222310047F3F8 /* View Modifier */ = {
+			isa = PBXGroup;
+			children = (
+				B451060E22F221070047F3F8 /* RowCenterButton.swift */,
+			);
+			path = "View Modifier";
+			sourceTree = "<group>";
+		};
 		B48919F222EBFF1D00778DA3 /* Constant */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +229,7 @@
 				B4A5D97422CBF7F200695A3F /* Home.swift */,
 				B4B9D13E22B2E48C003FC4E3 /* Model */,
 				B405260022E8FFBF007E2325 /* View */,
+				B451061022F222310047F3F8 /* View Modifier */,
 				B427503A22CDCEC4009FF939 /* Order Scene */,
 				B4D5E6CB22C043E700BE7580 /* Customer Scene */,
 				B427503B22CDCEE6009FF939 /* Sale Item Scene */,
@@ -393,6 +404,7 @@
 				B48E584722EA452900B9FEAB /* String.swift in Sources */,
 				B4F4D2B822E2452300E849B4 /* Date.swift in Sources */,
 				B405261122E938E9007E2325 /* Text.swift in Sources */,
+				B451060F22F221070047F3F8 /* RowCenterButton.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
 				B405260B22E90EF0007E2325 /* CustomerDetailView.swift in Sources */,
 				B4F4D2B122E229DA00E849B4 /* EditableForm.swift in Sources */,
