@@ -45,10 +45,10 @@ extension SaleItemForm.BodyView {
     // MARK: - Body
     
     var body: some View {
-        Section {
+        Group {
             // MARK: Name & Price
             Group {
-                VertialTextField(nameTextFieldPlaceholder, text: $model.name)
+                VertialTextField("Name", placeholder: nameTextFieldPlaceholder, text: $model.name)
                 VertialTextField("Price", placeholder: "$0.00", text: $model.price)
             }
             .disabled(!shouldEnableNamePriceTextFields)

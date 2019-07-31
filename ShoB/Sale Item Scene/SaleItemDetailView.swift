@@ -19,13 +19,23 @@ struct SaleItemDetailView: View, EditableForm {
     
     var onSave: () -> Void
     
+    var onDelete: () -> Void
+    
     
     // MARK: - Body
     
     var body: some View {
-        SaleItemForm(model: $model, mode: .saleItem)
-            .navigationBarTitle("Item Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
+        Form {
+            Section {
+                SaleItemForm.BodyView(model: $model, mode: .saleItem)
+            }
+            Section {
+                Button(action: onDelete, label: { Text("Delete") })
+                    .buttonStyle(RowCenterButtonStyle(.destrictive))
+            }
+        }
+        .navigationBarTitle("Item Details", displayMode: .inline)
+        .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
     }
 }
 
@@ -33,7 +43,7 @@ struct SaleItemDetailView: View, EditableForm {
 struct SaleItemDetailView_Previews : PreviewProvider {
     static let saleItem = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        SaleItemDetailView(saleItem: saleItem, model: .constant(.init(item: saleItem)), onSave: {})
+        SaleItemDetailView(saleItem: saleItem, model: .constant(.init(item: saleItem)), onSave: {}, onDelete: {})
     }
 }
 #endif

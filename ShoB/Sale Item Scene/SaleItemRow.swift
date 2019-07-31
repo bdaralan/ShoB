@@ -18,6 +18,8 @@ struct SaleItemRow: View {
     /// Triggered when the update button is tapped.
     var onSave: (SaleItem) -> Void
     
+    var onDelete: (SaleItem) -> Void
+    
     @State private var saleItemModel = SaleItemForm.Model()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
@@ -46,10 +48,14 @@ struct SaleItemRow: View {
     var saleItemDetailView: some View {
         SaleItemDetailView(saleItem: saleItem, model: $saleItemModel, onSave: {
             self.onSave(self.saleItem)
-        })
-        .onAppear { // assign the item to the model.
+        }, onDelete: {
+            self.navigationState.onPopped = nil
+            self.navigationState.isPushed = false
+            self.onDelete(self.saleItem)
+        }).onAppear {
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
+            // assign the item to the model.
             self.saleItemModel = .init(item: self.saleItem)
         }
     }
@@ -61,7 +67,7 @@ struct SaleItemRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static let saleItem = SaleItem(context: cud.sourceContext)
     static var previews: some View {
-        SaleItemRow(saleItem: saleItem, onSave: { _ in })
+        SaleItemRow(saleItem: saleItem, onSave: { _ in }, onDelete: { _ in })
     }
 }
 #endif

@@ -18,27 +18,17 @@ struct SaleItemListView: View {
     
     @State private var newSaleItemModel = SaleItemForm.Model()
     
-    /// Triggered when an item is selected.
-    ///
-    /// Set this block to perform custom action.
-    /// Otherwise, the default behavior is to show the item's details.
-    var onItemSelected: ((SaleItem, SaleItemListView) -> Void)?
-    
     
     // MARK: - Body
     
     var body: some View {
         List {
-            ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
-                if self.onItemSelected == nil { // default behavior
-                    SaleItemRow(
-                        saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
-                        onSave: self.saveSaleItemRowChanges
-                    )
-                    
-                } else { // custom behavior
-                    Button(saleItem.name, action: { self.onItemSelected?(saleItem, self) })
-                }
+            ForEach(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
+                SaleItemRow(
+                    saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
+                    onSave: { self.saveSaleItemRowChanges($0) },
+                    onDelete: { self.dataSource.cud.delete($0, saveContext: true) }
+                )
             }
         }
         .navigationBarItems(trailing: addNewSaleItemNavItem)
@@ -87,13 +77,14 @@ struct SaleItemListView: View {
         showCreateSaleItemForm = false
     }
     
-    func saveSaleItemRowChanges(item: SaleItem) {
+    func saveSaleItemRowChanges(_ item: SaleItem) {
+        item.objectWillChange.send() // send change to refresh UI
+        
         if item.hasPersistentChangedValues {
             dataSource.cud.saveUpdateContext()
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        item.objectWillChange.send()
     }
 }
 

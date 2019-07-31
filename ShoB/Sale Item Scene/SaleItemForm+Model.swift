@@ -18,16 +18,22 @@ extension SaleItemForm {
         weak var orderItem: OrderItem?
         
         var name = "" {
-            didSet { assign(to: \Self.name) }
+            didSet {
+                saleItem?.name = name
+                orderItem?.name = name
+            }
         }
         
         @CurrencyWrapper(amount: 0)
         var price: String {
-            didSet { assign(to: \Self.price) }
+            didSet {
+                saleItem?.price = _price.amount
+                orderItem?.price = _price.amount
+            }
         }
         
         var quantity = 1 {
-            didSet { assign(to: \Self.quantity) }
+            didSet { orderItem?.quantity = Int64(quantity) }
         }
         
         var subtotal: String {
@@ -58,49 +64,12 @@ extension SaleItemForm {
         }
         
         
-        func assign(to item: SaleItem, key: PartialKeyPath<Self>? = nil) {
-            switch key {
-            case \Self.name:
-                item.name = name
-            
-            case \Self.price:
-                item.price = _price.amount
-            
-            case .none:
-                item.name = name
-                item.price = _price.amount
-            
-            default: break
-            }
-        }
-        
-        func assign(to item: OrderItem, key: PartialKeyPath<Self>? = nil) {
-            switch key {
-            case \Self.name:
-                item.name = name
-            
-            case \Self.price:
-                item.price = _price.amount
-            
-            case \Self.quantity:
-                item.quantity = Int64(quantity)
-            
-            case .none:
-                item.name = name
-                item.price = _price.amount
-                item.quantity = Int64(quantity)
-            
-            default: break
-            }
-        }
-        
-        private func assign(to key: PartialKeyPath<Self>? = nil) {
-            if let saleItem = saleItem, orderItem == nil {
-                assign(to: saleItem, key: key)
-                
-            } else if let orderItem = orderItem, saleItem == nil {
-                assign(to: orderItem, key: key)
-            }
+        /// Assign values to the item.
+        /// - Parameter item: Object to assign values to.
+        func assign(to item: OrderItem) {
+            item.name = name
+            item.price = _price.amount
+            item.quantity = Int64(quantity)
         }
     }
 }
