@@ -28,8 +28,8 @@ class Store: NSManagedObject, Identifiable {
     @NSManaged var customers: Set<Customer>
     
     
-    override func didChangeValue(forKey key: String) {
-        super.didChangeValue(forKey: key)
+    override func willChangeValue(forKey key: String) {
+        super.willChangeValue(forKey: key)
         objectWillChange.send()
     }
 }

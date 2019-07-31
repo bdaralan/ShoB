@@ -35,8 +35,8 @@ class Customer: NSManagedObject, Identifiable {
     }
     
     
-    override func didChangeValue(forKey key: String) {
-        super.didChangeValue(forKey: key)
+    override func willChangeValue(forKey key: String) {
+        super.willChangeValue(forKey: key)
         objectWillChange.send()
     }
 }
