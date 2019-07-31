@@ -22,7 +22,7 @@ struct OrderRow: View {
     
     @State private var orderModel = OrderForm.Model()
     
-    @State private var navigationState = NavigationStateHandler()
+    @ObservedObject private var navigationState = NavigationStateHandler()
     
     
     // MARK: - Body
@@ -82,7 +82,12 @@ struct OrderRow: View {
     // MARK: - Body Component
     
     var orderDetailView: some View {
-        OrderDetailView(order: order, model: $orderModel, onSave: {
+        navigationState.onPopped = {
+            guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
+            context.rollback()
+        }
+        
+        return OrderDetailView(order: order, model: $orderModel, onSave: {
             self.onSave(self.orderModel)
         })
         .onAppear {
@@ -92,11 +97,6 @@ struct OrderRow: View {
             
             // assign the order to the model.
             self.orderModel = .init(order: self.order)
-            
-            self.navigationState.onPopped = {
-                guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
-                context.rollback()
-            }
         }
     }
     
