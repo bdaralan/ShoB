@@ -16,7 +16,7 @@ struct CustomerRow: View {
     
     @State private var model = CustomerForm.Model()
     
-    @State private var navigationState = NavigationStateHandler()
+    @ObservedObject private var navigationState = NavigationStateHandler()
     
     var onSave: (CustomerForm.Model) -> Void
     
@@ -24,7 +24,12 @@ struct CustomerRow: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: customerDetailView, isActive: $navigationState.isPushed) {
+        navigationState.onPopped = { // discard unsaved changes
+            guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
+            context.rollback()
+        }
+        
+        return NavigationLink(destination: customerDetailView, isActive: $navigationState.isPushed) {
             CustomerRow.ContentView(customer: customer)
         }
     }
@@ -38,11 +43,6 @@ struct CustomerRow: View {
         })
         .onAppear {
             self.model = .init(customer: self.customer)
-            
-            self.navigationState.onPopped = {
-                guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
-                context.rollback()
-            }
         }
     }
 }
