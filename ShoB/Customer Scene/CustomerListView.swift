@@ -76,12 +76,13 @@ struct CustomerListView: View {
     
     func updateCustomer(_ model: CustomerForm.Model) {
         guard let customer = model.customer else { return }
+        customer.objectWillChange.send()
+        
         if customer.hasPersistentChangedValues {
             dataSource.cud.saveUpdateContext()
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        customer.objectWillChange.send()
     }
 }
 

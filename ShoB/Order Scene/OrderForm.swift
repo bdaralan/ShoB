@@ -170,13 +170,13 @@ struct OrderForm: View {
         Button("Add", action: {
             guard let order = self.model.order, let context = order.managedObjectContext else { return }
             
+            // send change to reload form's Update button's state
+            order.objectWillChange.send()
+            
             // create order item and add it to the order
             let newOrderItem = OrderItem(context: context)
             newOrderItem.order = order
             self.newOrderItemModel.assign(to: newOrderItem)
-            
-            // send change to reload form's Update button's state
-            order.objectWillChange.send()
             
             self.dismissOrderItemFormSheet()
         })
@@ -281,12 +281,13 @@ struct OrderForm: View {
     func dismissOrderItemFormSheet() {
         // clean up if the sheet is editOrderItemForm, else it is addOrderItemForm or customerSelectionList
         if editOrderItemModel.orderItem != nil, let order = model.order {
+            order.objectWillChange.send()
+            
             // manually mark order as has changed if its item has changed
             // because hasPersistentChangedValues only check the object property
             // but not its array's object's property
             let hasOrderItemsChanged = order.orderItems.map({ $0.hasPersistentChangedValues }).contains(true)
             order.isMarkedValuesChanged = hasOrderItemsChanged
-            order.objectWillChange.send()
             
             // set orderItem to nil to avoid updating the item (safeguard)
             // the model is not set to .init() to prevent UI reloading while it is dismissing
