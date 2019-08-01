@@ -14,6 +14,11 @@ struct CustomerForm: View {
     
     @Binding var model: Model
     
+    /// An action to perform for deletion
+    ///
+    /// Set the block will show a delete button.
+    var onDelete: (() -> Void)?
+    
     
     // MARK: - Body
     
@@ -31,6 +36,13 @@ struct CustomerForm: View {
                 VertialTextField("Phone", text: $model.phone, content: .telephoneNumber)
                 VertialTextField("Email", text: $model.email, content: .emailAddress)
                 VertialTextField("Address", text: $model.address, content: .fullStreetAddress)
+            }
+            
+            if onDelete != nil {
+                Section {
+                    Button("Delete", action: onDelete!)
+                        .buttonStyle(RowCenterButtonStyle(.destructive))
+                }
             }
         }
     }

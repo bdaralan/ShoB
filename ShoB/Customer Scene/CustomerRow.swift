@@ -18,7 +18,9 @@ struct CustomerRow: View {
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
-    var onSave: (CustomerForm.Model) -> Void
+    var onSave: (Customer) -> Void
+    
+    var onDelete: (Customer) -> Void
     
     
     // MARK: - Body
@@ -39,7 +41,11 @@ struct CustomerRow: View {
     
     var customerDetailView: some View {
         CustomerDetailView(customer: customer, model: $model, onSave: {
-            self.onSave(self.model)
+            self.onSave(self.customer)
+        }, onDelete: {
+            self.navigationState.onPopped = nil
+            self.navigationState.isPushed = false
+            self.onDelete(self.customer)
         })
         .onAppear {
             self.model = .init(customer: self.customer)
@@ -52,7 +58,7 @@ struct CustomerRow: View {
 struct CustomerRow_Previews: PreviewProvider {
     static let customer = Customer(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CustomerRow(customer: customer, onSave: { _ in })
+        CustomerRow(customer: customer, onSave: { _ in }, onDelete: { _ in })
     }
 }
 #endif

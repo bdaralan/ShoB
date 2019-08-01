@@ -18,6 +18,8 @@ struct CustomerListView: View {
     
     @State private var newCustomerModel = CustomerForm.Model()
     
+    @ObservedObject private var viewReloader = ViewForceReloader()
+    
     
     // MARK: - Body
     
@@ -26,7 +28,8 @@ struct CustomerListView: View {
             ForEach(dataSource.fetchController.fetchedObjects ?? []) { customer in
                 CustomerRow(
                     customer: customer.get(from: self.dataSource.cud.updateContext),
-                    onSave: self.updateCustomer
+                    onSave: self.updateCustomer,
+                    onDelete: self.deleteCustomer
                 )
             }
         }
@@ -74,8 +77,7 @@ struct CustomerListView: View {
         showCreateCustomerForm = false
     }
     
-    func updateCustomer(_ model: CustomerForm.Model) {
-        guard let customer = model.customer else { return }
+    func updateCustomer(_ customer: Customer) {
         customer.objectWillChange.send()
         
         if customer.hasPersistentChangedValues {
@@ -83,6 +85,11 @@ struct CustomerListView: View {
         } else {
             dataSource.cud.discardUpdateContext()
         }
+    }
+    
+    func deleteCustomer(_ customer: Customer) {
+        dataSource.cud.delete(customer, saveContext: true)
+        viewReloader.forceReload()
     }
 }
 

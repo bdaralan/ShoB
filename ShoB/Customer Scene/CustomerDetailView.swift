@@ -18,9 +18,11 @@ struct CustomerDetailView: View, EditableForm {
     
     var onSave: () -> Void
     
+    var onDelete: () -> Void
+    
     
     var body: some View {
-        CustomerForm(model: $model)
+        CustomerForm(model: $model, onDelete: onDelete)
             .navigationBarTitle("Customer Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem(title: "Update", enable: customer.hasPersistentChangedValues))
     }
@@ -30,7 +32,7 @@ struct CustomerDetailView: View, EditableForm {
 struct CustomerDetailView_Previews: PreviewProvider {
     static let customer = Customer(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        CustomerDetailView(customer: customer, model: .constant(.init()), onSave: {})
+        CustomerDetailView(customer: customer, model: .constant(.init()), onSave: {}, onDelete: {})
     }
 }
 #endif
