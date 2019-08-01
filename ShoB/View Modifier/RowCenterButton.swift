@@ -31,12 +31,12 @@ struct RowCenterButtonStyle: ButtonStyle {
     func accentColor(for type: ActionType) -> Color {
         switch type {
         case .normal: return .accentColor
-        case .destrictive: return .red
+        case .destructive: return .red
         }
     }
     
     enum ActionType {
         case normal
-        case destrictive
+        case destructive
     }
 }
