@@ -73,6 +73,7 @@ struct Home: View {
             NavigationView {
                 SaleItemListView()
                     .environmentObject(saleItemDataSource)
+                    .environment(\.managedObjectContext, saleItemDataSource.cud.sourceContext)
                     .navigationBarTitle("Items", displayMode: .large)
             }
             .tabItem { tabItem(systemImage: "list.dash", title: "Items") }

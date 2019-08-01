@@ -18,12 +18,18 @@ struct SaleItemListView: View {
     
     @State private var newSaleItemModel = SaleItemForm.Model()
     
+    /// The fetched sale items from context in the environment.
+    ///
+    /// The context in the evironment is the `dataSource`'s context.
+    @FetchRequest(fetchRequest: SaleItem.requestAllObjects())
+    private var fetchedSaleItems: FetchedResults
+    
     
     // MARK: - Body
     
     var body: some View {
         List {
-            ForEach(dataSource.fetchController.fetchedObjects ?? []) { saleItem in
+            ForEach(fetchedSaleItems) { saleItem in
                 SaleItemRow(
                     saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
                     onSave: { self.saveSaleItemRowChanges($0) },
