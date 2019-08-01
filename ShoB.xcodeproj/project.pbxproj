@@ -17,6 +17,7 @@
 		B405261122E938E9007E2325 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405261022E938E9007E2325 /* Text.swift */; };
 		B40EFDDC22B4B64D00C0BAC8 /* OrderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */; };
 		B41093EC22F0A0B8005A85DF /* NavigationStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */; };
+		B414CA4422F3603F001BFE26 /* ViewForceReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0322E28F6900E91F08 /* SaleItemForm+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */; };
 		B42ADB0522E2913B00E91F08 /* SaleItemForm+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0422E2913B00E91F08 /* SaleItemForm+Model.swift */; };
@@ -74,6 +75,7 @@
 		B405261022E938E9007E2325 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListView.swift; sourceTree = "<group>"; };
 		B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStateHandler.swift; sourceTree = "<group>"; };
+		B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewForceReloader.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SaleItemForm+View.swift"; sourceTree = "<group>"; };
 		B42ADB0422E2913B00E91F08 /* SaleItemForm+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SaleItemForm+Model.swift"; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				B437BE3222B95282007C02C0 /* Currency.swift */,
 				B440E66322EE949E004EF9CD /* Importer.swift */,
 				B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */,
+				B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 				B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */,
 				B41093EC22F0A0B8005A85DF /* NavigationStateHandler.swift in Sources */,
 				B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */,
+				B414CA4422F3603F001BFE26 /* ViewForceReloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
