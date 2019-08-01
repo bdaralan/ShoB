@@ -18,15 +18,19 @@ struct SaleItemListView: View {
     
     @State private var newSaleItemModel = SaleItemForm.Model()
     
+    @ObservedObject private var viewReloader = ViewForceReloader()
+    
     
     // MARK: - Body
     
     var body: some View {
         List {
+//            viewReloader.forceReloadView
             ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
                     saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
-                    onSave: self.saveSaleItemRowChanges
+                    onSave: self.saveSaleItemRowChanges,
+                    onDelete: self.deleteSaleItem
                 )
             }
         }
@@ -83,6 +87,11 @@ struct SaleItemListView: View {
             dataSource.cud.discardUpdateContext()
         }
         item.objectWillChange.send()
+    }
+    
+    func deleteSaleItem(_ item: SaleItem) {
+        dataSource.cud.delete(item, saveContext: true)
+        viewReloader.forceReload()
     }
 }
 
