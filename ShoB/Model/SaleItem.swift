@@ -33,3 +33,17 @@ extension SaleItem {
         return NSFetchRequest<SaleItem>(entityName: "SaleItem")
     }
 }
+
+
+extension SaleItem {
+    
+    static func requestAllObjects() -> NSFetchRequest<SaleItem> {
+        let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
+        request.predicate = NSPredicate(value: true)
+        
+        let sortByName = NSSortDescriptor(key: #keyPath(SaleItem.name), ascending: true)
+        request.sortDescriptors = [sortByName]
+        
+        return request
+    }
+}
