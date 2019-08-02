@@ -25,7 +25,7 @@ struct EditOrderItemForm: View {
             }
             Section {
                 Button("Remove", action: onDelete)
-                    .buttonStyle(RowCenterButtonStyle(.destructive))
+                    .buttonStyle(CenterButtonStyle(.destructive))
             }
         }
     }

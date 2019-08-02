@@ -31,7 +31,7 @@
 		B449978422CDDFB600126116 /* SaleItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978322CDDFB600126116 /* SaleItemDetailView.swift */; };
 		B449978622CDE1E000126116 /* CreateSaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978522CDE1E000126116 /* CreateSaleItemForm.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
-		B451060F22F221070047F3F8 /* RowCenterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* RowCenterButton.swift */; };
+		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
@@ -92,7 +92,7 @@
 		B449978322CDDFB600126116 /* SaleItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemDetailView.swift; sourceTree = "<group>"; };
 		B449978522CDE1E000126116 /* CreateSaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSaleItemForm.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
-		B451060E22F221070047F3F8 /* RowCenterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowCenterButton.swift; sourceTree = "<group>"; };
+		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 		B451061022F222310047F3F8 /* View Modifier */ = {
 			isa = PBXGroup;
 			children = (
-				B451060E22F221070047F3F8 /* RowCenterButton.swift */,
+				B451060E22F221070047F3F8 /* CenterButtonStyle.swift */,
 			);
 			path = "View Modifier";
 			sourceTree = "<group>";
@@ -416,7 +416,7 @@
 				B48E584722EA452900B9FEAB /* String.swift in Sources */,
 				B4F4D2B822E2452300E849B4 /* Date.swift in Sources */,
 				B405261122E938E9007E2325 /* Text.swift in Sources */,
-				B451060F22F221070047F3F8 /* RowCenterButton.swift in Sources */,
+				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
 				B405260B22E90EF0007E2325 /* CustomerDetailView.swift in Sources */,
 				B4F4D2B122E229DA00E849B4 /* EditableForm.swift in Sources */,

@@ -31,7 +31,7 @@ struct SaleItemDetailView: View, EditableForm {
             }
             Section {
                 Button("Delete", action: onDelete)
-                    .buttonStyle(RowCenterButtonStyle(.destructive))
+                    .buttonStyle(CenterButtonStyle(.destructive))
             }
         }
         .navigationBarTitle("Item Details", displayMode: .inline)

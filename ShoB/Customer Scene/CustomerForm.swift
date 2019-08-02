@@ -41,7 +41,7 @@ struct CustomerForm: View {
             if onDelete != nil {
                 Section {
                     Button("Delete", action: onDelete!)
-                        .buttonStyle(RowCenterButtonStyle(.destructive))
+                        .buttonStyle(CenterButtonStyle(.destructive))
                 }
             }
         }

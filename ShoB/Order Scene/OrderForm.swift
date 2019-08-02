@@ -178,7 +178,7 @@ extension OrderForm {
     var deleteOrderButtonRow: some View {
         guard let onDelete = onDelete, let order = model.order else { return AnyView.emptyView }
         return Button("Delete", action: { onDelete(order) })
-            .buttonStyle(RowCenterButtonStyle(.destructive))
+            .buttonStyle(CenterButtonStyle(.destructive))
             .toAnyView()
     }
     
@@ -186,7 +186,7 @@ extension OrderForm {
     var orderAgainButtonRow: some View {
         guard let onOrderAgain = onOrderAgain, let order = model.order else { return AnyView.emptyView }
         return Button("Order Again", action: { onOrderAgain(order) })
-            .buttonStyle(RowCenterButtonStyle(.normal))
+            .buttonStyle(CenterButtonStyle(.normal))
             .toAnyView()
     }
 }

@@ -1,5 +1,5 @@
 //
-//  RowCenterButton.swift
+//  CenterButtonStyle.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/31/19.
@@ -9,7 +9,8 @@
 import SwiftUI
 
 
-struct RowCenterButtonStyle: ButtonStyle {
+/// A button style that will center the button's label.
+struct CenterButtonStyle: ButtonStyle {
     
     let actionType: ActionType
     
@@ -34,6 +35,7 @@ struct RowCenterButtonStyle: ButtonStyle {
         case .destructive: return .red
         }
     }
+    
     
     enum ActionType {
         case normal
