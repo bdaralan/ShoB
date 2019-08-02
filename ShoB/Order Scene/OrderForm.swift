@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-import Combine
-import CoreData
 
 
 /// A form used to view and edit order.
@@ -19,7 +17,7 @@ struct OrderForm: View {
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
     
     /// Model used to create order.
-    @Binding var model: Model
+    @Binding var model: OrderFormModel
     
     var onDelete: ((Order) -> Void)?
     

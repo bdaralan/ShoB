@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct EditOrderItemForm: View {
     
     @Binding var orderItemModel: SaleItemFormModel
@@ -22,14 +23,14 @@ struct EditOrderItemForm: View {
             Section {
                 SaleItemFormBody(model: $orderItemModel, mode: .orderItem)
             }
-            
             Section {
-                Button("Remove From Delete", action: onDelete)
+                Button("Remove", action: onDelete)
                     .buttonStyle(RowCenterButtonStyle(.destructive))
             }
         }
     }
 }
+
 
 #if DEBUG
 struct EditOrderItemView_Previews: PreviewProvider {

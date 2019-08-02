@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 
 /// A view that displays order in a list row.
@@ -24,7 +23,7 @@ struct OrderRow: View {
     
     var onOrderAgain: (Order) -> Void
     
-    @State private var orderModel = OrderForm.Model()
+    @State private var orderModel = OrderFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     

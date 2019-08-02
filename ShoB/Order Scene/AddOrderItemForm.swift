@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct AddOrderItemForm: View {
     
     @Binding var orderItemModel: SaleItemFormModel
@@ -28,15 +29,17 @@ struct AddOrderItemForm: View {
             Section(header: Text("ALL SALE ITEMS")) {
                 ForEach(saleItems) { item in
                     Button(action: {
+                        // only need to get values for the model
+                        // do not keep reference to avoid editing the item's original values
                         self.orderItemModel = .init(saleItem: item, keepReference: false)
-                    }, label: {
+                    }) {
                         HStack {
                             Text("\(item.name)")
                             Spacer()
                             Text(verbatim: "\(Currency(item.price))")
                         }
-                    })
-                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
         }

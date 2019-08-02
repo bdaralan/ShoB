@@ -7,14 +7,13 @@
 //
 
 import SwiftUI
-import CoreData
 
 
 /// A form used to create new order.
 struct CreateOrderForm: View, CreatableForm {
     
     /// The model to create order.
-    @Binding var model: OrderForm.Model
+    @Binding var model: OrderFormModel
     
     /// Triggered when the new order is placed.
     var onCreate: () -> Void

@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 
 /// A view that displays store's orders in a list.
@@ -28,7 +27,7 @@ struct OrderListView: View {
     @State private var showPlaceOrderForm = false
     
     /// The model used to place new order.
-    @State private var newOrderModel = OrderForm.Model()
+    @State private var newOrderModel = OrderFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
@@ -62,9 +61,12 @@ struct OrderListView: View {
             content: { self.placeOrderForm }
         )
     }
-    
-    
-    // MARK: - Body Component
+}
+
+
+// MARK: - Body Component
+
+extension OrderListView {
     
     var placeNewOrderNavItem: some View {
         Button(action: {
@@ -91,9 +93,12 @@ struct OrderListView: View {
             .environmentObject(customerDataSource)
         }
     }
-    
-    
-    // MARK: - Method
+}
+
+
+// MARK: - Method
+
+extension OrderListView {
     
     /// Dismiss place order form.
     ///

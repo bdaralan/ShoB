@@ -1,5 +1,5 @@
 //
-//  OrderRow+ContentView.swift
+//  OrderRowContentView.swift
 //  ShoB
 //
 //  Created by Dara Beng on 8/1/19.

@@ -15,7 +15,7 @@ struct OrderDetailView: View, EditableForm {
     @ObservedObject var order: Order
     
     /// The order to view or update.
-    @Binding var model: OrderForm.Model
+    @Binding var model: OrderFormModel
     
     var onSave: () -> Void
     
@@ -29,16 +29,10 @@ struct OrderDetailView: View, EditableForm {
     var body: some View {
         OrderForm(model: $model, onDelete: onDelete, onOrderAgain: onOrderAgain)
             .navigationBarTitle("Order Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem)
-    }
-    
-    
-    // MARK: - Body Component
-    
-    var saveNavItem: some View {
-        saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedValuesChanged)
+            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedValuesChanged))
     }
 }
+
 
 #if DEBUG
 struct OrderDetailView_Previews : PreviewProvider {
