@@ -71,7 +71,7 @@ extension CustomerRow.ContentView {
         case false where !email.isEmpty && phone.isEmpty:
             return infoText(image: Image.SFCustomer.email, text: email).toAnyView()
             
-        default: return EmptyView().toAnyView()
+        default: return AnyView.emptyView
         }
     }
     

@@ -9,6 +9,14 @@
 import SwiftUI
 
 
+extension AnyView {
+    
+    static var emptyView: AnyView {
+        AnyView(EmptyView())
+    }
+}
+
+
 extension View {
     
     /// Flat view to `AnyView`.

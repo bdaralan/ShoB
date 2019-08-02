@@ -21,6 +21,10 @@ struct OrderForm: View {
     /// Model used to create order.
     @Binding var model: Model
     
+    var onDelete: ((Order) -> Void)?
+    
+    var onOrderAgain: ((Order) -> Void)?
+    
     /// Model used to create and add item to the order.
     @State private var newOrderItemModel = SaleItemForm.Model()
     
@@ -36,7 +40,7 @@ struct OrderForm: View {
     /// - order item form
     /// - add or edit item form
     /// - customer selection list
-    @State private var modalPresentationSheet = EmptyView().toAnyView()
+    @State private var modalPresentationSheet = AnyView.emptyView
     
     
     // MARK: - Body
@@ -115,6 +119,12 @@ struct OrderForm: View {
                 }
                 .frame(minHeight: 200)
             }
+            
+            // MARK: Action Section
+            Section {
+                deleteOrderButtonRow
+                orderAgainButtonRow
+            }
         }
         .sheet(
             isPresented: $showModalPresentationSheet,
@@ -153,7 +163,7 @@ extension OrderForm {
         }
     }
     
-    /// Form's row displaying order items.
+    /// Order's order item row.
     /// - Parameter item: Order item to display.
     func orderItemRow(for item: OrderItem) -> some View {
         HStack {
@@ -164,6 +174,22 @@ extension OrderForm {
                 .imageScale(.large)
                 .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
+    }
+    
+    /// Delete order button.
+    var deleteOrderButtonRow: some View {
+        guard let onDelete = onDelete, let order = model.order else { return AnyView.emptyView }
+        return Button("Delete", action: { onDelete(order) })
+            .buttonStyle(RowCenterButtonStyle(.destructive))
+            .toAnyView()
+    }
+    
+    /// Order again button.
+    var orderAgainButtonRow: some View {
+        guard let onOrderAgain = onOrderAgain, let order = model.order else { return AnyView.emptyView }
+        return Button("Order Again", action: { onOrderAgain(order) })
+            .buttonStyle(RowCenterButtonStyle(.normal))
+            .toAnyView()
     }
 }
 
