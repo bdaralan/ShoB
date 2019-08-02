@@ -45,7 +45,7 @@ struct OrderForm: View {
         Form {
             // MARK: Customer Section
             Section(header: Text.topSection("CUSTOMER")) {
-                currentCustomerRow
+                customerRow(for: model.order?.customer)
             }
             
             // MARK: Date Section
@@ -84,34 +84,24 @@ struct OrderForm: View {
                 }
             }
             
-            // MARK: Items Section
+            // MARK: Order Items Section
             Section(header: Text("ORDER ITEMS")) {
                 
-                // MARK: Add Button
-                Button(action: {
-                    self.newOrderItemModel = .init()
-                    self.modalPresentationSheet = self.addOrderItemForm.toAnyView()
-                    self.showModalPresentationSheet = true
-                }, label: {
+                // Add Item Button
+                Button(action: showAddOrderItemForm) {
                     HStack {
                         Text("Add Item")
                         Spacer()
                         Image(systemName: "plus.circle").imageScale(.large)
                     }
-                })
+                }
                 
-                // MARK: Order Item List
-                if model.order != nil {
-                    ForEach(model.order!.orderItems.sorted(by: { $0.name < $1.name })) { item in
-                        Button(action: {
-                            self.editOrderItemModel = .init(item: item)
-                            self.modalPresentationSheet = self.editOrderItemForm.toAnyView()
-                            self.showModalPresentationSheet = true
-                        }, label: {
-                            self.orderItemRow(for: item)
-                        })
-                        .buttonStyle(PlainButtonStyle())
+                // Order Item List
+                ForEach(model.order?.orderItems.sorted(by: { $0.name < $1.name }) ?? []) { item in
+                    Button(action: { self.showEditOrderItemForm(with: item) }) {
+                        self.orderItemRow(for: item)
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
 
@@ -128,44 +118,73 @@ struct OrderForm: View {
         }
         .sheet(
             isPresented: $showModalPresentationSheet,
-            onDismiss: dismissOrderItemFormSheet,
+            onDismiss: dismissPresentationSheet,
             content: { self.modalPresentationSheet }
         )
-        
     }
+}
+
+
+// MARK: - Form Row
+
+extension OrderForm {
     
-    
-    // MARK: - Body Component
-    
-    var addOrderItemForm: some View {
-        NavigationView {
-            Form {
-                // Input Section
-                Section(header: Text.topSection("ORDER ITEM")) {
-                    SaleItemForm.BodyView(model: self.$newOrderItemModel, mode: .orderItem)
-                }
-                
-                // Sale Item List Section
-                Section(header: Text("ALL SALE ITEMS")) {
-                    ForEach(saleItemDataSource.fetchController.fetchedObjects ?? []) { item in
-                        Button(action: {
-                            self.newOrderItemModel = .init(item: item, keepReference: false)
-                        }, label: {
-                            HStack {
-                                Text("\(item.name)")
-                                Spacer()
-                                Text(verbatim: "\(Currency(item.price))")
-                            }
-                        })
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
+    /// Customer row displaying selected customer
+    func customerRow(for customer: Customer?) -> some View {
+        if let customer = customer {
+            return Button(action: showCustomerSelectionView) {
+                CustomerRow.ContentView(customer: customer)
             }
-            .navigationBarTitle("Add Item", displayMode: .inline)
-            .navigationBarItems(leading: addOrderItemFormCancelNavItem, trailing: addOrderItemFormAddNavItem)
+            .buttonStyle(PlainButtonStyle())
+            .toAnyView()
+            
+        } else { // no customer selected
+            return Button(action: showCustomerSelectionView) {
+                HStack {
+                    Image.SFCustomer.profile
+                    Text("None")
+                    Spacer()
+                    Text("Select Customer")
+                }
+                .foregroundColor(.secondary)
+            }
+            .buttonStyle(PlainButtonStyle())
+            .toAnyView()
         }
     }
     
+    /// Form's row displaying order items.
+    /// - Parameter item: Order item to display.
+    func orderItemRow(for item: OrderItem) -> some View {
+        HStack {
+            Text("\(item.quantity) x \(item.name)")
+            Spacer()
+            Text(verbatim: "\(Currency(item.subtotal))")
+            Image(systemName: "square.and.pencil")
+                .imageScale(.large)
+                .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
+        }
+    }
+}
+
+
+// MARK: - Add Order Item Form
+
+extension OrderForm {
+    
+    /// A form used to add order item to the order.
+    var addOrderItemForm: some View {
+        NavigationView {
+            AddOrderItemForm(
+                orderItemModel: $newOrderItemModel,
+                saleItems: saleItemDataSource.fetchController.fetchedObjects ?? []
+            )
+                .navigationBarTitle("Add Item", displayMode: .inline)
+                .navigationBarItems(leading: addOrderItemFormCancelNavItem, trailing: addOrderItemFormAddNavItem)
+        }
+    }
+    
+    /// Add navigation item for `addOrderItemForm`.
     var addOrderItemFormAddNavItem: some View {
         Button("Add", action: {
             guard let order = self.model.order, let context = order.managedObjectContext else { return }
@@ -178,57 +197,46 @@ struct OrderForm: View {
             newOrderItem.order = order
             self.newOrderItemModel.assign(to: newOrderItem)
             
-            self.dismissOrderItemFormSheet()
+            self.dismissPresentationSheet()
         })
     }
     
+    /// Cancel navigation item for `addOrderItemForm`.
     var addOrderItemFormCancelNavItem: some View {
-        Button("Cancel", action: dismissOrderItemFormSheet)
+        Button("Cancel", action: dismissPresentationSheet)
     }
+}
+
+
+// MARK: - Edit Order Item Form
+
+extension OrderForm {
     
+    /// A form used to edit order's item.
     var editOrderItemForm: some View {
         NavigationView {
-            Form {
-                Section {
-                    SaleItemForm.BodyView(model: $editOrderItemModel, mode: .orderItem)
-                }
-                Section {
-                    Button(action: deleteOrderItemFromOrder) {
-                        HStack(alignment: .center) {
-                            Spacer()
-                            Text("Remove From Order").foregroundColor(.red)
-                            Spacer()
-                        }
-                    }
-                }
-            }
-            .navigationBarTitle("Edit Item", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Done", action: dismissOrderItemFormSheet))
+            EditOrderItemForm(orderItemModel: $editOrderItemModel, onDelete: deleteEditingOrderItem)
+                .navigationBarTitle("Edit Item", displayMode: .inline)
+                .navigationBarItems(trailing: Button("Done", action: dismissPresentationSheet))
         }
     }
     
-    var currentCustomerRow: some View {
-        if let customer = model.order?.customer {
-            return Button(action: showCustomerSelectionList, label: { CustomerRow.ContentView(customer: customer) })
-                .buttonStyle(PlainButtonStyle())
-                .toAnyView()
-        } else {
-            return Button(action: showCustomerSelectionList, label: { currentCustomerRowNone })
-                .toAnyView()
-        }
+    /// Delete the current editing order's item.
+    func deleteEditingOrderItem() {
+        guard let itemToDelete = editOrderItemModel.orderItem else { return }
+        guard let context = itemToDelete.managedObjectContext else { return }
+        context.delete(itemToDelete)
+        dismissPresentationSheet()
     }
+}
+
+
+// MARK: - Customer Selection List View
+
+extension OrderForm {
     
-    var currentCustomerRowNone: some View {
-        HStack {
-            Image.SFCustomer.profile
-            Text("None")
-            Spacer()
-            Text("Select Customer")
-        }
-        .foregroundColor(.secondary)
-    }
-    
-    var customerSelectionList: some View {
+    /// A list view displaying all customers for user to select.
+    var customerSelectionView: some View {
         NavigationView {
             List {
                 ForEach(customerDataSource.fetchController.fetchedObjects ?? []) { customer in
@@ -240,16 +248,20 @@ struct OrderForm: View {
         }
     }
     
+    /// Cancel nav item for `customerSelectionView`.
     var customerSelectionDeselectNavItem: some View {
         Button(action: { self.selectCustomer(nil) }) {
             Image(systemName: "person.crop.circle.badge.xmark").imageScale(.large)
         }
     }
     
+    /// Deselect customer nav item for `customerSelectionView`.
     var customerSelectionCancelNavItem: some View {
         Button("Cancel", action: { self.showModalPresentationSheet = false })
     }
     
+    /// Customer row for `customerSelectionView`.
+    /// - Parameter customer: The customer to display.
     func customerSelectionRow(for customer: Customer) -> some View {
         Button(action: { self.selectCustomer(customer) }) {
             HStack {
@@ -263,23 +275,27 @@ struct OrderForm: View {
         .buttonStyle(PlainButtonStyle())
     }
     
-    func orderItemRow(for item: OrderItem) -> some View {
-        HStack {
-            Text("\(item.quantity) x \(item.name)")
-            Spacer()
-            Text(verbatim: "\(Currency(item.subtotal))")
-            Image(systemName: "square.and.pencil")
-                .imageScale(.large)
-                .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
+    /// Assign a customer to the order or `nil` for no customer.
+    /// - Parameter customer: The customer to assign or `nil`.
+    func selectCustomer(_ customer: Customer?) {
+        if let customer = customer, let context = model.order?.managedObjectContext {
+            model.order?.customer = customer.get(from: context)
+        } else {
+            model.order?.customer = nil
         }
+        showModalPresentationSheet = false
     }
-    
-    
-    // MARK: - Method
+}
+
+
+// MARK: - Method
+
+extension OrderForm {
     
     /// Dismiss the presenting add or edit order form sheet and clean up as needed.
-    func dismissOrderItemFormSheet() {
-        // clean up if the sheet is editOrderItemForm, else it is addOrderItemForm or customerSelectionList
+    func dismissPresentationSheet() {
+        // for add-order-item form or customer-selection list, just dismiss
+        // for edit-order-item form, do some clean up and reload
         if editOrderItemModel.orderItem != nil, let order = model.order {
             order.objectWillChange.send()
             
@@ -298,26 +314,24 @@ struct OrderForm: View {
         showModalPresentationSheet = false
     }
     
-    /// Delete the current editing order item.
-    func deleteOrderItemFromOrder() {
-        guard let itemToDelete = editOrderItemModel.orderItem else { return }
-        guard let context = itemToDelete.managedObjectContext else { return }
-        context.delete(itemToDelete)
-        dismissOrderItemFormSheet()
-    }
-    
-    func selectCustomer(_ customer: Customer?) {
-        if let customer = customer, let order = model.order, let context = order.managedObjectContext {
-            order.customer = customer.get(from: context)
-        } else {
-            model.order?.customer = nil
-        }
-        showModalPresentationSheet = false
-    }
-    
-    func showCustomerSelectionList() {
-        modalPresentationSheet = customerSelectionList.toAnyView()
+    /// Present `customerSelectionView` sheet.
+    func showCustomerSelectionView() {
+        modalPresentationSheet = customerSelectionView.toAnyView()
         showModalPresentationSheet = true
+    }
+    
+    /// Present `editOrderItemForm` sheet.
+    func showEditOrderItemForm(with item: OrderItem) {
+        editOrderItemModel = .init(item: item)
+        modalPresentationSheet = editOrderItemForm.toAnyView()
+        showModalPresentationSheet = true
+    }
+    
+    /// Present `addOrderItemForm` sheet.
+    func showAddOrderItemForm() {
+        self.newOrderItemModel = .init()
+        self.modalPresentationSheet = self.addOrderItemForm.toAnyView()
+        self.showModalPresentationSheet = true
     }
 }
 

@@ -17,6 +17,8 @@
 		B405261122E938E9007E2325 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405261022E938E9007E2325 /* Text.swift */; };
 		B40EFDDC22B4B64D00C0BAC8 /* OrderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */; };
 		B41093EC22F0A0B8005A85DF /* NavigationStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */; };
+		B412C70C22F3919300A4DE4D /* AddOrderItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B412C70B22F3919300A4DE4D /* AddOrderItemForm.swift */; };
+		B412C70E22F3936800A4DE4D /* EditOrderItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B412C70D22F3936800A4DE4D /* EditOrderItemForm.swift */; };
 		B414CA4422F3603F001BFE26 /* ViewForceReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0322E28F6900E91F08 /* SaleItemForm+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */; };
@@ -75,6 +77,8 @@
 		B405261022E938E9007E2325 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListView.swift; sourceTree = "<group>"; };
 		B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStateHandler.swift; sourceTree = "<group>"; };
+		B412C70B22F3919300A4DE4D /* AddOrderItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrderItemForm.swift; sourceTree = "<group>"; };
+		B412C70D22F3936800A4DE4D /* EditOrderItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderItemForm.swift; sourceTree = "<group>"; };
 		B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewForceReloader.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0222E28F6900E91F08 /* SaleItemForm+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SaleItemForm+View.swift"; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 				B4A5D97822CC3AB600695A3F /* OrderDetailView.swift */,
 				B4A5D97622CC392700695A3F /* CreateOrderForm.swift */,
 				B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */,
+				B412C70D22F3936800A4DE4D /* EditOrderItemForm.swift */,
+				B412C70B22F3919300A4DE4D /* AddOrderItemForm.swift */,
 				B4BE1CFE22E3DC6C00667CAF /* OrderForm+Model.swift */,
 				B4D5E6CE22C0558800BE7580 /* OrderRow.swift */,
 			);
@@ -418,6 +424,7 @@
 				B437BE3522B963CE007C02C0 /* SaleItemListView.swift in Sources */,
 				B405260922E90A68007E2325 /* AlwaysLowercasedWrapper.swift in Sources */,
 				B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */,
+				B412C70C22F3919300A4DE4D /* AddOrderItemForm.swift in Sources */,
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
 				B449978422CDDFB600126116 /* SaleItemDetailView.swift in Sources */,
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
@@ -427,6 +434,7 @@
 				B437BE3322B95282007C02C0 /* Currency.swift in Sources */,
 				B4B9D13522B2DF3B003FC4E3 /* ShoB.xcdatamodeld in Sources */,
 				B449978622CDE1E000126116 /* CreateSaleItemForm.swift in Sources */,
+				B412C70E22F3936800A4DE4D /* EditOrderItemForm.swift in Sources */,
 				B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */,
 				B4D346B222B6A31B0051AABB /* StandardUserDefaults.swift in Sources */,
 				B4B9D14B22B2E4A0003FC4E3 /* OrderItem.swift in Sources */,
