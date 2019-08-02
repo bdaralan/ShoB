@@ -9,18 +9,13 @@
 import SwiftUI
 
 
-extension OrderRow {
+/// The content view of the order row.
+struct OrderRowContentView: View {
+
+    @ObservedObject var order: Order
     
-    struct ContentView: View {
-        
-        @ObservedObject var order: Order
-    }
-}
-
-
-// MARK: - Body
-
-extension OrderRow.ContentView {
+    
+    // MARK: - Body
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -28,7 +23,7 @@ extension OrderRow.ContentView {
             HStack {
                 Group {
                     Image.SFCustomer.profile
-                    Text("\(order.customer?.identity ?? "None")")
+                    Text(order.customer?.identity ?? "None")
                 }
                 .foregroundColor(order.customer == nil ? .secondary : .primary)
                 
@@ -40,42 +35,45 @@ extension OrderRow.ContentView {
             .font(.title)
             
             // MARK: Order Date
-            HStack {
-                Image.SFOrder.orderDate
-                Text("\(order.orderDate, formatter: DateFormatter.shortDateTime)")
-            }
-            
-            // MARK: Delivery Date
-            HStack {
-                Image.SFOrder.delivery
-                Text(order.deliveryDate == nil ? "No" : "\(order.deliveryDate!, formatter: DateFormatter.shortDateTime)")
-            }
-            
-            // MARK: Delivered Date
-            HStack {
-                Image.SFOrder.delivered
-                Text(order.deliveredDate == nil ? "No" : "\(order.deliveredDate!, formatter: DateFormatter.shortDateTime)")
-            }
+            dateText(image: Image.SFOrder.orderDate, date: order.orderDate)
+            dateText(image: Image.SFOrder.delivery, date: order.deliveryDate)
+            dateText(image: Image.SFOrder.delivered, date: order.deliveredDate)
             
             // MARK: Total & Discount
             HStack {
-                Image.SFOrder.totalBeforeDiscount
-                Text(verbatim: "\(Currency(order.total))")
-                spacerDivider
-                Image.SFOrder.discount
-                Text(verbatim: "\(Currency(order.discount))")
-                spacerDivider
-                Image.SFOrder.totalAfterDiscount
-                Text(verbatim: "\(Currency(order.total - order.discount))").bold()
+                currencyText(image: Image.SFOrder.totalBeforeDiscount, amount: order.total)
+                verticalDivider
+                currencyText(image: Image.SFOrder.discount, amount: order.discount)
+                verticalDivider
+                currencyText(image: Image.SFOrder.totalAfterDiscount, amount: order.total - order.discount)
             }
         }
     }
+}
+
     
-    var spacerDivider: some View {
-        Group {
-            Spacer()
-            Divider()
-            Spacer()
+// MARK: - Body Component
+
+extension OrderRowContentView {
+    
+    /// View displaying imag and text for date.
+    /// - Parameter image: Image to display.
+    /// - Parameter date: Date to display.
+    func dateText(image: Image, date: Date?) -> some View {
+        HStack {
+            image
+            Text(date == nil ? "No" : "\(date!, formatter: DateFormatter.shortDateTime)")
         }
+    }
+    
+    /// View displaying image and currency amount.
+    /// - Parameter image: Image to display.
+    /// - Parameter amount: Amount to display.
+    func currencyText(image: Image, amount: Cent) -> some View {
+        ViewBuilder.buildBlock(image, Text(verbatim: "\(Currency(amount))"))
+    }
+    
+    var verticalDivider: some View {
+        ViewBuilder.buildBlock(Spacer(), Divider(), Spacer())
     }
 }

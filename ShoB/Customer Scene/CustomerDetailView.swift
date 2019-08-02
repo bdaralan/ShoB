@@ -14,12 +14,14 @@ struct CustomerDetailView: View, EditableForm {
     
     @ObservedObject var customer: Customer
     
-    @Binding var model: CustomerForm.Model
+    @Binding var model: CustomerFormModel
     
     var onSave: () -> Void
     
     var onDelete: () -> Void
     
+    
+    // MARK: - Body
     
     var body: some View {
         CustomerForm(model: $model, onDelete: onDelete)
@@ -27,6 +29,7 @@ struct CustomerDetailView: View, EditableForm {
             .navigationBarItems(trailing: saveNavItem(title: "Update", enable: customer.hasPersistentChangedValues))
     }
 }
+
 
 #if DEBUG
 struct CustomerDetailView_Previews: PreviewProvider {

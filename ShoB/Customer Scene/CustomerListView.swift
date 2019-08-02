@@ -16,7 +16,7 @@ struct CustomerListView: View {
     
     @State private var showCreateCustomerForm = false
     
-    @State private var newCustomerModel = CustomerForm.Model()
+    @State private var newCustomerModel = CustomerFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
@@ -40,10 +40,32 @@ struct CustomerListView: View {
             content: { self.createCustomerForm }
         )
     }
+}
+
+
+// MARK: - Nav Item
+
+extension CustomerListView {
     
+    var createNewCustomerNavItem: some View {
+        Button(action: {
+            // discard and create a new object for the form
+            self.dataSource.cud.discardNewObject()
+            self.dataSource.cud.prepareNewObject()
+            self.newCustomerModel = .init(customer: self.dataSource.cud.newObject!)
+            self.showCreateCustomerForm = true
+        }) {
+            Image(systemName: "plus").imageScale(.large)
+        }
+    }
+}
+
+
+// MARK: - Create Customer Form
+
+extension CustomerListView {
     
-    // MARK: - Body Component
-    
+    /// A form for creating new customer.
     var createCustomerForm: some View {
         CreateCustomerForm(
             model: $newCustomerModel,
@@ -51,21 +73,6 @@ struct CustomerListView: View {
             onCancel: dismissCreateNewCustomerForm
         )
     }
-    
-    var createNewCustomerNavItem: some View {
-        Button(action: {
-            // discard and create a new order object for the form
-            self.dataSource.cud.discardNewObject()
-            self.dataSource.cud.prepareNewObject()
-            self.newCustomerModel = .init(customer: self.dataSource.cud.newObject!)
-            self.showCreateCustomerForm = true
-        }, label: {
-            Image(systemName: "plus").imageScale(.large)
-        })
-    }
-    
-    
-    // MARK: - Method
     
     func dismissCreateNewCustomerForm() {
         dataSource.cud.discardCreateContext()
@@ -76,6 +83,12 @@ struct CustomerListView: View {
         dataSource.cud.saveCreateContext()
         showCreateCustomerForm = false
     }
+}
+
+
+// MARK: - Customer Row Method
+
+extension CustomerListView {
     
     func updateCustomer(_ customer: Customer) {
         customer.objectWillChange.send()
@@ -92,6 +105,7 @@ struct CustomerListView: View {
         viewReloader.forceReload()
     }
 }
+
 
 #if DEBUG
 struct CustomerList_Previews : PreviewProvider {

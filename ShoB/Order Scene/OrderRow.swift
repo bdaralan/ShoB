@@ -33,7 +33,7 @@ struct OrderRow: View {
     
     var body: some View {
         NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
-            OrderRow.ContentView(order: order)
+            OrderRowContentView(order: order)
         }
     }
 

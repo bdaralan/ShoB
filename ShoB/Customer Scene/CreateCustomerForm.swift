@@ -12,12 +12,14 @@ import SwiftUI
 /// A view used to create new customer.
 struct CreateCustomerForm: View, CreatableForm {
     
-    @Binding var model: CustomerForm.Model
+    @Binding var model: CustomerFormModel
     
     var onCreate: () -> Void
     
     var onCancel: () -> Void
     
+    
+    // MARK: - Body
     
     var body: some View {
         NavigationView {
@@ -27,6 +29,7 @@ struct CreateCustomerForm: View, CreatableForm {
         }
     }
 }
+
 
 #if DEBUG
 struct CreateCustomerForm_Previews: PreviewProvider {

@@ -12,7 +12,7 @@ import SwiftUI
 /// A view used to view or edit customer.
 struct CustomerForm: View {
     
-    @Binding var model: Model
+    @Binding var model: CustomerFormModel
     
     /// An action to perform for deletion
     ///
@@ -51,7 +51,7 @@ struct CustomerForm: View {
 
 #if DEBUG
 struct CustomerForm_Previews: PreviewProvider {
-    static let model = CustomerForm.Model()
+    static let model = CustomerFormModel()
     static var previews: some View {
         CustomerForm(model: .constant(model))
     }

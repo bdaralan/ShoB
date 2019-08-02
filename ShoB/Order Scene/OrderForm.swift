@@ -143,7 +143,7 @@ extension OrderForm {
     func customerRow(for customer: Customer?) -> some View {
         if let customer = customer {
             return Button(action: showCustomerSelectionView) {
-                CustomerRow.ContentView(customer: customer)
+                CustomerRowContentView(customer: customer)
             }
             .buttonStyle(PlainButtonStyle())
             .toAnyView()
@@ -291,7 +291,7 @@ extension OrderForm {
     func customerSelectionRow(for customer: Customer) -> some View {
         Button(action: { self.selectCustomer(customer) }) {
             HStack {
-                CustomerRow.ContentView(customer: customer)
+                CustomerRowContentView(customer: customer)
                 if customer.objectID == self.model.order?.customer?.objectID {
                     Spacer()
                     Image(systemName: "checkmark")

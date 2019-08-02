@@ -14,7 +14,7 @@ struct CustomerRow: View {
     
     @ObservedObject var customer: Customer
     
-    @State private var model = CustomerForm.Model()
+    @State private var model = CustomerFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
@@ -26,18 +26,22 @@ struct CustomerRow: View {
     // MARK: - Body
     
     var body: some View {
+        // setup navigation view on popped logic
         navigationState.onPopped = { // discard unsaved changes
             guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
             context.rollback()
         }
         
         return NavigationLink(destination: customerDetailView, isActive: $navigationState.isPushed) {
-            CustomerRow.ContentView(customer: customer)
+            CustomerRowContentView(customer: customer)
         }
     }
-    
-    
-    // MARK: - Body Component
+}
+
+
+// MARK: - Body Component
+
+extension CustomerRow {
     
     var customerDetailView: some View {
         CustomerDetailView(customer: customer, model: $model, onSave: {
