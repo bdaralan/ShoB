@@ -10,7 +10,7 @@ import SwiftUI
 
 struct EditOrderItemForm: View {
     
-    @Binding var orderItemModel: SaleItemForm.Model
+    @Binding var orderItemModel: SaleItemFormModel
     
     var onDelete: () -> Void
     
@@ -20,7 +20,7 @@ struct EditOrderItemForm: View {
     var body: some View {
         Form {
             Section {
-                SaleItemForm.BodyView(model: $orderItemModel, mode: .orderItem)
+                SaleItemFormBody(model: $orderItemModel, mode: .orderItem)
             }
             
             Section {

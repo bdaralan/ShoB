@@ -16,7 +16,7 @@ struct SaleItemListView: View {
     
     @State private var showCreateSaleItemForm = false
     
-    @State private var newSaleItemModel = SaleItemForm.Model()
+    @State private var newSaleItemModel = SaleItemFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
@@ -25,7 +25,6 @@ struct SaleItemListView: View {
     
     var body: some View {
         List {
-//            viewReloader.forceReloadView
             ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
                     saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
@@ -41,16 +40,19 @@ struct SaleItemListView: View {
             content: { self.createSaleItemForm }
         )
     }
-    
+}
+ 
 
-    // MARK: - Body Component
+// MARK: - Body Component
+
+extension SaleItemListView {
     
     var addNewSaleItemNavItem: some View {
         Button(action: {
             // discard and create new item for the form
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
-            self.newSaleItemModel = .init(item: self.dataSource.cud.newObject!)
+            self.newSaleItemModel = .init(saleItem: self.dataSource.cud.newObject!)
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -66,9 +68,12 @@ struct SaleItemListView: View {
             )
         }
     }
-    
-    
-    // MARK: - Method
+}
+
+
+// MARK: - Method
+
+extension SaleItemListView {
     
     func dismisCreateSaleItem() {
         dataSource.cud.discardCreateContext()

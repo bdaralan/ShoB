@@ -15,12 +15,6 @@ extension OrderForm {
     struct Model {
         weak var order: Order?
         
-        /// Customer's managed object URI.
-        /// The default is `Self.customerURINone`.
-        var customerURI = customerURINone {
-            didSet { order?.customer = customer(forURI: customerURI) }
-        }
-        
         var isDelivering = false {
             didSet { self.order?.deliveryDate = isDelivering ? Date.currentYMDHM : nil }
         }
@@ -54,7 +48,6 @@ extension OrderForm {
         init(order: Order? = nil) {
             guard let order = order else { return }
             self.order = order
-            self.customerURI = order.customer?.objectID.uriRepresentation() ?? Self.customerURINone
             orderDate = order.orderDate
             isDelivering = order.deliveryDate != nil
             isDelivered = order.deliveredDate != nil
@@ -69,9 +62,6 @@ extension OrderForm {
 
 extension OrderForm.Model {
     
-    /// A constant used to indicate that there is no customer selected.
-    static let customerURINone = URL(string: "/\(Self.self).customerURINone")!
-    
     /// Total before discount.
     var totalBeforeDiscount: String {
         guard let order = order else { return "\(Currency(0))" }
@@ -82,25 +72,5 @@ extension OrderForm.Model {
     var totalAfterDiscount: String {
         guard let order = order else { return "\(Currency(0))" }
         return "\(Currency(order.total - order.discount))"
-    }
-    
-    var isCustomerSelected: Bool {
-        return customerURI != Self.customerURINone
-    }
-    
-    /// Get customer object from the URI.
-    ///
-    /// - Warning: The system will `throws` if the URI is not CoreData URI.
-    /// - Parameter uri: Customer object's URI.
-    func customer(forURI uri: URL) -> Customer? {
-        guard uri != Self.customerURINone else { return nil }
-        
-        guard let context = order?.managedObjectContext,
-            let coordinator = context.persistentStoreCoordinator,
-            let objectID = coordinator.managedObjectID(forURIRepresentation: uri),
-            let customer = context.object(with: objectID) as? Customer
-            else { return nil }
-        
-        return customer
     }
 }

@@ -15,7 +15,7 @@ struct SaleItemDetailView: View, EditableForm {
     @ObservedObject var saleItem: SaleItem
     
     /// The model to view or edit sale item.
-    @Binding var model: SaleItemForm.Model
+    @Binding var model: SaleItemFormModel
     
     var onSave: () -> Void
     
@@ -27,7 +27,7 @@ struct SaleItemDetailView: View, EditableForm {
     var body: some View {
         Form {
             Section {
-                SaleItemForm.BodyView(model: $model, mode: .saleItem)
+                SaleItemFormBody(model: $model, mode: .saleItem)
             }
             Section {
                 Button("Delete", action: onDelete)
@@ -39,11 +39,12 @@ struct SaleItemDetailView: View, EditableForm {
     }
 }
 
+
 #if DEBUG
 struct SaleItemDetailView_Previews : PreviewProvider {
     static let saleItem = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        SaleItemDetailView(saleItem: saleItem, model: .constant(.init(item: saleItem)), onSave: {}, onDelete: {})
+        SaleItemDetailView(saleItem: saleItem, model: .constant(.init(saleItem: saleItem)), onSave: {}, onDelete: {})
     }
 }
 #endif

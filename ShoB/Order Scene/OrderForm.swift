@@ -26,10 +26,10 @@ struct OrderForm: View {
     var onOrderAgain: ((Order) -> Void)?
     
     /// Model used to create and add item to the order.
-    @State private var newOrderItemModel = SaleItemForm.Model()
+    @State private var newOrderItemModel = SaleItemFormModel()
     
     /// Model used to edit order's item.
-    @State private var editOrderItemModel = SaleItemForm.Model()
+    @State private var editOrderItemModel = SaleItemFormModel()
     
     /// Flag used to show order item form sheet, either add or edit item form.
     @State private var showModalPresentationSheet = false
@@ -348,7 +348,7 @@ extension OrderForm {
     
     /// Present `editOrderItemForm` sheet.
     func showEditOrderItemForm(with item: OrderItem) {
-        editOrderItemModel = .init(item: item)
+        editOrderItemModel = .init(orderItem: item)
         modalPresentationSheet = editOrderItemForm.toAnyView()
         showModalPresentationSheet = true
     }

@@ -12,16 +12,16 @@ import SwiftUI
 /// A view used to view or edit sale item.
 struct SaleItemForm: View {
     
-    @Binding var model: Model
+    @Binding var model: SaleItemFormModel
     
-    var mode: Mode
+    var mode: SaleItemFormBody.Mode
     
     
     // MARK: - Body
     
     var body: some View {
         Form {
-            SaleItemForm.BodyView(model: $model, mode: mode)
+            SaleItemFormBody(model: $model, mode: mode)
         }
     }
 }

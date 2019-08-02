@@ -20,7 +20,7 @@ struct SaleItemRow: View {
     
     var onDelete: (SaleItem) -> Void
     
-    @State private var saleItemModel = SaleItemForm.Model()
+    @State private var saleItemModel = SaleItemFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
@@ -41,9 +41,12 @@ struct SaleItemRow: View {
             }
         }
     }
-    
-    
-    // MARK: - Body Component
+}
+
+
+// MARK: - Body Component
+
+extension SaleItemRow {
     
     var saleItemDetailView: some View {
         SaleItemDetailView(saleItem: saleItem, model: $saleItemModel, onSave: {
@@ -56,7 +59,7 @@ struct SaleItemRow: View {
         .onAppear { // assign the item to the model.
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
-            self.saleItemModel = .init(item: self.saleItem)
+            self.saleItemModel = .init(saleItem: self.saleItem)
         }
     }
 }
