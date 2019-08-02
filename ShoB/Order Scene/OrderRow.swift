@@ -42,6 +42,18 @@ struct OrderRow: View {
     var orderDetailView: some View {
         navigationState.onPopped = {
             guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
+            
+            // DEVELOPER NOTE: beta 5
+            // customer and sale item does not need this on popped to
+            // let make the list UI fresh
+            //
+            // but maybe because order present an addition view to add the item
+            // which may lead to this behavior
+            //
+            // however, in commit 32539d0 before the refactoring of OrderRowContentView,
+            // there was no need to send change ¯\(°_o)/¯
+            self.order.objectWillChange.send()
+            
             context.rollback()
         }
         
