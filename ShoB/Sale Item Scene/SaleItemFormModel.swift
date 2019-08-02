@@ -38,6 +38,12 @@ struct SaleItemFormModel {
         "\(Currency(_price.amount * Int64(quantity)))"
     }
     
+    /// A flag to toggle the item selection list.
+    ///
+    /// The default is `true` which will show the selection list on present.
+    /// - Note: Specifically use with `AddOrderItemForm`.
+    var shouldExpandSelectionList = true
+    
     
     /// Create a model with the item.
     /// - Parameter saleItem: The item to init with.

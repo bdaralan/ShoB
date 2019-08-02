@@ -25,13 +25,23 @@ struct AddOrderItemForm: View {
                 SaleItemFormBody(model: self.$orderItemModel, mode: .orderItem)
             }
             
-            // Sale Item List Section
+            // Sale Item Selection List Section
             Section(header: Text("ALL SALE ITEMS")) {
-                ForEach(saleItems) { item in
+                
+                // Expand Sale Item List Button
+                if !orderItemModel.shouldExpandSelectionList {
+                    Button("Select Item", action: { self.orderItemModel.shouldExpandSelectionList = true })
+                }
+                
+                // Sale Item List
+                ForEach(orderItemModel.shouldExpandSelectionList ? saleItems : []) { item in
                     Button(action: {
                         // only need to get values for the model
                         // do not keep reference to avoid editing the item's original values
                         self.orderItemModel = .init(saleItem: item, keepReference: false)
+                        
+                        // collapse the selection list once selected
+                        self.orderItemModel.shouldExpandSelectionList = false
                     }) {
                         HStack {
                             Text("\(item.name)")
