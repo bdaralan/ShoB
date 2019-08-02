@@ -30,6 +30,8 @@ struct OrderListView: View {
     /// The model used to place new order.
     @State private var newOrderModel = OrderForm.Model()
     
+    @ObservedObject private var viewReloader = ViewForceReloader()
+    
     
     // MARK: - Body
     
@@ -45,7 +47,12 @@ struct OrderListView: View {
             
             // MARK: Order Rows
             ForEach(dataSource.fetchController.fetchedObjects ?? [], id: \.self) { order in
-                OrderRow(order: order.get(from: self.dataSource.cud.updateContext), onSave: self.updateOrder)
+                OrderRow(
+                    order: order.get(from: self.dataSource.cud.updateContext),
+                    onSave: self.updateOrder,
+                    onDelete: self.deleteOrder,
+                    onOrderAgain: self.placeOrderAgain
+                )
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
@@ -102,8 +109,7 @@ struct OrderListView: View {
         showPlaceOrderForm = false
     }
     
-    func updateOrder(_ model: OrderForm.Model) {
-        guard let order = model.order else { return }
+    func updateOrder(_ order: Order) {
         order.objectWillChange.send()
         
         if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
@@ -112,7 +118,16 @@ struct OrderListView: View {
         } else {
             dataSource.cud.discardUpdateContext()
         }
-        
+    }
+    
+    func deleteOrder(_ order: Order) {
+        print("deleteOrder")
+        dataSource.cud.delete(order, saveContext: true)
+        viewReloader.forceReload()
+    }
+    
+    func placeOrderAgain(_ order: Order) {
+        print("placeOrderAgain")
     }
 }
 

@@ -18,7 +18,11 @@ struct OrderRow: View {
     /// The order to view or update.
     @ObservedObject var order: Order
     
-    var onSave: (OrderForm.Model) -> Void
+    var onSave: (Order) -> Void
+    
+    var onDelete: (Order) -> Void
+    
+    var onOrderAgain: (Order) -> Void
     
     @State private var orderModel = OrderForm.Model()
     
@@ -29,52 +33,7 @@ struct OrderRow: View {
     
     var body: some View {
         NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
-            VStack(alignment: .leading) {
-                // MARK: Customer & Note
-                HStack {
-                    Group {
-                        Image.SFCustomer.profile
-                        Text("\(order.customer?.identity ?? "None")")
-                    }
-                    .foregroundColor(order.customer == nil ? .secondary : .primary)
-                        
-                    if !order.note.isEmpty {
-                        Spacer()
-                        Image.SFOrder.note
-                    }
-                }
-                .font(.title)
-                
-                // MARK: Order Date
-                HStack {
-                    Image.SFOrder.orderDate
-                    Text("\(order.orderDate, formatter: dateFormatter)")
-                }
-                
-                // MARK: Delivery Date
-                HStack {
-                    Image.SFOrder.delivery
-                    Text(order.deliveryDate == nil ? "No" : "\(order.deliveryDate!, formatter: dateFormatter)")
-                }
-                
-                // MARK: Delivered Date
-                HStack {
-                    Image.SFOrder.delivered
-                    Text(order.deliveredDate == nil ? "No" : "\(order.deliveredDate!, formatter: dateFormatter)")
-                }
-                
-                // MARK: Total & Discount
-                HStack {
-                    Image.SFOrder.totalBeforeDiscount
-                    Text(verbatim: "\(Currency(order.total))")
-                    spacerDivider
-                    Image.SFOrder.discount
-                    Text(verbatim: "\(Currency(order.discount))")
-                    spacerDivider
-                    Image.SFOrder.totalAfterDiscount
-                    Text(verbatim: "\(Currency(order.total - order.discount))").bold()
-                }
-            }
+            OrderRow.ContentView(order: order)
         }
     }
 
@@ -88,7 +47,14 @@ struct OrderRow: View {
         }
         
         return OrderDetailView(order: order, model: $orderModel, onSave: {
-            self.onSave(self.orderModel)
+            self.onSave(self.order)
+        }, onDelete: {
+            self.navigationState.onPopped = nil
+            self.navigationState.isPushed = false
+            self.onDelete($0)
+        }, onOrderAgain: {
+            self.navigationState.isPushed = false
+            self.onOrderAgain($0)
         })
         .onAppear {
             // DEVELOPER NOTE:
@@ -99,23 +65,7 @@ struct OrderRow: View {
             self.orderModel = .init(order: self.order)
         }
     }
-    
-    var spacerDivider: some View {
-        Group {
-            Spacer()
-            Divider()
-            Spacer()
-        }
-    }
 }
-
-
-fileprivate let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .short
-    return formatter
-}()
 
 
 #if DEBUG
@@ -123,7 +73,7 @@ struct OrderRow_Previews : PreviewProvider {
     static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     static let order = Order(context: cud.sourceContext)
     static var previews: some View {
-        OrderRow(order: order, onSave: { _ in })
+        OrderRow(order: order, onSave: { _ in }, onDelete: { _ in }, onOrderAgain: { _ in })
     }
 }
 #endif

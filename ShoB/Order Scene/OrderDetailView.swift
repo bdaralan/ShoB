@@ -19,11 +19,15 @@ struct OrderDetailView: View, EditableForm {
     
     var onSave: () -> Void
     
+    var onDelete: (Order) -> Void
+    
+    var onOrderAgain: (Order) -> Void
+    
     
     // MARK: - Body
     
     var body: some View {
-        OrderForm(model: $model)
+        OrderForm(model: $model, onDelete: onDelete, onOrderAgain: onOrderAgain)
             .navigationBarTitle("Order Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem)
     }
@@ -40,7 +44,7 @@ struct OrderDetailView: View, EditableForm {
 struct OrderDetailView_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
     static var previews: some View {
-        OrderDetailView(order: order, model: .constant(.init()), onSave: {})
+        OrderDetailView(order: order, model: .constant(.init()), onSave: {}, onDelete: { _ in }, onOrderAgain: { _ in })
     }
 }
 #endif

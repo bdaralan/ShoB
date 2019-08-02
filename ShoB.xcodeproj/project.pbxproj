@@ -32,6 +32,7 @@
 		B449978622CDE1E000126116 /* CreateSaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978522CDE1E000126116 /* CreateSaleItemForm.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B451060F22F221070047F3F8 /* RowCenterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* RowCenterButton.swift */; };
+		B451826122F3D7BA001FA8D5 /* OrderRow+ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRow+ContentView.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F322EBFF4100778DA3 /* Constant+Image.swift */; };
@@ -92,6 +93,7 @@
 		B449978522CDE1E000126116 /* CreateSaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSaleItemForm.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B451060E22F221070047F3F8 /* RowCenterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowCenterButton.swift; sourceTree = "<group>"; };
+		B451826022F3D7BA001FA8D5 /* OrderRow+ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderRow+ContentView.swift"; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48919F322EBFF4100778DA3 /* Constant+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constant+Image.swift"; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				B412C70B22F3919300A4DE4D /* AddOrderItemForm.swift */,
 				B4BE1CFE22E3DC6C00667CAF /* OrderForm+Model.swift */,
 				B4D5E6CE22C0558800BE7580 /* OrderRow.swift */,
+				B451826022F3D7BA001FA8D5 /* OrderRow+ContentView.swift */,
 			);
 			path = "Order Scene";
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */,
 				B412C70C22F3919300A4DE4D /* AddOrderItemForm.swift in Sources */,
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
+				B451826122F3D7BA001FA8D5 /* OrderRow+ContentView.swift in Sources */,
 				B449978422CDDFB600126116 /* SaleItemDetailView.swift in Sources */,
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
 				B405260222E8FFDC007E2325 /* VertialTextField.swift in Sources */,
