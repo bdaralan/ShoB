@@ -16,4 +16,9 @@ extension String {
     func replaceEmpty(with replacement: String) -> String {
         return isEmpty ? replacement : self
     }
+    
+    /// Time whitespace and newline.
+    func trimmed() -> String {
+        self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
