@@ -15,7 +15,7 @@ import Combine
 /// An order of a store or a customer.
 class Order: NSManagedObject, Identifiable {
     
-    @NSManaged var orderDate: Date
+    @NSManaged var orderDate: Date!
     @NSManaged var deliveryDate: Date?
     @NSManaged var deliveredDate: Date?
     @NSManaged var discount: Cent
