@@ -23,10 +23,10 @@ struct OrderListView: View {
     
     @State private var segments = [Segment.today, .tomorrow, .past7Days]
     
-    /// A flag used to present or dismiss `placeOrderForm`.
-    @State private var showPlaceOrderForm = false
+    /// A flag used to present or dismiss `createOrderForm`.
+    @State private var showCreateOrderForm = false
     
-    /// The model used to place new order.
+    /// The model used to create new order.
     @State private var newOrderModel = OrderFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
@@ -56,9 +56,9 @@ struct OrderListView: View {
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
         .sheet(
-            isPresented: $showPlaceOrderForm,
-            onDismiss: dismissPlaceOrderForm,
-            content: { self.placeOrderForm }
+            isPresented: $showCreateOrderForm,
+            onDismiss: dismissCreateOrderForm,
+            content: { self.createOrderForm }
         )
     }
 }
@@ -74,20 +74,19 @@ extension OrderListView {
             self.dataSource.cud.discardNewObject()
             self.dataSource.cud.prepareNewObject()
             self.newOrderModel = .init(order: self.dataSource.cud.newObject!)
-            self.showPlaceOrderForm = true
+            self.showCreateOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
         })
     }
     
-    /// Construct an order form.
-    /// - Parameter order: The order to view or pass `nil` get a create mode form.
-    var placeOrderForm: some View {
+    /// Form form creating new order.
+    var createOrderForm: some View {
         NavigationView {
             CreateOrderForm(
                 model: $newOrderModel,
                 onCreate: saveNewOrder,
-                onCancel: dismissPlaceOrderForm
+                onCancel: dismissCreateOrderForm
             )
             .environmentObject(saleItemDataSource)
             .environmentObject(customerDataSource)
@@ -100,20 +99,22 @@ extension OrderListView {
 
 extension OrderListView {
     
-    /// Dismiss place order form.
+    /// Dismiss create order form.
     ///
     /// If the form was cancelled or dismissed, any changes to the data source's create context is discarded.
-    func dismissPlaceOrderForm() {
+    func dismissCreateOrderForm() {
         dataSource.cud.discardCreateContext()
-        showPlaceOrderForm = false
+        showCreateOrderForm = false
     }
     
     /// Save the new order to the data source.
     func saveNewOrder() {
         dataSource.cud.saveCreateContext()
-        showPlaceOrderForm = false
+        showCreateOrderForm = false
     }
     
+    /// Save changes.
+    /// - Parameter order: The order to save.
     func updateOrder(_ order: Order) {
         order.objectWillChange.send()
         
@@ -125,14 +126,41 @@ extension OrderListView {
         }
     }
     
+    /// Delete order.
+    /// - Parameter order: The order to delete.
     func deleteOrder(_ order: Order) {
-        print("deleteOrder")
         dataSource.cud.delete(order, saveContext: true)
         viewReloader.forceReload()
     }
     
+    /// Create a new order from an old order.
+    /// - Parameter order: The old order.
     func placeOrderAgain(_ order: Order) {
-        print("placeOrderAgain")
+        let oldOrder = order.get(from: dataSource.cud.createContext)
+        
+        // prepare new object
+        dataSource.cud.discardNewObject()
+        dataSource.cud.prepareNewObject()
+        let newOrder = dataSource.cud.newObject!
+        
+        // copy neccessary values
+        newOrder.discount = oldOrder.discount
+        newOrder.note = oldOrder.note
+        newOrder.customer = oldOrder.customer
+        newOrder.store = oldOrder.store
+        
+        // copy order items
+        order.orderItems.forEach {
+            let copiedItem = OrderItem(context: dataSource.cud.createContext)
+            copiedItem.name = $0.name
+            copiedItem.price = $0.price
+            copiedItem.quantity = $0.quantity
+            copiedItem.order = newOrder
+        }
+        
+        // show the form
+        newOrderModel = .init(order: newOrder)
+        showCreateOrderForm = true
     }
 }
 
