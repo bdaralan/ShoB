@@ -42,13 +42,13 @@ struct Home: View {
         return dataSource
     }()
     
-    @State private var selectedTab = 1
+    @State private var selectedTab = 0
     
     
     // MARK: - Body
     
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             // MARK: Order List
             NavigationView {
                 OrderListView()
@@ -73,7 +73,6 @@ struct Home: View {
             NavigationView {
                 SaleItemListView()
                     .environmentObject(saleItemDataSource)
-                    .environment(\.managedObjectContext, saleItemDataSource.cud.sourceContext)
                     .navigationBarTitle("Items", displayMode: .large)
             }
             .tabItem { tabItem(systemImage: "list.dash", title: "Items") }
