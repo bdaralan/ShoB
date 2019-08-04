@@ -14,10 +14,7 @@ struct Home: View {
     
     @ObservedObject var orderDataSource: FetchedDataSource<Order> = {
         let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
-        let request = dataSource.fetchController.fetchRequest
-        request.predicate = .init(value: true)
-        request.sortDescriptors = [.init(key: #keyPath(Order.discount), ascending: true)]
-        dataSource.performFetch()
+        dataSource.performFetch(Order.requestDeliverToday())
         return dataSource
     }()
     

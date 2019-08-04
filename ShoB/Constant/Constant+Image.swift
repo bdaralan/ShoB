@@ -35,9 +35,9 @@ extension Image.SFOrder {
     
     static let orderDate = Image(systemName: "calendar")
     
-    static let delivery = Image(systemName: "car.fill")
+    static let deliverDate = Image(systemName: "cube.box.fill")
     
-    static let delivered = Image(systemName: "cube.box.fill")
+    static let delivered = Image(systemName: "d.circle.fill")
     
     static let totalBeforeDiscount = Image(systemName: "plus.circle")
     

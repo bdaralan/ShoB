@@ -62,6 +62,7 @@
 		B4D346B222B6A31B0051AABB /* StandardUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */; };
 		B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */; };
 		B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CE22C0558800BE7580 /* OrderRow.swift */; };
+		B4E80D1F22F79D9200052B36 /* OrderListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E80D1E22F79D9200052B36 /* OrderListViewModel.swift */; };
 		B4F4D2AF22E2293700E849B4 /* CreatableForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F4D2AE22E2293700E849B4 /* CreatableForm.swift */; };
 		B4F4D2B122E229DA00E849B4 /* EditableForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F4D2B022E229DA00E849B4 /* EditableForm.swift */; };
 		B4F4D2B822E2452300E849B4 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F4D2B722E2452300E849B4 /* Date.swift */; };
@@ -126,6 +127,7 @@
 		B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardUserDefaults.swift; sourceTree = "<group>"; };
 		B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
 		B4D5E6CE22C0558800BE7580 /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
+		B4E80D1E22F79D9200052B36 /* OrderListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListViewModel.swift; sourceTree = "<group>"; };
 		B4F4D2AE22E2293700E849B4 /* CreatableForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatableForm.swift; sourceTree = "<group>"; };
 		B4F4D2B022E229DA00E849B4 /* EditableForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableForm.swift; sourceTree = "<group>"; };
 		B4F4D2B722E2452300E849B4 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				B40EFDDB22B4B64D00C0BAC8 /* OrderListView.swift */,
+				B4E80D1E22F79D9200052B36 /* OrderListViewModel.swift */,
 				B4A5D97822CC3AB600695A3F /* OrderDetailView.swift */,
 				B4A5D97622CC392700695A3F /* CreateOrderForm.swift */,
 				B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */,
@@ -428,6 +431,7 @@
 				B405260922E90A68007E2325 /* AlwaysLowercasedWrapper.swift in Sources */,
 				B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */,
 				B412C70C22F3919300A4DE4D /* AddOrderItemForm.swift in Sources */,
+				B4E80D1F22F79D9200052B36 /* OrderListViewModel.swift in Sources */,
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
 				B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */,
 				B449978422CDDFB600126116 /* SaleItemDetailView.swift in Sources */,

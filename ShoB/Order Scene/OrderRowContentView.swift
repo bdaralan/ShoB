@@ -36,7 +36,7 @@ struct OrderRowContentView: View {
             
             // MARK: Order Date
             dateText(image: Image.SFOrder.orderDate, date: order.orderDate)
-            dateText(image: Image.SFOrder.delivery, date: order.deliveryDate)
+            dateText(image: Image.SFOrder.deliverDate, date: order.deliverDate)
             dateText(image: Image.SFOrder.delivered, date: order.deliveredDate)
             
             // MARK: Total & Discount
@@ -46,6 +46,7 @@ struct OrderRowContentView: View {
                 currencyText(image: Image.SFOrder.discount, amount: order.discount)
                 verticalDivider
                 currencyText(image: Image.SFOrder.totalAfterDiscount, amount: order.total - order.discount)
+                    .font(Font.body.bold())
             }
         }
     }

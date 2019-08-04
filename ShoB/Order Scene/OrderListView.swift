@@ -18,10 +18,8 @@ struct OrderListView: View {
     @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
     
     @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
-
-    @State private var currentSegment = Segment.today
     
-    @State private var segments = [Segment.today, .tomorrow, .past7Days]
+    @ObservedObject private var model = OrderListViewModel()
     
     /// A flag used to present or dismiss `createOrderForm`.
     @State private var showCreateOrderForm = false
@@ -35,14 +33,17 @@ struct OrderListView: View {
     // MARK: - Body
     
     var body: some View {
+        
         List {
             // MARK: Segment Picker
-            Picker("", selection: $currentSegment) {
-                ForEach(segments, id: \.self) { segment in
+            Picker("", selection: $model.currentSegment) {
+                ForEach(model.segmentOptions, id: \.self) { segment in
                     Text(segment.rawValue).tag(segment)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
+            .onReceive(model.$currentSegment, perform: reloadList)
+            
             
             // MARK: Order Rows
             ForEach(dataSource.fetchController.fetchedObjects ?? [], id: \.self) { order in
@@ -121,6 +122,7 @@ extension OrderListView {
         if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
             order.isMarkedValuesChanged = false
             dataSource.cud.saveUpdateContext()
+            viewReloader.forceReload()
         } else {
             dataSource.cud.discardUpdateContext()
         }
@@ -161,6 +163,15 @@ extension OrderListView {
         // show the form
         newOrderModel = .init(order: newOrder)
         showCreateOrderForm = true
+    }
+    
+    func reloadList(for segment: Segment) {
+        switch segment {
+        case .today: dataSource.performFetch(Order.requestDeliverToday())
+        case .tomorrow: dataSource.performFetch(Order.requestDeliverTomorrow())
+        case .past7Days: dataSource.performFetch(Order.requestDeliveredPast7Days())
+        case .all: break
+        }
     }
 }
 

@@ -11,8 +11,8 @@
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Store" inverseName="customers" inverseEntity="Store"/>
     </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
+        <attribute name="deliverDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="deliveredDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="deliveryDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="discount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="note" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="orderDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

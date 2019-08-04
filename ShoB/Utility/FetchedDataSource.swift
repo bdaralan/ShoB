@@ -50,7 +50,13 @@ class FetchedDataSource<T: NSManagedObject>: NSObject, ObservableObject, NSFetch
     }
     
     /// Perform fetch on the `fetchController`.
-    func performFetch() {
+    /// - Parameter request: The request to perform or `nil` to perform the current request.
+    func performFetch(_ request: NSFetchRequest<T>? = nil) {
+        if let request = request {
+            fetchController.fetchRequest.predicate = request.predicate
+            fetchController.fetchRequest.sortDescriptors = request.sortDescriptors
+        }
+        
         objectWillChange.send()
         
         do {

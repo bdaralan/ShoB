@@ -53,11 +53,7 @@ struct OrderForm: View {
             // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
                 DatePicker("Order Date", selection: $model.orderDate)
-
-                Toggle("Delivery", isOn: $model.isDelivering)
-                if model.isDelivering {
-                    DatePicker("Delivery Date", selection: $model.deliveryDate)
-                }
+                DatePicker("Deliver Date", selection: $model.deliverDate)
 
                 Toggle("Delivered", isOn: $model.isDelivered)
                 if model.isDelivered {
