@@ -29,13 +29,7 @@ struct Home: View {
     
     @ObservedObject var customerDataSource: FetchedDataSource<Customer> = {
         let dataSource = FetchedDataSource<Customer>(context: CoreDataStack.current.mainContext)
-        let request = dataSource.fetchController.fetchRequest
-        request.predicate = .init(value: true)
-        request.sortDescriptors = [
-            .init(key: #keyPath(Customer.givenName), ascending: true),
-            .init(key: #keyPath(Customer.familyName), ascending: true)
-        ]
-        dataSource.performFetch()
+        dataSource.performFetch(Customer.requestAllCustomer())
         return dataSource
     }()
     

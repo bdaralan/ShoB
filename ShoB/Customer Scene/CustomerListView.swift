@@ -20,12 +20,17 @@ struct CustomerListView: View {
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
+    var sortedCustomers: [Customer] {
+        dataSource.fetchController.fetchedObjects?
+            .sorted(by: { $0.identity.lowercased() < $1.identity.lowercased() }) ?? []
+    }
+    
     
     // MARK: - Body
     
     var body: some View {
         List {
-            ForEach(dataSource.fetchController.fetchedObjects ?? []) { customer in
+            ForEach(sortedCustomers) { customer in
                 CustomerRow(
                     customer: customer.get(from: self.dataSource.cud.updateContext),
                     onSave: self.updateCustomer,

@@ -47,4 +47,11 @@ extension Customer {
     @nonobjc class func fetchRequest() -> NSFetchRequest<Customer> {
         return NSFetchRequest<Customer>(entityName: "Customer")
     }
+    
+    static func requestAllCustomer() -> NSFetchRequest<Customer> {
+        let request = Customer.fetchRequest() as NSFetchRequest<Customer>
+        request.predicate = .init(value: true)
+        request.sortDescriptors = []
+        return request
+    }
 }
