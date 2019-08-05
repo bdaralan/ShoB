@@ -33,6 +33,7 @@ struct OrderRowContentView: View {
                 }
             }
             .font(.title)
+            .padding(.top, 8)
             
             // MARK: Order Date
             dateText(image: Image.SFOrder.orderDate, date: order.orderDate)

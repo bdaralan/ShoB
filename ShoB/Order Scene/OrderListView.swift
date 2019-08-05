@@ -33,26 +33,16 @@ struct OrderListView: View {
     // MARK: - Body
     
     var body: some View {
-        
         List {
-            // MARK: Segment Picker
-            Picker("", selection: $model.currentSegment) {
-                ForEach(model.segmentOptions, id: \.self) { segment in
-                    Text(segment.rawValue).tag(segment)
+            Section(header: segmentPicker) {
+                ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
+                    OrderRow(
+                        order: order.get(from: self.dataSource.cud.updateContext),
+                        onSave: self.updateOrder,
+                        onDelete: self.deleteOrder,
+                        onOrderAgain: self.placeOrderAgain
+                    )
                 }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .onReceive(model.$currentSegment, perform: reloadList)
-            
-            
-            // MARK: Order Rows
-            ForEach(dataSource.fetchController.fetchedObjects ?? [], id: \.self) { order in
-                OrderRow(
-                    order: order.get(from: self.dataSource.cud.updateContext),
-                    onSave: self.updateOrder,
-                    onDelete: self.deleteOrder,
-                    onOrderAgain: self.placeOrderAgain
-                )
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
@@ -61,6 +51,18 @@ struct OrderListView: View {
             onDismiss: dismissCreateOrderForm,
             content: { self.createOrderForm }
         )
+    }
+    
+    var segmentPicker: some View {
+        Picker("", selection: $model.currentSegment) {
+            ForEach(model.segmentOptions, id: \.self) { segment in
+                Text(segment.rawValue).tag(segment)
+            }
+            
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.vertical, 8)
+        .onReceive(model.$currentSegment, perform: reloadList)
     }
 }
 
