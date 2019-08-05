@@ -13,5 +13,5 @@ class OrderListViewModel: ObservableObject {
     
     @Published var currentSegment = OrderListView.Segment.today
     
-    let segmentOptions: [OrderListView.Segment] = [.today, .tomorrow, .past7Days]
+    let segmentOptions = OrderListView.Segment.allCases
 }

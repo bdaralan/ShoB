@@ -169,9 +169,8 @@ extension OrderListView {
     func reloadList(for segment: Segment) {
         switch segment {
         case .today: dataSource.performFetch(Order.requestDeliverToday())
-        case .tomorrow: dataSource.performFetch(Order.requestDeliverTomorrow())
+        case .upcoming: dataSource.performFetch(Order.requestDeliverAfterToday())
         case .past7Days: dataSource.performFetch(Order.requestDeliveredPast7Days())
-        case .all: break
         }
     }
 }
@@ -181,11 +180,10 @@ extension OrderListView {
 
 extension OrderListView {
     
-    enum Segment: String {
+    enum Segment: String, CaseIterable {
         case today = "Today"
-        case tomorrow = "Tomorrow"
+        case upcoming = "Upcoming"
         case past7Days = "Past 7 Days"
-        case all = "All"
     }
 }
 

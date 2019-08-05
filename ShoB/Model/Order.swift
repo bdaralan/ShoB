@@ -66,18 +66,17 @@ extension Order {
         return request
     }
     
-    static func requestDeliverTomorrow() -> NSFetchRequest<Order> {
+    static func requestDeliverAfterToday() -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
         
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)! as NSDate
-        let dayAfterTomorrow = calendar.date(byAdding: .day, value: 2, to: today)! as NSDate
         
         let deliverDate = #keyPath(Order.deliverDate)
         let sortByDeliverDate = NSSortDescriptor(key: deliverDate, ascending: true)
         
-        request.predicate = .init(format: "\(deliverDate) >= %@ AND \(deliverDate) < %@", tomorrow, dayAfterTomorrow)
+        request.predicate = .init(format: "\(deliverDate) >= %@", tomorrow)
         request.sortDescriptors = [sortByDeliverDate]
         return request
     }
