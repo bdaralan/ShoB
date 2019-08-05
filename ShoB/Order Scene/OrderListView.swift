@@ -124,7 +124,6 @@ extension OrderListView {
         if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
             order.isMarkedValuesChanged = false
             dataSource.cud.saveUpdateContext()
-            viewReloader.forceReload()
         } else {
             dataSource.cud.discardUpdateContext()
         }

@@ -52,30 +52,47 @@ struct OrderForm: View {
             
             // MARK: Date Section
             Section(header: Text("ORDER DETAILS")) {
-                DatePicker("Order Date", selection: $model.orderDate)
-                DatePicker("Deliver Date", selection: $model.deliverDate)
+                DatePicker(selection: $model.orderDate) {
+                    Image.SFOrder.orderDate
+                    Text("Order Date")
+                }
+                
+                DatePicker(selection: $model.deliverDate) {
+                    Image.SFOrder.deliverDate
+                    Text("Deliver Date")
+                }
 
-                Toggle("Delivered", isOn: $model.isDelivered)
+                Toggle(isOn: $model.isDelivered) {
+                    Image.SFOrder.delivered
+                    Text("Delivered")
+                }
+                
                 if model.isDelivered {
-                    DatePicker("Delivered Date", selection: $model.deliveredDate)
+                    DatePicker(selection: $model.deliveredDate) {
+                        Image.SFOrder.delivered.foregroundColor(.green)
+                        Text("Delivered Date")
+                    }
                 }
             }
             
             // MARK: Total Section
             Section(header: Text("TOTAL & DISCOUNT")) {
                 HStack {
+                    Image.SFOrder.totalAfterDiscount.font(Font.body.bold())
                     Text("Total").bold()
                     Spacer()
                     Text(model.totalAfterDiscount).bold()
                 }
                 
                 HStack {
+                    Image.SFOrder.totalBeforeDiscount
                     Text("Before Discount")
                     Spacer()
                     Text(model.totalBeforeDiscount)
                 }
                 
                 HStack {
+                    Image.SFOrder.discount
                     Text("Discount")
                     TextField("$0.00", text: $model.discount)
                         .multilineTextAlignment(.trailing)

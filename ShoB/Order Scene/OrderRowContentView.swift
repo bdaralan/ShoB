@@ -36,9 +36,21 @@ struct OrderRowContentView: View {
             .padding(.top, 8)
             
             // MARK: Order Date
-            dateText(image: Image.SFOrder.orderDate, date: order.orderDate)
-            dateText(image: Image.SFOrder.deliverDate, date: order.deliverDate)
-            dateText(image: Image.SFOrder.delivered, date: order.deliveredDate)
+            HStack {
+                Image.SFOrder.orderDate
+                formattedText(for: order.orderDate)
+            }
+            
+            HStack {
+                Image.SFOrder.deliverDate
+                formattedText(for: order.deliverDate)
+            }
+            
+            HStack {
+                Image.SFOrder.delivered
+                    .foregroundColor(order.deliveredDate != nil ? .green : .primary)
+                formattedText(for: order.deliveredDate)
+            }
             
             // MARK: Total & Discount
             HStack {
@@ -58,14 +70,10 @@ struct OrderRowContentView: View {
 
 extension OrderRowContentView {
     
-    /// View displaying imag and text for date.
-    /// - Parameter image: Image to display.
-    /// - Parameter date: Date to display.
-    func dateText(image: Image, date: Date?) -> some View {
-        HStack {
-            image
-            Text(date == nil ? "No" : "\(date!, formatter: DateFormatter.shortDateTime)")
-        }
+    /// Format text for the given date
+    /// - Parameter date: The date to format.
+    func formattedText(for date: Date?) -> Text {
+        Text(date == nil ? "No" : "\(date!, formatter: DateFormatter.shortDateTime)")
     }
     
     /// View displaying image and currency amount.

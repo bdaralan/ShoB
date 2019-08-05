@@ -31,15 +31,6 @@ struct OrderRow: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
-            OrderRowContentView(order: order)
-        }
-    }
-
-    
-    // MARK: - Body Component
-    
-    var orderDetailView: some View {
         navigationState.onPopped = {
             guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
             
@@ -57,7 +48,16 @@ struct OrderRow: View {
             context.rollback()
         }
         
-        return OrderDetailView(order: order, model: $orderModel, onSave: {
+        return NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
+            OrderRowContentView(order: order)
+        }
+    }
+
+    
+    // MARK: - Body Component
+    
+    var orderDetailView: some View {
+        OrderDetailView(order: order, model: $orderModel, onSave: {
             self.onSave(self.order)
         }, onDelete: {
             self.navigationState.onPopped = nil

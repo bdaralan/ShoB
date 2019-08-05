@@ -14,28 +14,35 @@ struct OrderFormModel {
     weak var order: Order?
     
     var isDelivered = false {
-        didSet { self.order?.deliveredDate = isDelivered ? Date.currentYMDHM : nil }
+        didSet {
+            if isDelivered {
+                deliveredDate = Date.currentYMDHM
+                order?.deliveredDate = deliveredDate
+            } else {
+                order?.deliveredDate = nil
+            }
+        }
     }
     
     var orderDate = Date.currentYMDHM {
-        didSet { self.order?.orderDate = orderDate }
+        didSet { order?.orderDate = orderDate }
     }
     
     var deliverDate = Date.currentYMDHM {
-        didSet { self.order?.deliverDate = deliverDate }
+        didSet { order?.deliverDate = deliverDate }
     }
     
     var deliveredDate = Date.currentYMDHM {
-        didSet { self.order?.deliveredDate = deliveredDate }
+        didSet { order?.deliveredDate = deliveredDate }
     }
     
     @CurrencyWrapper(amount: 0)
     var discount: String {
-        didSet { self.order?.discount = _discount.amount }
+        didSet { order?.discount = _discount.amount }
     }
     
     var note = "" {
-        didSet { self.order?.note = note }
+        didSet { order?.note = note }
     }
     
     
@@ -46,7 +53,7 @@ struct OrderFormModel {
         deliverDate = order.deliverDate
         isDelivered = order.deliveredDate != nil
         deliveredDate = isDelivered ? order.deliveredDate! : Date.currentYMDHM
-        discount = order.discount == 0 ? "" : "\(Currency(order.discount))"
+        discount = "\(Currency(order.discount))"
         note = order.note
     }
 }

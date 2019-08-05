@@ -25,7 +25,7 @@ struct CreateSaleItemForm : View, CreatableForm {
     var body: some View {
         SaleItemForm(model: $model, mode: .saleItem)
             .navigationBarTitle("New Item", displayMode: .inline)
-            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Add"))
+            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Create"))
     }
 }
 
