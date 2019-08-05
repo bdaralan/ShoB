@@ -11,6 +11,7 @@ In progress...
 - [ ] 100% SwiftUI
 - [ ] Intergrage CoreData & iCloud AutoSync
 - [ ] Add CloudKit Share
+- [ ] Dark Mode Support
 - [ ] Markdown Support
 - [ ] Generate Invoice PDF
 - [ ] Deploy
