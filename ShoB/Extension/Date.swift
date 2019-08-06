@@ -22,15 +22,12 @@ extension Date {
         current([.year, .month, .day, .hour, .minute])
     }
     
-    /// Current date with including year, month, and day.
-    static var currentYMD: Date {
-        current([.year, .month, .day])
-    }
-    
-    func removeHourMinute() -> Date {
+    /// Get the start of today using the current calendar.
+    /// - Parameter addingDay: The number of day to add. The default is 0.
+    static func startOfToday(addingDay: Int = 0) -> Date {
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: self)
-        return calendar.date(from: components) ?? self
+        let today = calendar.startOfDay(for: Date())
+        return addingDay == 0 ? today : calendar.date(byAdding: .day, value: addingDay, to: today)!
     }
 }
 

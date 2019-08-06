@@ -54,11 +54,11 @@ struct OrderRowContentView: View {
             
             // MARK: Total & Discount
             HStack {
-                currencyText(image: Image.SFOrder.totalBeforeDiscount, amount: order.total)
+                currencyText(image: Image.SFOrder.totalBeforeDiscount, amount: order.subtotal())
                 verticalDivider
                 currencyText(image: Image.SFOrder.discount, amount: order.discount)
                 verticalDivider
-                currencyText(image: Image.SFOrder.totalAfterDiscount, amount: order.total - order.discount)
+                currencyText(image: Image.SFOrder.totalAfterDiscount, amount: order.total())
                     .font(Font.body.bold())
             }
         }

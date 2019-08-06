@@ -27,15 +27,13 @@ class SaleItem: NSManagedObject, Identifiable {
 }
 
 
+// MARK: - Fetch Request
+
 extension SaleItem {
     
     @nonobjc class func fetchRequest() -> NSFetchRequest<SaleItem> {
         return NSFetchRequest<SaleItem>(entityName: "SaleItem")
     }
-}
-
-
-extension SaleItem {
     
     static func requestAllObjects() -> NSFetchRequest<SaleItem> {
         let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>

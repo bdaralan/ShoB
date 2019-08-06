@@ -42,6 +42,8 @@ class Customer: NSManagedObject, Identifiable {
 }
 
 
+// MARK: - Fetch Request
+
 extension Customer {
     
     @nonobjc class func fetchRequest() -> NSFetchRequest<Customer> {

@@ -52,18 +52,6 @@ struct OrderListView: View {
             content: { self.createOrderForm }
         )
     }
-    
-    var segmentPicker: some View {
-        Picker("", selection: $model.currentSegment) {
-            ForEach(model.segmentOptions, id: \.self) { segment in
-                Text(segment.rawValue).tag(segment)
-            }
-            
-        }
-        .pickerStyle(SegmentedPickerStyle())
-        .padding(.vertical, 8)
-        .onReceive(model.$currentSegment, perform: reloadList)
-    }
 }
 
 
@@ -94,6 +82,18 @@ extension OrderListView {
             .environmentObject(saleItemDataSource)
             .environmentObject(customerDataSource)
         }
+    }
+    
+    var segmentPicker: some View {
+        Picker("", selection: $model.currentSegment) {
+            ForEach(model.segmentOptions, id: \.self) { segment in
+                Text(segment.title).tag(segment)
+            }
+            
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.vertical, 8)
+        .onReceive(model.$currentSegment, perform: reloadList)
     }
 }
 
@@ -168,9 +168,16 @@ extension OrderListView {
     
     func reloadList(for segment: Segment) {
         switch segment {
-        case .today: dataSource.performFetch(Order.requestDeliverToday())
-        case .upcoming: dataSource.performFetch(Order.requestDeliverAfterToday())
-        case .past7Days: dataSource.performFetch(Order.requestDeliveredPast7Days())
+        
+        case .today:
+            dataSource.performFetch(Order.requestDeliverToday())
+        
+        case .upcoming:
+            let tomorrow = Date.startOfToday(addingDay: 1)
+            dataSource.performFetch(Order.requestDeliver(from: tomorrow))
+        
+        case .pastDay(let day):
+            dataSource.performFetch(Order.requestDeliver(fromPastDay: day))
         }
     }
 }
@@ -180,10 +187,18 @@ extension OrderListView {
 
 extension OrderListView {
     
-    enum Segment: String, CaseIterable {
-        case today = "Today"
-        case upcoming = "Upcoming"
-        case past7Days = "Past 7 Days"
+    enum Segment: Hashable {
+        case pastDay(Int)
+        case today
+        case upcoming
+        
+        var title: String {
+            switch self {
+            case .pastDay(let day): return "Past \(day) Days"
+            case .today: return "Today"
+            case .upcoming: return "Upcoming"
+            }
+        }
     }
 }
 

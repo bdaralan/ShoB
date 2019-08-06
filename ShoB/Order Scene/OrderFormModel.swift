@@ -64,12 +64,12 @@ extension OrderFormModel {
     /// Total before discount.
     var totalBeforeDiscount: String {
         guard let order = order else { return "\(Currency(0))" }
-        return "\(Currency(order.total))"
+        return "\(Currency(order.subtotal()))"
     }
     
     /// Total after discount.
     var totalAfterDiscount: String {
         guard let order = order else { return "\(Currency(0))" }
-        return "\(Currency(order.total - order.discount))"
+        return "\(Currency(order.total()))"
     }
 }
