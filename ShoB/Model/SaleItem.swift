@@ -13,7 +13,7 @@ import Combine
 
 
 /// A sale item of a store.
-class SaleItem: NSManagedObject, Identifiable {
+class SaleItem: NSManagedObject, Identifiable, InStoreObject {
     
     @NSManaged var name: String
     @NSManaged var price: Cent

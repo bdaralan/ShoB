@@ -13,7 +13,7 @@ import Combine
 
 
 /// A customer of a store.
-class Customer: NSManagedObject, Identifiable {
+class Customer: NSManagedObject, Identifiable, InStoreObject {
     
     @NSManaged var familyName: String
     @NSManaged var givenName: String
