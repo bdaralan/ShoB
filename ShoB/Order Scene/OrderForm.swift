@@ -213,34 +213,28 @@ extension OrderForm {
         NavigationView {
             AddOrderItemForm(
                 orderItemModel: $newOrderItemModel,
-                saleItems: saleItemDataSource.fetchController.fetchedObjects ?? []
+                saleItems: saleItemDataSource.fetchController.fetchedObjects ?? [],
+                onAdd: addOrderItem,
+                onCancel: dismissPresentationSheet
             )
                 .navigationBarTitle("Add Item", displayMode: .inline)
-                .navigationBarItems(leading: addOrderItemFormCancelNavItem, trailing: addOrderItemFormAddNavItem)
         }
     }
     
-    /// Add navigation item for `addOrderItemForm`.
-    var addOrderItemFormAddNavItem: some View {
-        Button("Add", action: {
-            guard let order = self.model.order, let context = order.managedObjectContext else { return }
-            
-            // send change to reload form's Update button's state
-            order.objectWillChange.send()
-            
-            // create order item and add it to the order
-            let newOrderItem = OrderItem(context: context)
-            newOrderItem.order = order
-            self.newOrderItemModel.assign(to: newOrderItem)
-            self.model.orderItemCount = order.orderItems.count
-            
-            self.dismissPresentationSheet()
-        })
-    }
-    
-    /// Cancel navigation item for `addOrderItemForm`.
-    var addOrderItemFormCancelNavItem: some View {
-        Button("Cancel", action: dismissPresentationSheet)
+    /// Add order item to the order
+    func addOrderItem() {
+        guard let order = model.order, let context = order.managedObjectContext else { return }
+        
+        // send change to reload form's Update button's state
+        order.objectWillChange.send()
+        
+        // create order item and add it to the order
+        let newOrderItem = OrderItem(context: context)
+        newOrderItem.order = order
+        newOrderItemModel.assign(to: newOrderItem)
+        model.orderItemCount = order.orderItems.count
+        
+        dismissPresentationSheet()
     }
 }
 

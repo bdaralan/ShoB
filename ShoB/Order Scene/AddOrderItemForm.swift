@@ -14,6 +14,10 @@ struct AddOrderItemForm: View {
     @Binding var orderItemModel: SaleItemFormModel
     
     var saleItems: [SaleItem]
+    
+    var onAdd: () -> Void
+    
+    var onCancel: () -> Void
   
     
     // MARK: - Body
@@ -53,6 +57,23 @@ struct AddOrderItemForm: View {
                 }
             }
         }
+        .navigationBarItems(leading: cancelNavItem, trailing: addNavItem)
+    }
+}
+
+// MARK: - Body Component
+
+extension AddOrderItemForm {
+    
+    /// Add navigation item for `addOrderItemForm`.
+    var addNavItem: some View {
+        Button("Add", action: onAdd)
+            .disabled(orderItemModel.name.isEmpty)
+    }
+    
+    /// Cancel navigation item for `addOrderItemForm`.
+    var cancelNavItem: some View {
+        Button("Cancel", action: onCancel)
     }
 }
 
@@ -60,7 +81,7 @@ struct AddOrderItemForm: View {
 #if DEBUG
 struct AddOrderItemView_Previews: PreviewProvider {
     static var previews: some View {
-        AddOrderItemForm(orderItemModel: .constant(.init()), saleItems: [])
+        AddOrderItemForm(orderItemModel: .constant(.init()), saleItems: [], onAdd: {}, onCancel: {})
     }
 }
 #endif
