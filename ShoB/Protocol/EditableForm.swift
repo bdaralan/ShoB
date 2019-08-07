@@ -15,6 +15,8 @@ protocol EditableForm {
     /// Triggered when the save button is tapped.
     var onSave: () -> Void { set get }
     
+    var onDelete: () -> Void { set get }
+    
     var isSaveEnabled: Bool { get }
 }
 

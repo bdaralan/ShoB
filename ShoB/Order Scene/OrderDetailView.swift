@@ -19,7 +19,7 @@ struct OrderDetailView: View, EditableForm {
     
     var onSave: () -> Void
     
-    var onDelete: (Order) -> Void
+    var onDelete: () -> Void
     
     var onOrderAgain: (Order) -> Void
     
@@ -53,7 +53,7 @@ extension OrderDetailView {
         deleteConfirmationAlert(
             title: "Delete Order",
             message: nil,
-            action: { self.onDelete(self.order) }
+            action: onDelete
         )
     }
 }
@@ -63,7 +63,7 @@ extension OrderDetailView {
 struct OrderDetailView_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
     static var previews: some View {
-        OrderDetailView(order: order, model: .constant(.init()), onSave: {}, onDelete: { _ in }, onOrderAgain: { _ in })
+        OrderDetailView(order: order, model: .constant(.init()), onSave: {}, onDelete: {}, onOrderAgain: { _ in })
     }
 }
 #endif

@@ -25,6 +25,8 @@ struct SaleItemDetailView: View, EditableForm {
         saleItem.hasPersistentChangedValues && saleItem.hasValidInputs()
     }
     
+    @State private var showDeleteConfirmationAlert = false
+    
     
     // MARK: - Body
     
@@ -34,12 +36,23 @@ struct SaleItemDetailView: View, EditableForm {
                 SaleItemFormBody(model: $model, mode: .saleItem)
             }
             Section {
-                Button("Delete", action: onDelete)
+                Button("Delete", action: { self.showDeleteConfirmationAlert = true })
                     .buttonStyle(CenterButtonStyle(.destructive))
             }
         }
         .navigationBarTitle("Item Details", displayMode: .inline)
         .navigationBarItems(trailing: saveNavItem(title: "Update"))
+        .alert(isPresented: $showDeleteConfirmationAlert, content: { self.deleteConfirmationAlert })
+    }
+}
+
+
+// MARK: - Body Component
+
+extension SaleItemDetailView {
+    
+    var deleteConfirmationAlert: Alert {
+        deleteConfirmationAlert(title: "Delete Item", message: nil, action: onDelete)
     }
 }
 

@@ -24,13 +24,26 @@ struct CustomerDetailView: View, EditableForm {
         customer.hasPersistentChangedValues && customer.hasValidInputs()
     }
     
+    @State private var showDeleteConfirmationAlert = false
+    
     
     // MARK: - Body
     
     var body: some View {
-        CustomerForm(model: $model, onDelete: onDelete)
+        CustomerForm(model: $model, onDelete: { self.showDeleteConfirmationAlert = true })
             .navigationBarTitle("Customer Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem(title: "Update"))
+            .alert(isPresented: $showDeleteConfirmationAlert, content: { self.deleteConfirmationAlert })
+    }
+}
+
+
+// MARK: - Body Component
+
+extension CustomerDetailView {
+    
+    var deleteConfirmationAlert: Alert {
+        deleteConfirmationAlert(title: "Delete Customer", message: nil, action: onDelete)
     }
 }
 

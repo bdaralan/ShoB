@@ -62,7 +62,7 @@ struct OrderRow: View {
         }, onDelete: {
             self.navigationState.onPopped = nil
             self.navigationState.isPushed = false
-            self.onDelete($0)
+            self.onDelete(self.order)
         }, onOrderAgain: {
             self.navigationState.isPushed = false
             self.onOrderAgain($0)
