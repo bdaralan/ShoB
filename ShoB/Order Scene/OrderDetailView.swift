@@ -27,13 +27,34 @@ struct OrderDetailView: View, EditableForm {
         order.hasPersistentChangedValues && order.hasValidInputs()
     }
     
+    @State private var showConfirmDeleteAlert = false
+    
     
     // MARK: - Body
     
     var body: some View {
-        OrderForm(model: $model, onDelete: onDelete, onOrderAgain: onOrderAgain)
+        OrderForm(
+            model: $model,
+            onDelete: { self.showConfirmDeleteAlert = true },
+            onOrderAgain: { self.onOrderAgain(self.order) }
+        )
             .navigationBarTitle("Order Details", displayMode: .inline)
             .navigationBarItems(trailing: saveNavItem(title: "Update"))
+            .alert(isPresented: $showConfirmDeleteAlert, content: { deleteConfirmationAlert })
+    }
+}
+
+
+// MARK: - Body Component
+
+extension OrderDetailView {
+    
+    var deleteConfirmationAlert: Alert {
+        deleteConfirmationAlert(
+            title: "Delete Order",
+            message: nil,
+            action: { self.onDelete(self.order) }
+        )
     }
 }
 

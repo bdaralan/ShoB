@@ -19,9 +19,9 @@ struct OrderForm: View {
     /// Model used to create order.
     @Binding var model: OrderFormModel
     
-    var onDelete: ((Order) -> Void)?
+    var onDelete: (() -> Void)?
     
-    var onOrderAgain: ((Order) -> Void)?
+    var onOrderAgain: (() -> Void)?
     
     /// Model used to create and add item to the order.
     @State private var newOrderItemModel = SaleItemFormModel()
@@ -189,16 +189,16 @@ extension OrderForm {
     
     /// Delete order button.
     var deleteOrderButtonRow: some View {
-        guard let onDelete = onDelete, let order = model.order else { return AnyView.emptyView }
-        return Button("Delete", action: { onDelete(order) })
+        guard let onDelete = onDelete else { return AnyView.emptyView }
+        return Button("Delete", action: onDelete)
             .buttonStyle(CenterButtonStyle(.destructive))
             .toAnyView()
     }
     
     /// Order again button.
     var orderAgainButtonRow: some View {
-        guard let onOrderAgain = onOrderAgain, let order = model.order else { return AnyView.emptyView }
-        return Button("Order Again", action: { onOrderAgain(order) })
+        guard let onOrderAgain = onOrderAgain else { return AnyView.emptyView }
+        return Button("Order Again", action: onOrderAgain)
             .buttonStyle(CenterButtonStyle(.normal))
             .toAnyView()
     }
