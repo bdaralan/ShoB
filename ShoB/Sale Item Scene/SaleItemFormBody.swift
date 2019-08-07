@@ -83,7 +83,7 @@ extension SaleItemFormBody {
                 // MARK: Increment Segment
                 Picker("", selection: $incrementValue) {
                     Text("1").tag(1)
-                    Text("5").tag(5)
+                    Text("6").tag(6)
                     Text("12").tag(QuantityMode.dozenCount)
                 }
                 .pickerStyle(SegmentedPickerStyle())
