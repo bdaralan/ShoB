@@ -21,13 +21,17 @@ struct CreateOrderForm: View, CreatableForm {
     /// Triggered when cancelled to create a new order.
     var onCancel: () -> Void
     
+    var isCreateEnabled: Bool {
+        model.order!.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     
     var body: some View {
         OrderForm(model: $model)
             .navigationBarTitle("New Order", displayMode: .inline)
-            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Place Order"))
+            .navigationBarItems(leading: cancelNavItem(), trailing: createNavItem(title: "Place Order").disabled(!model.order!.hasValidInputs()))
     }
 }
 

@@ -23,13 +23,17 @@ struct OrderDetailView: View, EditableForm {
     
     var onOrderAgain: (Order) -> Void
     
+    var isSaveEnabled: Bool {
+        order.hasPersistentChangedValues && order.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     
     var body: some View {
         OrderForm(model: $model, onDelete: onDelete, onOrderAgain: onOrderAgain)
             .navigationBarTitle("Order Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: order.hasPersistentChangedValues || order.isMarkedValuesChanged))
+            .navigationBarItems(trailing: saveNavItem(title: "Update"))
     }
 }
 

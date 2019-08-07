@@ -20,13 +20,17 @@ struct CustomerDetailView: View, EditableForm {
     
     var onDelete: () -> Void
     
+    var isSaveEnabled: Bool {
+        customer.hasPersistentChangedValues && customer.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     
     var body: some View {
         CustomerForm(model: $model, onDelete: onDelete)
             .navigationBarTitle("Customer Details", displayMode: .inline)
-            .navigationBarItems(trailing: saveNavItem(title: "Update", enable: customer.hasPersistentChangedValues))
+            .navigationBarItems(trailing: saveNavItem(title: "Update"))
     }
 }
 

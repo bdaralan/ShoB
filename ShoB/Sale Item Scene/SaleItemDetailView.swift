@@ -21,6 +21,10 @@ struct SaleItemDetailView: View, EditableForm {
     
     var onDelete: () -> Void
     
+    var isSaveEnabled: Bool {
+        saleItem.hasPersistentChangedValues && saleItem.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     
@@ -35,7 +39,7 @@ struct SaleItemDetailView: View, EditableForm {
             }
         }
         .navigationBarTitle("Item Details", displayMode: .inline)
-        .navigationBarItems(trailing: saveNavItem(title: "Update", enable: saleItem.hasPersistentChangedValues))
+        .navigationBarItems(trailing: saveNavItem(title: "Update"))
     }
 }
 

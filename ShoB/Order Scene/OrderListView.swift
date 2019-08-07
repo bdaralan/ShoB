@@ -112,6 +112,7 @@ extension OrderListView {
     
     /// Save the new order to the data source.
     func saveNewOrder() {
+        guard newOrderModel.order!.hasValidInputs() else { return }
         dataSource.cud.saveCreateContext()
         showCreateOrderForm = false
     }

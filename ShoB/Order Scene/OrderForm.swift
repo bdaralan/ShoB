@@ -233,6 +233,7 @@ extension OrderForm {
             let newOrderItem = OrderItem(context: context)
             newOrderItem.order = order
             self.newOrderItemModel.assign(to: newOrderItem)
+            self.model.orderItemCount = order.orderItems.count
             
             self.dismissPresentationSheet()
         })
@@ -262,6 +263,8 @@ extension OrderForm {
     func deleteEditingOrderItem() {
         guard let itemToDelete = editOrderItemModel.orderItem else { return }
         guard let context = itemToDelete.managedObjectContext else { return }
+        model.order!.orderItems.remove(itemToDelete)
+        model.orderItemCount = model.order!.orderItems.count
         context.delete(itemToDelete)
         dismissPresentationSheet()
     }

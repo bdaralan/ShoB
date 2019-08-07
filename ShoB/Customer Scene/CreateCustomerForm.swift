@@ -18,6 +18,10 @@ struct CreateCustomerForm: View, CreatableForm {
     
     var onCancel: () -> Void
     
+    var isCreateEnabled: Bool {
+        model.customer!.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     

@@ -25,7 +25,7 @@ struct CustomerForm: View {
     var body: some View {
         Form {
             // MARK: Info Section
-            Section(header: Text.topSection("INFO"), footer: Text("One of the above fields must not be empty.")) {
+            Section(header: Text.topSection("INFO")) {
                 VertialTextField("Given Name", text: $model.givenName, content: .givenName)
                 VertialTextField("Family Name", text: $model.familyName, content: .familyName)
                 VertialTextField("Organization", text: $model.organization, content: .organizationName)

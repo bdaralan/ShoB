@@ -19,6 +19,10 @@ struct CreateSaleItemForm : View, CreatableForm {
     
     var onCancel: () -> Void
     
+    var isCreateEnabled: Bool {
+        model.saleItem!.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     

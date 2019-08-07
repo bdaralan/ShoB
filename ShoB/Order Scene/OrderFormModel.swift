@@ -45,6 +45,19 @@ struct OrderFormModel {
         didSet { order?.note = note }
     }
     
+    /// The number of item in order.
+    ///
+    /// - Note: This property is used to force refresh UI only.
+    ///
+    ///   **In Beta 5**: While refactoring, there seem to be a bug in `OrderForm` class
+    ///   where adding new item does not refresh "Place Order" button state even if
+    ///   the order's `objectWillChange` is sent.
+    ///
+    ///   For now this property is used to force a UI refresh.
+    ///
+    ///   Revisit this in the future beta.
+    var orderItemCount = 0
+    
     
     init(order: Order? = nil) {
         guard let order = order else { return }

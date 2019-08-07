@@ -17,6 +17,8 @@ protocol CreatableForm {
     
     /// Triggered when the cancel button is tapped.
     var onCancel: () -> Void { set get }
+    
+    var isCreateEnabled: Bool { get }
 }
 
 
@@ -29,5 +31,6 @@ extension CreatableForm {
     func createNavItem(title: String) -> some View {
         Button(title, action: onCreate)
             .font(Font.body.bold())
+            .disabled(!isCreateEnabled)
     }
 }

@@ -14,14 +14,16 @@ protocol EditableForm {
     
     /// Triggered when the save button is tapped.
     var onSave: () -> Void { set get }
+    
+    var isSaveEnabled: Bool { get }
 }
 
 
 extension EditableForm {
     
-    func saveNavItem(title: String, enable: Bool) -> some View {
+    func saveNavItem(title: String) -> some View {
         Button(title, action: onSave)
             .font(Font.body.bold())
-            .disabled(!enable)
+            .disabled(!isSaveEnabled)
     }
 }
