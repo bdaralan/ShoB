@@ -24,7 +24,7 @@ struct OrderDetailView: View, EditableForm {
     var onOrderAgain: (Order) -> Void
     
     var isSaveEnabled: Bool {
-        order.hasPersistentChangedValues && order.hasValidInputs()
+        order.hasPersistentChangedValues && order.hasValidInputs() || order.isMarkedValuesChanged
     }
     
     @State private var showConfirmDeleteAlert = false
