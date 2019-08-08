@@ -13,7 +13,7 @@ import Combine
 /// A text field for searching.
 struct SearchTextField: View {
     
-    @ObservedObject private var model = SearchField()
+    @ObservedObject private var searchField = SearchField()
     
     let placeholder: String
     
@@ -22,17 +22,34 @@ struct SearchTextField: View {
     var onSearchTextDebounced: ((String) -> Void)?
     
     var body: some View {
-        model.onSearchTextChanged = onSearchTextChanged
-        model.onSearchTextDebounced = onSearchTextDebounced
-        return TextField(placeholder, text: $model.searchText)
+        HStack {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.secondary)
+                TextField(placeholder, text: $searchField.searchText)
+            }
+            .padding(8)
+            .background(Color(UIColor(white: 0.94, alpha: 1)))
+            .cornerRadius(10)
+            .animation(.easeOut)
+            
+            if !searchField.searchText.isEmpty {
+                Button("Cancel", action: searchField.clear)
+                    .foregroundColor(.accentColor)
+                    .transition(.move(edge: .trailing))
+                    .animation(.easeOut)
+            }
+        }
+        .onAppear {
+            self.searchField.onSearchTextChanged = self.onSearchTextChanged
+            self.searchField.onSearchTextDebounced = self.onSearchTextDebounced
+        }
     }
 }
 
 
 /// An observable object to be used with `SearchTextField`.
 class SearchField: ObservableObject {
-    
-    let searchTextWillChange = PassthroughSubject<String, Never>()
     
     @Published var searchText = "" {
         willSet { searchTextWillChange.send(newValue) }
@@ -43,15 +60,22 @@ class SearchField: ObservableObject {
     
     var onSearchTextDebounced: ((String) -> Void)?
     
-    private var searchTextCancellable: AnyCancellable?
+    private let searchTextWillChange = PassthroughSubject<String, Never>()
+    
+    private var searchTextWillChangeCancellable: AnyCancellable?
     
     
     init() {
-        searchTextCancellable = searchTextWillChange
+        searchTextWillChangeCancellable = searchTextWillChange
             .map({ $0.trimmingCharacters(in: .whitespaces) })
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink(receiveValue: { self.onSearchTextDebounced?($0) })
+    }
+    
+    /// Clear the search text to empty.
+    func clear() {
+        searchText = ""
     }
 }
 
