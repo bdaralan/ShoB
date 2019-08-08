@@ -40,6 +40,7 @@
 		B48E584722EA452900B9FEAB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48E584622EA452900B9FEAB /* String.swift */; };
 		B4918E0B22ED4D0B00D17DDE /* CustomerRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4918E0A22ED4D0B00D17DDE /* CustomerRowContentView.swift */; };
 		B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4932D1022BC53D50010710F /* CustomerListView.swift */; };
+		B4A2C3EA22FB9EFC006EE586 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */; };
 		B4A5D97522CBF7F200695A3F /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A5D97422CBF7F200695A3F /* Home.swift */; };
 		B4A5D97722CC392700695A3F /* CreateOrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A5D97622CC392700695A3F /* CreateOrderForm.swift */; };
 		B4A5D97922CC3AB600695A3F /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A5D97822CC3AB600695A3F /* OrderDetailView.swift */; };
@@ -103,6 +104,7 @@
 		B48E584622EA452900B9FEAB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		B4918E0A22ED4D0B00D17DDE /* CustomerRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerRowContentView.swift; sourceTree = "<group>"; };
 		B4932D1022BC53D50010710F /* CustomerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerListView.swift; sourceTree = "<group>"; };
+		B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B4A5D97422CBF7F200695A3F /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		B4A5D97622CC392700695A3F /* CreateOrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrderForm.swift; sourceTree = "<group>"; };
 		B4A5D97822CC3AB600695A3F /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				B405260122E8FFDC007E2325 /* VertialTextField.swift */,
+				B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 				B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */,
 				B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */,
 				B4B9D15122B2E4A0003FC4E3 /* SaleItem.swift in Sources */,
+				B4A2C3EA22FB9EFC006EE586 /* SearchTextField.swift in Sources */,
 				B4918E0B22ED4D0B00D17DDE /* CustomerRowContentView.swift in Sources */,
 				B4A5D97C22CD1EC800695A3F /* CUDDataSource.swift in Sources */,
 				B40525FF22E8FD74007E2325 /* CreateCustomerForm.swift in Sources */,
