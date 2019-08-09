@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 
 /// A view that displays store's sale items in a list.
@@ -20,11 +21,14 @@ struct SaleItemListView: View {
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
+    @ObservedObject private var searchField = SearchField()
+    
     
     // MARK: - Body
     
     var body: some View {
         List {
+            SearchTextField(searchField: searchField)
             ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
                     saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
@@ -33,6 +37,7 @@ struct SaleItemListView: View {
                 )
             }
         }
+        .onAppear(perform: setupSearchField)
         .navigationBarItems(trailing: addNewSaleItemNavItem)
         .sheet(
             isPresented: $showCreateSaleItemForm,
@@ -97,6 +102,14 @@ extension SaleItemListView {
     func deleteSaleItem(_ item: SaleItem) {
         dataSource.cud.delete(item, saveContext: true)
         viewReloader.forceReload()
+    }
+    
+    func setupSearchField() {
+        searchField.placeholder = "Search by name or price"
+        searchField.onSearchTextDebounced = { searchText in
+            let search = searchText.isEmpty ? nil : searchText
+            self.dataSource.performFetch(SaleItem.requestAllObjects(searchNameOrPrice: search))
+        }
     }
 }
 
