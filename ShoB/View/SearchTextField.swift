@@ -56,7 +56,7 @@ class SearchField: ObservableObject {
     /// An action to perform when text changed.
     var onSearchTextChanged: ((String) -> Void)?
     
-    /// An action to perform debounce text changed.
+    /// An action to perform when debounce text changed.
     var onSearchTextDebounced: ((String) -> Void)?
     
     /// A publisher for sending change when `text` changed.
@@ -66,10 +66,9 @@ class SearchField: ObservableObject {
     
     
     init() {
-        searchTextWillChangeCancellable = searchTextWillChange.eraseToAnyPublisher()
+        searchTextWillChangeCancellable = searchTextWillChange
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
-            .eraseToAnyPublisher()
             .sink(receiveValue: { newValue in
                 self.objectWillChange.send()
                 self.onSearchTextDebounced?(newValue)
