@@ -50,9 +50,25 @@ extension Customer {
         return NSFetchRequest<Customer>(entityName: "Customer")
     }
     
-    static func requestAllCustomer() -> NSFetchRequest<Customer> {
+    /// A request to fetch customers.
+    /// - Parameter filterInfo: Customer's info to filter. Example name, email, or address.
+    static func requestAllCustomer(filterInfo: String? = nil) -> NSFetchRequest<Customer> {
         let request = Customer.fetchRequest() as NSFetchRequest<Customer>
-        request.predicate = .init(value: true)
+        
+        if let search = filterInfo {
+            let format = """
+            \(#keyPath(familyName)) CONTAINS[c] %@ OR
+            \(#keyPath(givenName)) CONTAINS[c] %@ OR
+            \(#keyPath(organization)) CONTAINS[c] %@ OR
+            \(#keyPath(phone)) CONTAINS[c] %@ OR
+            \(#keyPath(email)) CONTAINS[c] %@ OR
+            \(#keyPath(address)) CONTAINS[c] %@
+            """
+            request.predicate = .init(format: format, search, search, search, search, search, search)
+        } else {
+            request.predicate = .init(value: true)
+        }
+        
         request.sortDescriptors = []
         return request
     }

@@ -20,6 +20,8 @@ struct CustomerListView: View {
     
     @ObservedObject private var viewReloader = ViewForceReloader()
     
+    @ObservedObject private var searchField = SearchField()
+    
     var sortedCustomers: [Customer] {
         dataSource.fetchController.fetchedObjects?
             .sorted(by: { $0.identity.lowercased() < $1.identity.lowercased() }) ?? []
@@ -30,6 +32,7 @@ struct CustomerListView: View {
     
     var body: some View {
         List {
+            SearchTextField(searchField: searchField)
             ForEach(sortedCustomers) { customer in
                 CustomerRow(
                     customer: customer.get(from: self.dataSource.cud.updateContext),
@@ -38,6 +41,7 @@ struct CustomerListView: View {
                 )
             }
         }
+        .onAppear(perform: setupSearchField)
         .navigationBarItems(trailing: createNewCustomerNavItem)
         .sheet(
             isPresented: $showCreateCustomerForm,
@@ -108,6 +112,20 @@ extension CustomerListView {
     func deleteCustomer(_ customer: Customer) {
         dataSource.cud.delete(customer, saveContext: true)
         viewReloader.forceReload()
+    }
+}
+
+
+// MARK: - Method
+
+extension CustomerListView {
+    
+    func setupSearchField() {
+        searchField.placeholder = "Search name, phone, email, etc..."
+        searchField.onSearchTextDebounced = { searchText in
+            let search = searchText.isEmpty ? nil : searchText
+            self.dataSource.performFetch(Customer.requestAllCustomer(filterInfo: search))
+        }
     }
 }
 

@@ -108,7 +108,7 @@ extension SaleItemListView {
         searchField.placeholder = "Search by name or price"
         searchField.onSearchTextDebounced = { searchText in
             let search = searchText.isEmpty ? nil : searchText
-            self.dataSource.performFetch(SaleItem.requestAllObjects(searchNameOrPrice: search))
+            self.dataSource.performFetch(SaleItem.requestAllObjects(filterNameOrPrice: search))
         }
     }
 }

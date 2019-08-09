@@ -35,10 +35,10 @@ extension SaleItem {
         return NSFetchRequest<SaleItem>(entityName: "SaleItem")
     }
     
-    static func requestAllObjects(searchNameOrPrice: String? = nil) -> NSFetchRequest<SaleItem> {
+    static func requestAllObjects(filterNameOrPrice: String? = nil) -> NSFetchRequest<SaleItem> {
         let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
         
-        if let search = searchNameOrPrice {
+        if let search = filterNameOrPrice {
             if Double(search) != nil { // matching price
                 request.predicate = .init(format: "\(#keyPath(SaleItem.price)) == %d", Currency(search).amount)
             } else { // matching name
