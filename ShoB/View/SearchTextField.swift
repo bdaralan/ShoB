@@ -13,6 +13,8 @@ import Combine
 /// A search text box.
 struct SearchTextField: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    
     @ObservedObject var searchField: SearchField
     
     
@@ -25,7 +27,7 @@ struct SearchTextField: View {
                 TextField(searchField.placeholder, text: $searchField.searchText)
             }
             .padding(8)
-            .background(Color(UIColor(white: 0.94, alpha: 1)))
+            .background(Color(UIColor(white: colorScheme == .light ? 0.92 : 0.1, alpha: 1)))
             .cornerRadius(10)
             .animation(.easeOut)
             
