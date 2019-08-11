@@ -13,7 +13,7 @@ import Combine
 /// A view that displays store's sale items in a list.
 struct SaleItemListView: View {
     
-    @EnvironmentObject var dataSource: FetchedDataSource<SaleItem>
+    @EnvironmentObject var saleItemDataSource: SaleItemDataSource
     
     @State private var showCreateSaleItemForm = false
     
@@ -29,9 +29,9 @@ struct SaleItemListView: View {
     var body: some View {
         List {
             SearchTextField(searchField: searchField)
-            ForEach(dataSource.fetchController.fetchedObjects ?? []) {  saleItem in
+            ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
-                    saleItem: saleItem.get(from: self.dataSource.cud.updateContext),
+                    saleItem: self.saleItemDataSource.readingObject(saleItem),
                     onSave: self.saveSaleItemRowChanges,
                     onDelete: self.deleteSaleItem
                 )
@@ -55,9 +55,9 @@ extension SaleItemListView {
     var addNewSaleItemNavItem: some View {
         Button(action: {
             // discard and create new item for the form
-            self.dataSource.cud.discardNewObject()
-            self.dataSource.cud.prepareNewObject()
-            self.newSaleItemModel = .init(saleItem: self.dataSource.cud.newObject!)
+            self.saleItemDataSource.discardNewObject()
+            self.saleItemDataSource.prepareNewObject()
+            self.newSaleItemModel = .init(saleItem: self.saleItemDataSource.newObject!)
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -81,26 +81,21 @@ extension SaleItemListView {
 extension SaleItemListView {
     
     func dismisCreateSaleItem() {
-        dataSource.cud.discardCreateContext()
+        saleItemDataSource.discardCreateContext()
         showCreateSaleItemForm = false
     }
     
     func saveNewSaleItem() {
-        dataSource.cud.saveCreateContext()
+        saleItemDataSource.saveNewObject()
         showCreateSaleItemForm = false
     }
     
     func saveSaleItemRowChanges(item: SaleItem) {
-        if item.hasPersistentChangedValues {
-            dataSource.cud.saveUpdateContext()
-        } else {
-            dataSource.cud.discardUpdateContext()
-        }
-        item.objectWillChange.send()
+        saleItemDataSource.saveUpdateObject()
     }
     
     func deleteSaleItem(_ item: SaleItem) {
-        dataSource.cud.delete(item, saveContext: true)
+        saleItemDataSource.delete(item, saveContext: true)
         viewReloader.forceReload()
     }
     
@@ -108,7 +103,7 @@ extension SaleItemListView {
         searchField.placeholder = "Search by name or price"
         searchField.onSearchTextDebounced = { searchText in
             let search = searchText.isEmpty ? nil : searchText
-            self.dataSource.performFetch(SaleItem.requestAllObjects(filterNameOrPrice: search))
+            self.saleItemDataSource.performFetch(SaleItem.requestAllObjects(filterNameOrPrice: search))
         }
     }
 }

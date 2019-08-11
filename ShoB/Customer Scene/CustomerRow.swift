@@ -12,6 +12,8 @@ import SwiftUI
 /// A view that displays customer in a list row.
 struct CustomerRow: View {
     
+    @EnvironmentObject var customerDataSource: CustomerDataSource
+    
     @ObservedObject var customer: Customer
     
     @State private var model = CustomerFormModel()
@@ -28,6 +30,7 @@ struct CustomerRow: View {
     var body: some View {
         // setup navigation view on popped logic
         navigationState.onPopped = { // discard unsaved changes
+            self.customerDataSource.setUpdateObject(nil)
             guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
             context.rollback()
         }
@@ -53,6 +56,7 @@ extension CustomerRow {
         })
         .onAppear {
             self.model = .init(customer: self.customer)
+            self.customerDataSource.setUpdateObject(self.customer)
         }
     }
 }

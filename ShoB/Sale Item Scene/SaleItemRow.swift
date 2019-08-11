@@ -12,6 +12,8 @@ import SwiftUI
 /// A view that displays sale item in a list row.
 struct SaleItemRow: View {
     
+    @EnvironmentObject var saleItemDataSource: SaleItemDataSource
+    
     /// The source item to view or update.
     @ObservedObject var saleItem: SaleItem
     
@@ -29,6 +31,7 @@ struct SaleItemRow: View {
     
     var body: some View {
         navigationState.onPopped = { // discard unsaved changes
+            self.saleItemDataSource.setUpdateObject(nil)
             guard self.saleItem.hasChanges, let context = self.saleItem.managedObjectContext else { return }
             context.rollback()
         }
@@ -60,6 +63,7 @@ extension SaleItemRow {
             // DEVELOPER NOTE:
             // Do the assignment here for now until finding a better place for the assignment
             self.saleItemModel = .init(saleItem: self.saleItem)
+            self.saleItemDataSource.setUpdateObject(self.saleItem)
         }
     }
 }
@@ -67,8 +71,7 @@ extension SaleItemRow {
 
 #if DEBUG
 struct SaleItemRow_Previews : PreviewProvider {
-    static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
-    static let saleItem = SaleItem(context: cud.sourceContext)
+    static let saleItem = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         SaleItemRow(saleItem: saleItem, onSave: { _ in }, onDelete: { _ in })
     }

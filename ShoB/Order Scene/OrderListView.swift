@@ -12,12 +12,12 @@ import SwiftUI
 /// A view that displays store's orders in a list.
 struct OrderListView: View {
     
-    @EnvironmentObject var dataSource: FetchedDataSource<Order>
+    @EnvironmentObject var orderDataSource: OrderDataSource
     
     /// Used to display sale item list when create new order.
-    @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
+    @EnvironmentObject var saleItemDataSource: SaleItemDataSource
     
-    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
+    @EnvironmentObject var customerDataSource: CustomerDataSource
     
     @ObservedObject private var model = OrderListViewModel()
     
@@ -35,9 +35,9 @@ struct OrderListView: View {
     var body: some View {
         List {
             Section(header: segmentPicker) {
-                ForEach(dataSource.fetchController.fetchedObjects ?? []) { order in
+                ForEach(orderDataSource.fetchedResult.fetchedObjects ?? []) { order in
                     OrderRow(
-                        order: order.get(from: self.dataSource.cud.updateContext),
+                        order: self.orderDataSource.readingObject(order),
                         onSave: self.updateOrder,
                         onDelete: self.deleteOrder,
                         onOrderAgain: self.placeOrderAgain
@@ -62,9 +62,9 @@ extension OrderListView {
     var placeNewOrderNavItem: some View {
         Button(action: {
             // discard and create a new order object for the form
-            self.dataSource.cud.discardNewObject()
-            self.dataSource.cud.prepareNewObject()
-            self.newOrderModel = .init(order: self.dataSource.cud.newObject!)
+            self.orderDataSource.discardNewObject()
+            self.orderDataSource.prepareNewObject()
+            self.newOrderModel = .init(order: self.orderDataSource.newObject!)
             self.showCreateOrderForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -106,46 +106,38 @@ extension OrderListView {
     ///
     /// If the form was cancelled or dismissed, any changes to the data source's create context is discarded.
     func dismissCreateOrderForm() {
-        dataSource.cud.discardCreateContext()
+        orderDataSource.discardCreateContext()
         showCreateOrderForm = false
     }
     
     /// Save the new order to the data source.
     func saveNewOrder() {
         guard newOrderModel.order!.hasValidInputs() else { return }
-        dataSource.cud.saveCreateContext()
+        orderDataSource.saveNewObject()
         showCreateOrderForm = false
     }
     
     /// Save changes.
     /// - Parameter order: The order to save.
     func updateOrder(_ order: Order) {
-        order.objectWillChange.send()
-        
-        if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
-            order.isMarkedValuesChanged = false
-            dataSource.cud.saveUpdateContext()
-        } else {
-            dataSource.cud.discardUpdateContext()
-        }
+        self.orderDataSource.saveUpdateObject()
     }
     
     /// Delete order.
     /// - Parameter order: The order to delete.
     func deleteOrder(_ order: Order) {
-        dataSource.cud.delete(order, saveContext: true)
+        orderDataSource.delete(order, saveContext: true)
         viewReloader.forceReload()
     }
     
     /// Create a new order from an old order.
     /// - Parameter order: The old order.
     func placeOrderAgain(_ order: Order) {
-        let oldOrder = order.get(from: dataSource.cud.createContext)
-        
         // prepare new object
-        dataSource.cud.discardNewObject()
-        dataSource.cud.prepareNewObject()
-        let newOrder = dataSource.cud.newObject!
+        orderDataSource.discardNewObject()
+        orderDataSource.prepareNewObject()
+        let newOrder = orderDataSource.newObject!
+        let oldOrder = order.get(from: orderDataSource.createContext)
         
         // copy neccessary values
         newOrder.discount = oldOrder.discount
@@ -155,7 +147,7 @@ extension OrderListView {
         
         // copy order items
         order.orderItems.forEach {
-            let copiedItem = OrderItem(context: dataSource.cud.createContext)
+            let copiedItem = OrderItem(context: orderDataSource.createContext)
             copiedItem.name = $0.name
             copiedItem.price = $0.price
             copiedItem.quantity = $0.quantity
@@ -171,14 +163,14 @@ extension OrderListView {
         switch segment {
         
         case .today:
-            dataSource.performFetch(Order.requestDeliverToday())
+            orderDataSource.performFetch(Order.requestDeliverToday())
         
         case .upcoming:
             let tomorrow = Date.startOfToday(addingDay: 1)
-            dataSource.performFetch(Order.requestDeliver(from: tomorrow))
+            orderDataSource.performFetch(Order.requestDeliver(from: tomorrow))
         
         case .pastDay(let day):
-            dataSource.performFetch(Order.requestDeliver(fromPastDay: day))
+            orderDataSource.performFetch(Order.requestDeliver(fromPastDay: day))
         }
     }
 }

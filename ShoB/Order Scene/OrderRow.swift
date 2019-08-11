@@ -12,7 +12,9 @@ import SwiftUI
 /// A view that displays order in a list row.
 struct OrderRow: View {
     
-    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
+    @EnvironmentObject var orderDataSource: OrderDataSource
+    
+    @EnvironmentObject var customerDataSource: CustomerDataSource
     
     /// The order to view or update.
     @ObservedObject var order: Order
@@ -32,6 +34,8 @@ struct OrderRow: View {
     
     var body: some View {
         navigationState.onPopped = {
+            self.orderDataSource.setUpdateObject(nil)
+            
             guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
             
             // DEVELOPER NOTE: beta 5
@@ -74,6 +78,7 @@ struct OrderRow: View {
             
             // assign the order to the model.
             self.orderModel = .init(order: self.order)
+            self.orderDataSource.setUpdateObject(self.order)
         }
     }
 }
@@ -81,8 +86,7 @@ struct OrderRow: View {
 
 #if DEBUG
 struct OrderRow_Previews : PreviewProvider {
-    static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
-    static let order = Order(context: cud.sourceContext)
+    static let order = Order(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         OrderRow(order: order, onSave: { _ in }, onDelete: { _ in }, onOrderAgain: { _ in })
     }

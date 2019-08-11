@@ -12,23 +12,20 @@ import SwiftUI
 /// The root view of the application.
 struct Home: View {
     
-    @ObservedObject var orderDataSource: FetchedDataSource<Order> = {
-        let dataSource = FetchedDataSource<Order>(context: CoreDataStack.current.mainContext)
+    @ObservedObject var orderDataSource: OrderDataSource = {
+        let dataSource = OrderDataSource(parentContext: CoreDataStack.current.mainContext)
         dataSource.performFetch(Order.requestDeliverToday())
         return dataSource
     }()
     
-    @ObservedObject var saleItemDataSource: FetchedDataSource<SaleItem> = {
-        let dataSource = FetchedDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
-        let request = dataSource.fetchController.fetchRequest
-        request.predicate = .init(value: true)
-        request.sortDescriptors = [.init(key: #keyPath(SaleItem.name), ascending: true)]
-        dataSource.performFetch()
+    @ObservedObject var saleItemDataSource: SaleItemDataSource = {
+        let dataSource = SaleItemDataSource(parentContext: CoreDataStack.current.mainContext)
+        dataSource.performFetch(SaleItem.requestAllObjects())
         return dataSource
     }()
     
-    @ObservedObject var customerDataSource: FetchedDataSource<Customer> = {
-        let dataSource = FetchedDataSource<Customer>(context: CoreDataStack.current.mainContext)
+    @ObservedObject var customerDataSource: CustomerDataSource = {
+        let dataSource = CustomerDataSource(parentContext: CoreDataStack.current.mainContext)
         dataSource.performFetch(Customer.requestAllCustomer())
         return dataSource
     }()
@@ -59,7 +56,7 @@ struct Home: View {
             }
             .tabItem { tabItem(systemImage: "rectangle.stack.person.crop.fill", title: "Customers") }
             .tag(1)
-            
+
             // MARK: Sale Item List
             NavigationView {
                 SaleItemListView()

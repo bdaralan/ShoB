@@ -36,7 +36,6 @@ struct CreateSaleItemForm : View, CreatableForm {
 
 #if DEBUG
 struct AddSaleItemView_Previews : PreviewProvider {
-    static let cud = CUDDataSource<SaleItem>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         CreateSaleItemForm(model: .constant(.init()), onCreate: {}, onCancel: {})
     }

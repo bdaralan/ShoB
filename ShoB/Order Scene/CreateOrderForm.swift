@@ -38,7 +38,6 @@ struct CreateOrderForm: View, CreatableForm {
 
 #if DEBUG
 struct PlaceOrderView_Previews : PreviewProvider {
-    static let cud = CUDDataSource<Order>(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         CreateOrderForm(model: .constant(.init()), onCreate: {}, onCancel: {})
     }

@@ -12,7 +12,7 @@ import SwiftUI
 /// A view that displays store's customer in a list.
 struct CustomerListView: View {
     
-    @EnvironmentObject var dataSource: FetchedDataSource<Customer>
+    @EnvironmentObject var customerDataSource: CustomerDataSource
     
     @State private var showCreateCustomerForm = false
     
@@ -23,7 +23,7 @@ struct CustomerListView: View {
     @ObservedObject private var searchField = SearchField()
     
     var sortedCustomers: [Customer] {
-        dataSource.fetchController.fetchedObjects?
+        customerDataSource.fetchedResult.fetchedObjects?
             .sorted(by: { $0.identity.lowercased() < $1.identity.lowercased() }) ?? []
     }
     
@@ -35,7 +35,7 @@ struct CustomerListView: View {
             SearchTextField(searchField: searchField)
             ForEach(sortedCustomers) { customer in
                 CustomerRow(
-                    customer: customer.get(from: self.dataSource.cud.updateContext),
+                    customer: self.customerDataSource.readingObject(customer),
                     onSave: self.updateCustomer,
                     onDelete: self.deleteCustomer
                 )
@@ -59,9 +59,9 @@ extension CustomerListView {
     var createNewCustomerNavItem: some View {
         Button(action: {
             // discard and create a new object for the form
-            self.dataSource.cud.discardNewObject()
-            self.dataSource.cud.prepareNewObject()
-            self.newCustomerModel = .init(customer: self.dataSource.cud.newObject!)
+            self.customerDataSource.discardNewObject()
+            self.customerDataSource.prepareNewObject()
+            self.newCustomerModel = .init(customer: self.customerDataSource.newObject!)
             self.showCreateCustomerForm = true
         }) {
             Image(systemName: "plus").imageScale(.large)
@@ -84,12 +84,12 @@ extension CustomerListView {
     }
     
     func dismissCreateNewCustomerForm() {
-        dataSource.cud.discardCreateContext()
+        customerDataSource.discardCreateContext()
         showCreateCustomerForm = false
     }
     
     func saveNewCustomer() {
-        dataSource.cud.saveCreateContext()
+        customerDataSource.saveNewObject()
         showCreateCustomerForm = false
     }
 }
@@ -100,17 +100,11 @@ extension CustomerListView {
 extension CustomerListView {
     
     func updateCustomer(_ customer: Customer) {
-        customer.objectWillChange.send()
-        
-        if customer.hasPersistentChangedValues {
-            dataSource.cud.saveUpdateContext()
-        } else {
-            dataSource.cud.discardUpdateContext()
-        }
+        customerDataSource.saveUpdateObject()
     }
     
     func deleteCustomer(_ customer: Customer) {
-        dataSource.cud.delete(customer, saveContext: true)
+        customerDataSource.delete(customer, saveContext: true)
         viewReloader.forceReload()
     }
 }
@@ -124,7 +118,7 @@ extension CustomerListView {
         searchField.placeholder = "Search name, phone, email, etc..."
         searchField.onSearchTextDebounced = { searchText in
             let search = searchText.isEmpty ? nil : searchText
-            self.dataSource.performFetch(Customer.requestAllCustomer(filterInfo: search))
+            self.customerDataSource.performFetch(Customer.requestAllCustomer(filterInfo: search))
         }
     }
 }

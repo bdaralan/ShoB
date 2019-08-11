@@ -12,9 +12,9 @@ import SwiftUI
 /// A form used to view and edit order.
 struct OrderForm: View {
     
-    @EnvironmentObject var customerDataSource: FetchedDataSource<Customer>
+    @EnvironmentObject var customerDataSource: CustomerDataSource
     
-    @EnvironmentObject var saleItemDataSource: FetchedDataSource<SaleItem>
+    @EnvironmentObject var saleItemDataSource: SaleItemDataSource
     
     /// Model used to create order.
     @Binding var model: OrderFormModel
@@ -213,7 +213,7 @@ extension OrderForm {
         NavigationView {
             AddOrderItemForm(
                 orderItemModel: $newOrderItemModel,
-                saleItems: saleItemDataSource.fetchController.fetchedObjects ?? [],
+                saleItems: saleItemDataSource.fetchedResult.fetchedObjects ?? [],
                 onAdd: addOrderItem,
                 onCancel: dismissPresentationSheet
             )
@@ -272,7 +272,7 @@ extension OrderForm {
     var customerSelectionView: some View {
         NavigationView {
             List {
-                ForEach(customerDataSource.fetchController.fetchedObjects ?? []) { customer in
+                ForEach(customerDataSource.fetchedResult.fetchedObjects ?? []) { customer in
                     self.customerSelectionRow(for: customer)
                 }
             }
