@@ -41,7 +41,7 @@ Since iOS 13 now support Core Data auto sync with iCloud, the project will take 
 **Requirement:**
 
 - Creating the Core Data Stack, use `NSPersistentCloudKitContainer` instead of `NSPersistentContainer`.
-- The auto sync feature requires that all properties of `NSManagedObject` must be *optional* in the `.xcdatamodeld` file.
+- The auto sync feature requires that all properties of `NSManagedObject`'s Entity must be *optional* in the `.xcdatamodeld` file.
 
 **Resource**:
 
@@ -85,11 +85,11 @@ Until there is a native way of doing this, the approach right now is to use [`Na
 
 #### Create/Read/Update/Delete Core Data Object
 
-The approach right now is the make use of `EnvironmentObject`. There will be a data source object, specific to each type of object that will handle all the actions.
+The approach right now is the make use of `EnvironmentObject`. There will be a concrete data source object specific to each type of model object that will handle all the actions.
 
-The specific data source object must conform to a custom [`DataSource`][DataSource] protocol. The protocol have all the methods for fetching, creating, updating, deleting, and object validation.
+The concrete data source object will conform to [`DataSource`][DataSource] protocol. The protocol has all the methods for fetching, creating, reading, updating, deleting, and validating `NSManagedObject`.
 
-Therefore, views that have access to the `EnvironmentObject` will be able to access necessary objects and methods to create, update, or delete the object.
+Therefore, views that have access to the `EnvironmentObject` will be able to access objects and methods to perform necessary actions.
 
 Current concrete classes conform to `DataSource`:
 
@@ -100,13 +100,23 @@ Current concrete classes conform to `DataSource`:
 <!-- MARK: - Link -->
 
 [NavigationStateHandler]: https://github.com/iDara09/ShoB/blob/master/ShoB/Utility/NavigationStateHandler.swift
+
 [DataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/DataSource.swift
+
 [CustomerDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/CustomerDataSource.swift
+
 [OrderDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/OrderDataSource.swift
+
 [SaleItemDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/SaleItemDataSource.swift
+
 [Setting Up Core Data with CloudKit]: https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/setting_up_core_data_with_cloudkit
+
 [Creating a Core Data Model for CloudKit]: https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/creating_a_core_data_model_for_cloudkit
+
 [Reading CloudKit Records for Core Data]: https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/reading_cloudkit_records_for_core_data
+
 [Syncing a Core Data Store with CloudKit]: https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/syncing_a_core_data_store_with_cloudkit
+
 [Accessing Data When the Store Has Changed]: https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed
+
 [Consuming Relevant Store Changes]: https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
