@@ -85,7 +85,7 @@ extension DataSource {
         newObject = Object(context: createContext)
     }
     
-    /// Assign object to the `updatingObject`
+    /// Assign object to the `updateObject`
     /// - Parameter object: The object to assign. It must be from the `updateContext`.
     func setUpdateObject(_ object: Object?) {
         if let object = object, object.managedObjectContext === updateContext {
