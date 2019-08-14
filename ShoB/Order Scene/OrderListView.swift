@@ -88,8 +88,13 @@ extension OrderListView {
         Picker("", selection: $model.currentSegment) {
             ForEach(model.segmentOptions, id: \.self) { segment in
                 Text(segment.title).tag(segment)
+                    // use fixedSize to fix the following outputs:
+                    //
+                    // clamping fail!
+                    // proposed: _ProposedSize(width: Optional(0.0), height: Optional(0.0)) => (0.0, 197.5)
+                    // clamped: (0.0, 21.5) => (0.0, 21.5)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            
         }
         .pickerStyle(SegmentedPickerStyle())
         .padding(.vertical, 8)
