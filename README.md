@@ -32,15 +32,15 @@ In progress...
 
 ## Learning
 
-This is a section for documents, resources, thoughts, and approaches are explained.
+This is a section for listing out documents, resources, thoughts, and approaches.
 
 ### Core Data & iCloud Auto Sync
 
-Since iOS 13 now support Core Data auto sync with iCloud, the project will take advantage of that.
+Since iOS 13 now supports Core Data auto sync with CloudKit, the project will take advantage of that.
 
 **Requirement:**
 
-- Creating the Core Data Stack, use `NSPersistentCloudKitContainer` instead of `NSPersistentContainer`.
+- Creating the Core Data Stack using `NSPersistentCloudKitContainer` instead of `NSPersistentContainer`.
 - The auto sync feature requires that all properties of `NSManagedObject`'s Entity must be *optional* in the `.xcdatamodeld` file.
 
 **Resource**:
@@ -72,7 +72,7 @@ To support dark mode out of the box, the project makes use of system colors such
 
 #### Model View View Model (MVVM)
 
-The MVVM is used on most of the top level views to handle view update. Whereas, some of the inner views or views that are part of the top level views might only need `@State` properties.
+The MVVM is used on most of the top level views to handle view update. Whereas, some of the inner views or views that are part of the top level views might only need `@State` or `@ObservedObject` properties.
 
 - Most top level views have their own view model either a `struct` or a `class` which conforms to `ObservableObject`.
 - Property Wrapper `@Published` is used in the class view model to get will-change signal from the publisher for the properties of interest.
