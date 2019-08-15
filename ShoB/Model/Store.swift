@@ -17,7 +17,7 @@ import Combine
 /// An object that holds user's records including
 /// sale items, orders, and customers.
 ///
-class Store: NSManagedObject, Identifiable {
+class Store: NSManagedObject, Identifiable, ValidationRequired {
     
     @NSManaged var name: String
     @NSManaged var phone: String
@@ -32,6 +32,14 @@ class Store: NSManagedObject, Identifiable {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
     }
+    
+    func hasValidInputs() -> Bool {
+        !name.isEmpty
+    }
+    
+    func isValid() -> Bool {
+        hasValidInputs()
+    }
 }
 
 
@@ -39,5 +47,14 @@ extension Store {
     
     @nonobjc class func fetchRequest() -> NSFetchRequest<Store> {
         return NSFetchRequest<Store>(entityName: "Store")
+    }
+    
+    static func requestAllStores() -> NSFetchRequest<Store> {
+        let request = Store.fetchRequest() as NSFetchRequest<Store>
+        
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [.init(key: #keyPath(Store.name), ascending: true)]
+        
+        return request
     }
 }

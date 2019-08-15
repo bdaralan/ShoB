@@ -13,7 +13,7 @@ import Combine
 
 
 /// A customer of a store.
-class Customer: NSManagedObject, Identifiable, InStoreObject {
+class Customer: NSManagedObject, Identifiable, ValidationRequired {
     
     @NSManaged var familyName: String
     @NSManaged var givenName: String
@@ -38,6 +38,16 @@ class Customer: NSManagedObject, Identifiable, InStoreObject {
     override func willChangeValue(forKey key: String) {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
+    }
+    
+    func hasValidInputs() -> Bool {
+        return !self.familyName.trimmed().isEmpty
+            || !self.givenName.trimmed().isEmpty
+            || !self.organization.trimmed().isEmpty
+    }
+    
+    func isValid() -> Bool {
+        hasValidInputs() && store != nil
     }
 }
 

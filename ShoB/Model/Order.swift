@@ -13,7 +13,7 @@ import Combine
 
 
 /// An order of a store or a customer.
-class Order: NSManagedObject, Identifiable, InStoreObject {
+class Order: NSManagedObject, Identifiable, ValidationRequired {
     
     @NSManaged var orderDate: Date!
     @NSManaged var deliverDate: Date!
@@ -39,6 +39,13 @@ class Order: NSManagedObject, Identifiable, InStoreObject {
         objectWillChange.send()
     }
     
+    func hasValidInputs() -> Bool {
+        !self.orderItems.isEmpty
+    }
+    
+    func isValid() -> Bool {
+        hasValidInputs() && store != nil
+    }
     
     /// The total after discount.
     func total() -> Cent {

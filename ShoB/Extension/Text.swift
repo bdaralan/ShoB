@@ -17,4 +17,16 @@ extension Text {
     static func topSection(_ text: String, padding: CGFloat = 20) -> some View {
         Text(text).padding(.top, padding)
     }
+    
+    /// A contact info view display an image and the info text.
+    /// - Parameter image: Image represent the info.
+    /// - Parameter text: Info text.
+    static func contactInfo(image: Image, text: String) -> some View {
+        guard !text.isEmpty else { return AnyView.emptyView }
+        return HStack {
+            image
+            Text(text)
+        }
+        .toAnyView()
+    }
 }
