@@ -20,12 +20,18 @@ struct StoreListView: View {
     
     @ObservedObject private var createStoreModel = StoreFormModel()
     
+    @ObservedObject private var viewReloader = ViewForceReloader()
+    
+    
     // MARK: - Body
     
     var body: some View {
         List {
             ForEach(storeDataSource.fetchedResult.fetchedObjects ?? []) { store in
-                StoreRow(store: self.storeDataSource.readingObject(store))
+                StoreRow(
+                    store: self.storeDataSource.readObject(store),
+                    onDeleted: { self.viewReloader.forceReload() }
+                )
             }
         }
         .navigationBarItems(trailing: addNewStoreNavItem)
@@ -78,7 +84,7 @@ extension StoreListView {
     }
     
     func commitCreateStore() {
-        // TODO: add activity indicator while fetching user record
+        // MARK: TODO add activity indicator while fetching user record
         CKContainer.default().fetchUserRecordID { recordID, error in
             defer {
                 // show error alert if cannot get user record id or the store is invalid

@@ -13,11 +13,15 @@ struct StoreRow: View {
     
     @EnvironmentObject var storeDataSource: StoreDataSource
     
+    /// The store object in the `DataSource`'s `updateContext`.
     @ObservedObject var store: Store
     
     @ObservedObject private var storeModel = StoreFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
+    
+    /// An antion to perform when the store is deleted.
+    var onDeleted: (() -> Void)?
     
     
     // MARK: - Body
@@ -45,27 +49,37 @@ extension StoreRow {
     var storeDetailView: some View {
         StoreForm(
             model: storeModel,
-            onUpdate: { self.store.objectWillChange.send(); self.storeDataSource.saveUpdateContext() },
-            enableUpdate: !store.name.isEmpty && store.hasPersistentChangedValues,
+            onUpdate: updateStore,
+            enableUpdate: store.hasPersistentChangedValues && store.hasValidInputs(),
             rowActions: rowActions()
         )
             .navigationBarTitle("Store Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
     }
     
+    func setupOnAppear() {
+        storeModel.store = store
+        navigationState.onPopped = {
+            self.storeDataSource.saveUpdateContext()
+        }
+    }
+    
     func rowActions() -> [MultiPurposeFormRowAction] {
         let actions: [MultiPurposeFormRowAction] = [
-            .init(title: "Delete", action: { print("Delete") }, isDestructive: true)
+            .init(title: "Delete", isDestructive: true, action: deleteStore)
         ]
         return actions
     }
     
-    func setupOnAppear() {
-        storeModel.store = store
-        navigationState.onPopped = {
-            guard let context = self.store.managedObjectContext, context.hasChanges else { return }
-            context.rollback()
-        }
+    func updateStore() {
+        store.objectWillChange.send()
+        storeDataSource.saveUpdateContext()
+    }
+    
+    func deleteStore() {
+        storeDataSource.delete(store, saveContext: true)
+        onDeleted?()
+        navigationState.pop()
     }
 }
 
