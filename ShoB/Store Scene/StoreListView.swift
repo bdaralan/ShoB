@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 
 struct StoreListView: View {
@@ -14,6 +15,8 @@ struct StoreListView: View {
     @EnvironmentObject var storeDataSource: StoreDataSource
     
     @State private var showCreateStoreForm = false
+    
+    @State private var showCannotCreateStoreAlert = false
     
     @ObservedObject private var createStoreModel = StoreFormModel()
     
@@ -59,13 +62,39 @@ extension StoreListView {
                 enableCreate: !createStoreModel.name.isEmpty
             )
                 .navigationBarTitle("New Store", displayMode: .inline)
+                .alert(isPresented: $showCannotCreateStoreAlert, content: { cannotCreateStoreAlert })
         }
     }
     
+    var cannotCreateStoreAlert: Alert {
+        Alert(
+            title: Text("Create Failed"),
+            message: Text("""
+            Unable to get user's ID.
+            Please try again and make sure you are connected to the Internet.
+            """),
+            dismissButton: Alert.Button.default(Text("Dismiss"))
+        )
+    }
+    
     func commitCreateStore() {
-        storeDataSource.saveCreateContext()
-        storeDataSource.discardNewObject()
-        showCreateStoreForm = false
+        // TODO: add activity indicator while fetching user record
+        CKContainer.default().fetchUserRecordID { recordID, error in
+            defer {
+                // show error alert if cannot get user record id or the store is invalid
+                self.showCannotCreateStoreAlert = !self.createStoreModel.store!.isValid()
+            }
+            
+            // assign user record id to store object
+            guard let recordID = recordID else { return }
+            self.createStoreModel.store!.setOwnerID(with: recordID)
+            
+            // save store object and dismiss form
+            guard self.createStoreModel.store!.isValid() else { return }
+            self.storeDataSource.saveCreateContext()
+            self.storeDataSource.discardNewObject()
+            self.showCreateStoreForm = false
+        }
     }
     
     func cancelCreateStore() {

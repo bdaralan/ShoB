@@ -8,8 +8,7 @@
 //
 
 import CoreData
-import SwiftUI
-import Combine
+import CloudKit
 
 
 /// User's store.
@@ -19,6 +18,8 @@ import Combine
 ///
 class Store: NSManagedObject, Identifiable, ValidationRequired {
     
+    /// The owner's `CKRecord.ID`'s `recordName`.
+    @NSManaged private(set) var ownerID: String
     @NSManaged var name: String
     @NSManaged var phone: String
     @NSManaged var email: String
@@ -38,7 +39,12 @@ class Store: NSManagedObject, Identifiable, ValidationRequired {
     }
     
     func isValid() -> Bool {
-        hasValidInputs()
+        hasValidInputs() && !ownerID.isEmpty
+    }
+    
+    func setOwnerID(with recordID: CKRecord.ID) {
+        guard recordID.zoneID.ownerName == CKCurrentUserDefaultName else { return }
+        ownerID = recordID.recordName
     }
 }
 
