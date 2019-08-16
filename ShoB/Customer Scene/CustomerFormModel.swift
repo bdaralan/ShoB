@@ -29,9 +29,8 @@ struct CustomerFormModel {
         didSet { customer?.address = address.trimmed() }
     }
     
-    @AlwaysLowercasedWrapper
     var email = "" {
-        didSet { customer?.email = email.trimmed() }
+        didSet { customer?.email = email.trimmed().lowercased() }
     }
     
     var phone = "" {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14886.2" systemVersion="18G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14886.2" systemVersion="18G87" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Customer" representedClassName=".Customer" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString=""/>
@@ -35,6 +35,7 @@
         <attribute name="address" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="name" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="ownerID" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="phone" optional="YES" attributeType="String" defaultValueString=""/>
         <relationship name="customers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Customer" inverseName="store" inverseEntity="Customer"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Order" inverseName="store" inverseEntity="Order"/>
@@ -45,6 +46,6 @@
         <element name="Order" positionX="0" positionY="108" width="128" height="163"/>
         <element name="OrderItem" positionX="-9" positionY="99" width="128" height="103"/>
         <element name="SaleItem" positionX="-18" positionY="81" width="128" height="88"/>
-        <element name="Store" positionX="-54" positionY="18" width="128" height="148"/>
+        <element name="Store" positionX="-54" positionY="18" width="128" height="163"/>
     </elements>
 </model>

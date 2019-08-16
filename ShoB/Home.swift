@@ -30,6 +30,12 @@ struct Home: View {
         return dataSource
     }()
     
+    @ObservedObject var storeDataSource: StoreDataSource = {
+        let dataSource = StoreDataSource(parentContext: CoreDataStack.current.mainContext)
+        dataSource.performFetch(Store.requestAllStores())
+        return dataSource
+    }()
+    
     @State private var selectedTab = 0
     
     
@@ -65,9 +71,16 @@ struct Home: View {
             }
             .tabItem { tabItem(systemImage: "list.dash", title: "Items") }
             .tag(2)
+            
+            NavigationView {
+                StoreListView()
+                    .environmentObject(storeDataSource)
+                    .navigationBarTitle("Store", displayMode: .large)
+            }
+            .tabItem { tabItem(systemImage: "folder.fill", title: "Store") }
+            .tag(3)
         }
     }
-    
     
     func tabItem(systemImage: String, title: String) -> some View {
         ViewBuilder.buildBlock(Image(systemName: systemImage), Text(title))

@@ -13,7 +13,7 @@ import Combine
 
 
 /// A sale item of a store.
-class SaleItem: NSManagedObject, Identifiable, InStoreObject {
+class SaleItem: NSManagedObject, Identifiable, ValidationRequired {
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -23,6 +23,15 @@ class SaleItem: NSManagedObject, Identifiable, InStoreObject {
     override func willChangeValue(forKey key: String) {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
+    }
+    
+    func hasValidInputs() -> Bool {
+        return !self.name.trimmed().isEmpty
+            && self.price > 0
+    }
+    
+    func isValid() -> Bool {
+        hasValidInputs() && store != nil
     }
 }
 

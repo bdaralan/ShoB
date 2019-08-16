@@ -30,31 +30,13 @@ struct CustomerRowContentView: View {
                     .fontWeight(.semibold)
                 
                 Group {
-                    infoText(image: Image.SFCustomer.organization, text: customer.organization)
-                    infoText(image: Image.SFCustomer.phone, text: customer.phone)
-                    infoText(image: Image.SFCustomer.email, text: customer.email)
-                    infoText(image: Image.SFCustomer.address, text: customer.address)
+                    Text.contactInfo(image: Image.SFCustomer.organization, text: customer.organization)
+                    Text.contactInfo(image: Image.SFCustomer.phone, text: customer.phone)
+                    Text.contactInfo(image: Image.SFCustomer.email, text: customer.email)
+                    Text.contactInfo(image: Image.SFCustomer.address, text: customer.address)
                 }
                 .font(.caption)
             }
         }
-    }
-}
-
-
-// MARK: - Body Component
-
-extension CustomerRowContentView {
-    
-    /// Customer info view display an image and the info text.
-    /// - Parameter image: Image represent the info.
-    /// - Parameter text: Info text.
-    func infoText(image: Image, text: String) -> some View {
-        guard !text.isEmpty else { return AnyView.emptyView }
-        return HStack {
-            image
-            Text(text.replaceEmpty(with: "N/A"))
-        }
-        .toAnyView()
     }
 }

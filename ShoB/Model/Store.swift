@@ -8,8 +8,7 @@
 //
 
 import CoreData
-import SwiftUI
-import Combine
+import CloudKit
 
 
 /// User's store.
@@ -17,8 +16,10 @@ import Combine
 /// An object that holds user's records including
 /// sale items, orders, and customers.
 ///
-class Store: NSManagedObject, Identifiable {
+class Store: NSManagedObject, Identifiable, ValidationRequired {
     
+    /// The owner's `CKRecord.ID`'s `recordName`.
+    @NSManaged private(set) var ownerID: String
     @NSManaged var name: String
     @NSManaged var phone: String
     @NSManaged var email: String
@@ -32,6 +33,19 @@ class Store: NSManagedObject, Identifiable {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
     }
+    
+    func hasValidInputs() -> Bool {
+        !name.isEmpty
+    }
+    
+    func isValid() -> Bool {
+        hasValidInputs() && !ownerID.isEmpty
+    }
+    
+    func setOwnerID(with recordID: CKRecord.ID) {
+        guard recordID.zoneID.ownerName == CKCurrentUserDefaultName else { return }
+        ownerID = recordID.recordName
+    }
 }
 
 
@@ -39,5 +53,14 @@ extension Store {
     
     @nonobjc class func fetchRequest() -> NSFetchRequest<Store> {
         return NSFetchRequest<Store>(entityName: "Store")
+    }
+    
+    static func requestAllStores() -> NSFetchRequest<Store> {
+        let request = Store.fetchRequest() as NSFetchRequest<Store>
+        
+        request.predicate = .init(value: true)
+        request.sortDescriptors = [.init(key: #keyPath(Store.name), ascending: true)]
+        
+        return request
     }
 }

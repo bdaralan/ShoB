@@ -34,7 +34,7 @@ struct CustomerForm: View {
             // MARK: Contact Section
             Section(header: Text("CONTACT").padding(.top)) {
                 VertialTextField("Phone", text: $model.phone, content: .telephoneNumber)
-                VertialTextField("Email", text: $model.email, content: .emailAddress)
+                VertialTextField("Email", text: $model.email, content: .emailAddress).autocapitalization(.none)
                 VertialTextField("Address", text: $model.address, content: .fullStreetAddress)
             }
             
