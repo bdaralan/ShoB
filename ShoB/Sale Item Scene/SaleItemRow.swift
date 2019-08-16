@@ -56,7 +56,7 @@ extension SaleItemRow {
             self.onSave(self.saleItem)
         }, onDelete: {
             self.navigationState.onPopped = nil
-            self.navigationState.isPushed = false
+            self.navigationState.pop()
             self.onDelete(self.saleItem)
         })
         .onAppear { // assign the item to the model.

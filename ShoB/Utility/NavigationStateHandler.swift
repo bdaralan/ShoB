@@ -53,6 +53,10 @@ class NavigationStateHandler: ObservableObject {
     
     /// An action to perform when poped.
     var onPopped: (() -> Void)?
+    
+    func pop() {
+        isPushed = false
+    }
 }
 
 

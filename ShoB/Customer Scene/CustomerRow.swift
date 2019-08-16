@@ -51,7 +51,7 @@ extension CustomerRow {
             self.onSave(self.customer)
         }, onDelete: {
             self.navigationState.onPopped = nil
-            self.navigationState.isPushed = false
+            self.navigationState.pop()
             self.onDelete(self.customer)
         })
         .onAppear {

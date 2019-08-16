@@ -65,10 +65,10 @@ struct OrderRow: View {
             self.onSave(self.order)
         }, onDelete: {
             self.navigationState.onPopped = nil
-            self.navigationState.isPushed = false
+            self.navigationState.pop()
             self.onDelete(self.order)
         }, onOrderAgain: {
-            self.navigationState.isPushed = false
+            self.navigationState.pop()
             self.onOrderAgain($0)
         })
         .onAppear {
