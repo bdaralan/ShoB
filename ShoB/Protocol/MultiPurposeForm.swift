@@ -116,6 +116,6 @@ extension MultiPurposeForm {
 
 struct MultiPurposeFormRowAction {
     var title: String
-    var action: () -> Void
     var isDestructive = false
+    var action: () -> Void
 }
