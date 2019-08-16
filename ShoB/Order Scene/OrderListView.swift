@@ -37,7 +37,7 @@ struct OrderListView: View {
             Section(header: segmentPicker) {
                 ForEach(orderDataSource.fetchedResult.fetchedObjects ?? []) { order in
                     OrderRow(
-                        order: self.orderDataSource.readingObject(order),
+                        order: self.orderDataSource.readObject(order),
                         onSave: self.updateOrder,
                         onDelete: self.deleteOrder,
                         onOrderAgain: self.placeOrderAgain

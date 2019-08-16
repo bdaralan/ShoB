@@ -31,7 +31,7 @@ struct SaleItemListView: View {
             SearchTextField(searchField: searchField)
             ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
-                    saleItem: self.saleItemDataSource.readingObject(saleItem),
+                    saleItem: self.saleItemDataSource.readObject(saleItem),
                     onSave: self.saveSaleItemRowChanges,
                     onDelete: self.deleteSaleItem
                 )

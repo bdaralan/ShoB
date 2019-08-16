@@ -97,7 +97,7 @@ extension DataSource {
     
     /// Get the same object from `updateContext`.
     /// - Parameter object: The object to read.
-    func readingObject(_ object: Object) -> Object {
+    func readObject(_ object: Object) -> Object {
         updateContext.object(with: object.objectID) as! Object
     }
     

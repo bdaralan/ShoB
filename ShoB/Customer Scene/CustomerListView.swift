@@ -35,7 +35,7 @@ struct CustomerListView: View {
             SearchTextField(searchField: searchField)
             ForEach(sortedCustomers) { customer in
                 CustomerRow(
-                    customer: self.customerDataSource.readingObject(customer),
+                    customer: self.customerDataSource.readObject(customer),
                     onSave: self.updateCustomer,
                     onDelete: self.deleteCustomer
                 )
