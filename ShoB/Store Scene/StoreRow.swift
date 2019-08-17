@@ -49,9 +49,11 @@ extension StoreRow {
     var storeDetailView: some View {
         StoreForm(
             model: storeModel,
-            onUpdate: updateStore,
+            onUpdate: storeDataSource.saveUpdateObject,
             enableUpdate: store.hasPersistentChangedValues && store.hasValidInputs(),
-            rowActions: rowActions()
+            rowActions: [
+                .init(title: "Delete", isDestructive: true, action: deleteStore)
+            ]
         )
             .navigationBarTitle("Store Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
@@ -59,16 +61,11 @@ extension StoreRow {
     
     func setupOnAppear() {
         storeModel.store = store
+        storeDataSource.setUpdateObject(store)
         navigationState.onPopped = {
-            self.storeDataSource.saveUpdateContext()
+            self.storeDataSource.setUpdateObject(nil)
+            self.storeDataSource.discardUpdateContext()
         }
-    }
-    
-    func rowActions() -> [MultiPurposeFormRowAction] {
-        let actions: [MultiPurposeFormRowAction] = [
-            .init(title: "Delete", isDestructive: true, action: deleteStore)
-        ]
-        return actions
     }
     
     func updateStore() {
@@ -78,8 +75,8 @@ extension StoreRow {
     
     func deleteStore() {
         storeDataSource.delete(store, saveContext: true)
-        onDeleted?()
         navigationState.pop()
+        onDeleted?()
     }
 }
 

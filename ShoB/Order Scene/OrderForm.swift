@@ -10,7 +10,7 @@ import SwiftUI
 
 
 /// A form used to view and edit order.
-struct OrderForm: View {
+struct OrderForm: View, MultiPurposeForm {
     
     @EnvironmentObject var customerDataSource: CustomerDataSource
     
@@ -19,9 +19,17 @@ struct OrderForm: View {
     /// Model used to create order.
     @Binding var model: OrderFormModel
     
-    var onDelete: (() -> Void)?
+    var onCreate: (() -> Void)?
     
-    var onOrderAgain: (() -> Void)?
+    var onUpdate: (() -> Void)?
+    
+    var onCancel: (() -> Void)?
+    
+    var enableCreate: Bool?
+    
+    var enableUpdate: Bool?
+    
+    var rowActions: [MultiPurposeFormRowAction] = []
     
     /// Model used to create and add item to the order.
     @State private var newOrderItemModel = SaleItemFormModel()
@@ -43,7 +51,7 @@ struct OrderForm: View {
     // MARK: - Body
     
     var body: some View {
-        Form {
+        let form = Form {
             // MARK: Customer Section
             Section(header: Text.topSection("CUSTOMER")) {
                 customerRow(for: model.order?.customer)
@@ -129,18 +137,15 @@ struct OrderForm: View {
                 }
                 .frame(minHeight: 200)
             }
-            
-            // MARK: Action Section
-            Section {
-                deleteOrderButtonRow
-                orderAgainButtonRow
-            }
+            setupRowActionSection()
         }
         .sheet(
             isPresented: $showModalPresentationSheet,
             onDismiss: dismissPresentationSheet,
             content: { self.modalPresentationSheet }
         )
+        
+        return setupNavItems(forForm: form.toAnyView())
     }
 }
 
@@ -185,22 +190,6 @@ extension OrderForm {
                 .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
     }
-    
-    /// Delete order button.
-    var deleteOrderButtonRow: some View {
-        guard let onDelete = onDelete else { return AnyView.emptyView }
-        return Button("Delete", action: onDelete)
-            .buttonStyle(CenterButtonStyle(.destructive))
-            .toAnyView()
-    }
-    
-    /// Order again button.
-    var orderAgainButtonRow: some View {
-        guard let onOrderAgain = onOrderAgain else { return AnyView.emptyView }
-        return Button("Order Again", action: onOrderAgain)
-            .buttonStyle(CenterButtonStyle(.normal))
-            .toAnyView()
-    }
 }
 
 
@@ -211,7 +200,7 @@ extension OrderForm {
     /// A form used to add order item to the order.
     var addOrderItemForm: some View {
         NavigationView {
-            AddOrderItemForm(
+            OrderItemForm(
                 orderItemModel: $newOrderItemModel,
                 saleItems: saleItemDataSource.fetchedResult.fetchedObjects ?? [],
                 onAdd: addOrderItem,
@@ -224,16 +213,10 @@ extension OrderForm {
     /// Add order item to the order
     func addOrderItem() {
         guard let order = model.order, let context = order.managedObjectContext else { return }
-        
-        // send change to reload form's Update button's state
-        order.objectWillChange.send()
-        
-        // create order item and add it to the order
         let newOrderItem = OrderItem(context: context)
-        newOrderItem.order = order
         newOrderItemModel.assign(to: newOrderItem)
+        order.orderItems.insert(newOrderItem)
         model.orderItemCount = order.orderItems.count
-        
         dismissPresentationSheet()
     }
 }
@@ -246,19 +229,22 @@ extension OrderForm {
     /// A form used to edit order's item.
     var editOrderItemForm: some View {
         NavigationView {
-            EditOrderItemForm(orderItemModel: $editOrderItemModel, onDelete: deleteEditingOrderItem)
-                .navigationBarTitle("Edit Item", displayMode: .inline)
-                .navigationBarItems(trailing: Button("Done", action: dismissPresentationSheet))
+            OrderItemForm(
+                orderItemModel: $editOrderItemModel,
+                onDone: dismissPresentationSheet,
+                onDelete: deleteEditingOrderItem
+            )
+                .navigationBarTitle("Edit Details", displayMode: .inline)
         }
     }
     
     /// Delete the current editing order's item.
     func deleteEditingOrderItem() {
-        guard let itemToDelete = editOrderItemModel.orderItem else { return }
-        guard let context = itemToDelete.managedObjectContext else { return }
-        model.order!.orderItems.remove(itemToDelete)
-        model.orderItemCount = model.order!.orderItems.count
-        context.delete(itemToDelete)
+        guard let item = editOrderItemModel.orderItem, let order = item.order else { return }
+        guard let context = item.managedObjectContext else { return }
+        order.orderItems.remove(item)
+        context.delete(item)
+        model.orderItemCount = order.orderItems.count
         dismissPresentationSheet()
     }
 }

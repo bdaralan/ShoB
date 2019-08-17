@@ -9,28 +9,36 @@
 import SwiftUI
 
 
-/// A view used to view or edit sale item.
-struct SaleItemForm: View {
+struct SaleItemForm: View, MultiPurposeForm {
     
     @Binding var model: SaleItemFormModel
+        
+    var onCreate: (() -> Void)?
     
-    var mode: SaleItemFormBody.Mode
+    var onUpdate: (() -> Void)?
+    
+    var onCancel: (() -> Void)?
+    
+    var enableCreate: Bool?
+    
+    var enableUpdate: Bool?
+    
+    var rowActions: [MultiPurposeFormRowAction] = []
     
     
     // MARK: - Body
     
     var body: some View {
-        Form {
-            SaleItemFormBody(model: $model, mode: mode)
+        let form = Form {
+            // MARK: Name & Price
+            Section {
+                VertialTextField("Name", text: $model.name)
+                VertialTextField("Price", placeholder: "$0.00", text: $model.price)
+            }
+            
+            setupRowActionSection()
         }
+        
+        return setupNavItems(forForm: form.toAnyView())
     }
 }
-
-
-#if DEBUG
-struct SaleItemForm_Previews : PreviewProvider {
-    static var previews: some View {
-        SaleItemForm(model: .constant(.init()), mode: .saleItem)
-    }
-}
-#endif

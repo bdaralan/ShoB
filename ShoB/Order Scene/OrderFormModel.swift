@@ -68,6 +68,8 @@ struct OrderFormModel {
         deliveredDate = isDelivered ? order.deliveredDate! : Date.currentYMDHM
         discount = "\(Currency(order.discount))"
         note = order.note
+        
+        orderItemCount = order.orderItems.count
     }
 }
 

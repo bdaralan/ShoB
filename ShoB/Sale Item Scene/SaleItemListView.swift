@@ -32,8 +32,7 @@ struct SaleItemListView: View {
             ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? []) {  saleItem in
                 SaleItemRow(
                     saleItem: self.saleItemDataSource.readObject(saleItem),
-                    onSave: self.saveSaleItemRowChanges,
-                    onDelete: self.deleteSaleItem
+                    onDeleted: { self.viewReloader.forceReload() }
                 )
             }
         }
@@ -66,11 +65,13 @@ extension SaleItemListView {
     
     var createSaleItemForm: some View {
         NavigationView {
-            CreateSaleItemForm(
+            SaleItemForm(
                 model: $newSaleItemModel,
                 onCreate: saveNewSaleItem,
-                onCancel: dismisCreateSaleItem
+                onCancel: dismisCreateSaleItem,
+                enableCreate: newSaleItemModel.saleItem!.hasValidInputs()
             )
+                .navigationBarTitle("New Item", displayMode: .inline)
         }
     }
 }
@@ -88,15 +89,6 @@ extension SaleItemListView {
     func saveNewSaleItem() {
         saleItemDataSource.saveNewObject()
         showCreateSaleItemForm = false
-    }
-    
-    func saveSaleItemRowChanges(item: SaleItem) {
-        saleItemDataSource.saveUpdateObject()
-    }
-    
-    func deleteSaleItem(_ item: SaleItem) {
-        saleItemDataSource.delete(item, saveContext: true)
-        viewReloader.forceReload()
     }
     
     func setupSearchField() {

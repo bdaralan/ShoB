@@ -19,24 +19,55 @@ struct OrderRow: View {
     /// The order to view or update.
     @ObservedObject var order: Order
     
-    var onSave: (Order) -> Void
+    var onDeleted: (() -> Void)?
     
-    var onDelete: (Order) -> Void
-    
-    var onOrderAgain: (Order) -> Void
+    var onOrderAgain: ((Order) -> Void)?
     
     @State private var orderModel = OrderFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
+    var enableUpdate: Bool {
+        (order.hasPersistentChangedValues || order.isMarkedValuesChanged) && order.hasValidInputs()
+    }
+    
     
     // MARK: - Body
     
     var body: some View {
+        NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
+            OrderRowContentView(order: order)
+        }
+    }
+
+    
+    // MARK: - Body Component
+    
+    var orderDetailView: some View {
+        OrderForm(
+            model: $orderModel,
+            onUpdate: orderDataSource.saveUpdateObject,
+            enableUpdate: enableUpdate,
+            rowActions: rowActions()
+        )
+            .navigationBarTitle("Order Details", displayMode: .inline)
+            .onAppear(perform: setupOnAppear)
+    }
+    
+    func setupOnAppear() {
+        // DEVELOPER NOTE:
+        // Do the assignment here for now until finding a better place for the assignment
+        print("DEVELOPER NOTE: OrderRow.orderDetailView.onAppear")
+        
+        // assign the order to the model.
+        orderModel = .init(order: order)
+        orderDataSource.setUpdateObject(order)
+        
         navigationState.onPopped = {
             self.orderDataSource.setUpdateObject(nil)
             
-            guard self.order.hasChanges, let context = self.order.managedObjectContext else { return }
+            guard self.order.hasChanges || self.order.isMarkedValuesChanged else { return }
+            guard let context = self.order.managedObjectContext else { return }
             
             // DEVELOPER NOTE: beta 5
             // customer and sale item does not need this on popped to
@@ -48,38 +79,33 @@ struct OrderRow: View {
             // however, in commit 32539d0 before the refactoring of OrderRowContentView,
             // there was no need to send change ¯\(°_o)/¯
             self.order.objectWillChange.send()
+            self.order.isMarkedValuesChanged = false
             
             context.rollback()
         }
-        
-        return NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
-            OrderRowContentView(order: order)
-        }
     }
-
     
-    // MARK: - Body Component
+    func deleteOrder() {
+        orderDataSource.delete(order, saveContext: true)
+        navigationState.pop()
+        onDeleted?()
+    }
     
-    var orderDetailView: some View {
-        OrderDetailView(order: order, model: $orderModel, onSave: {
-            self.onSave(self.order)
-        }, onDelete: {
-            self.navigationState.onPopped = nil
-            self.navigationState.pop()
-            self.onDelete(self.order)
-        }, onOrderAgain: {
-            self.navigationState.pop()
-            self.onOrderAgain($0)
-        })
-        .onAppear {
-            // DEVELOPER NOTE:
-            // Do the assignment here for now until finding a better place for the assignment
-            print("DEVELOPER NOTE: OrderRow.orderDetailView.onAppear")
-            
-            // assign the order to the model.
-            self.orderModel = .init(order: self.order)
-            self.orderDataSource.setUpdateObject(self.order)
+    func placeOrderAgain() {
+        navigationState.pop()
+        onOrderAgain?(order)
+    }
+    
+    func rowActions() -> [MultiPurposeFormRowAction] {
+        var actions = [MultiPurposeFormRowAction]()
+        
+        actions.append(.init(title: "Delete", isDestructive: true, action: deleteOrder))
+        
+        if onOrderAgain != nil {
+            actions.append(.init(title: "Place Again", action: placeOrderAgain))
         }
+        
+        return actions
     }
 }
 
@@ -88,7 +114,7 @@ struct OrderRow: View {
 struct OrderRow_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext)
     static var previews: some View {
-        OrderRow(order: order, onSave: { _ in }, onDelete: { _ in }, onOrderAgain: { _ in })
+        OrderRow(order: order)
     }
 }
 #endif

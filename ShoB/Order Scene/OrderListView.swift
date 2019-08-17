@@ -38,8 +38,7 @@ struct OrderListView: View {
                 ForEach(orderDataSource.fetchedResult.fetchedObjects ?? []) { order in
                     OrderRow(
                         order: self.orderDataSource.readObject(order),
-                        onSave: self.updateOrder,
-                        onDelete: self.deleteOrder,
+                        onDeleted: { self.viewReloader.forceReload() },
                         onOrderAgain: self.placeOrderAgain
                     )
                 }
@@ -74,13 +73,15 @@ extension OrderListView {
     /// Form form creating new order.
     var createOrderForm: some View {
         NavigationView {
-            CreateOrderForm(
+            OrderForm(
                 model: $newOrderModel,
                 onCreate: saveNewOrder,
-                onCancel: dismissCreateOrderForm
+                onCancel: dismissCreateOrderForm,
+                enableCreate: newOrderModel.order!.hasValidInputs()
             )
-            .environmentObject(saleItemDataSource)
-            .environmentObject(customerDataSource)
+                .environmentObject(saleItemDataSource)
+                .environmentObject(customerDataSource)
+                .navigationBarTitle("New Order", displayMode: .inline)
         }
     }
     
@@ -122,25 +123,13 @@ extension OrderListView {
         showCreateOrderForm = false
     }
     
-    /// Save changes.
-    /// - Parameter order: The order to save.
-    func updateOrder(_ order: Order) {
-        self.orderDataSource.saveUpdateObject()
-    }
-    
-    /// Delete order.
-    /// - Parameter order: The order to delete.
-    func deleteOrder(_ order: Order) {
-        orderDataSource.delete(order, saveContext: true)
-        viewReloader.forceReload()
-    }
-    
     /// Create a new order from an old order.
     /// - Parameter order: The old order.
     func placeOrderAgain(_ order: Order) {
         // prepare new object
         orderDataSource.discardNewObject()
         orderDataSource.prepareNewObject()
+        
         let newOrder = orderDataSource.newObject!
         let oldOrder = order.get(from: orderDataSource.createContext)
         

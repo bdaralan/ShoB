@@ -10,20 +10,27 @@ import SwiftUI
 
 
 /// A view used to view or edit customer.
-struct CustomerForm: View {
+struct CustomerForm: View, MultiPurposeForm {
     
     @Binding var model: CustomerFormModel
     
-    /// An action to perform for deletion
-    ///
-    /// Set the block will show a delete button.
-    var onDelete: (() -> Void)?
+    var onCreate: (() -> Void)?
+    
+    var onUpdate: (() -> Void)?
+    
+    var onCancel: (() -> Void)?
+    
+    var enableCreate: Bool?
+    
+    var enableUpdate: Bool?
+    
+    var rowActions: [MultiPurposeFormRowAction] = []
     
     
     // MARK: - Body
     
     var body: some View {
-        Form {
+        let form = Form {
             // MARK: Info Section
             Section(header: Text.topSection("INFO")) {
                 VertialTextField("Given Name", text: $model.givenName, content: .givenName)
@@ -38,13 +45,10 @@ struct CustomerForm: View {
                 VertialTextField("Address", text: $model.address, content: .fullStreetAddress)
             }
             
-            if onDelete != nil {
-                Section {
-                    Button("Delete", action: onDelete!)
-                        .buttonStyle(CenterButtonStyle(.destructive))
-                }
-            }
+            setupRowActionSection()
         }
+        
+        return setupNavItems(forForm: form.toAnyView())
     }
 }
 

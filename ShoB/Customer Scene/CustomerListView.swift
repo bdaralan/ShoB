@@ -36,8 +36,7 @@ struct CustomerListView: View {
             ForEach(sortedCustomers) { customer in
                 CustomerRow(
                     customer: self.customerDataSource.readObject(customer),
-                    onSave: self.updateCustomer,
-                    onDelete: self.deleteCustomer
+                    onDeleted: { self.viewReloader.forceReload() }
                 )
             }
         }
@@ -76,11 +75,15 @@ extension CustomerListView {
     
     /// A form for creating new customer.
     var createCustomerForm: some View {
-        CreateCustomerForm(
-            model: $newCustomerModel,
-            onCreate: saveNewCustomer,
-            onCancel: dismissCreateNewCustomerForm
-        )
+        NavigationView {
+            CustomerForm(
+                model: $newCustomerModel,
+                onCreate: saveNewCustomer,
+                onCancel: dismissCreateNewCustomerForm,
+                enableCreate: newCustomerModel.customer!.hasValidInputs()
+            )
+                .navigationBarTitle("New Customer", displayMode: .inline)
+        }
     }
     
     func dismissCreateNewCustomerForm() {
@@ -91,21 +94,6 @@ extension CustomerListView {
     func saveNewCustomer() {
         customerDataSource.saveNewObject()
         showCreateCustomerForm = false
-    }
-}
-
-
-// MARK: - Customer Row Method
-
-extension CustomerListView {
-    
-    func updateCustomer(_ customer: Customer) {
-        customerDataSource.saveUpdateObject()
-    }
-    
-    func deleteCustomer(_ customer: Customer) {
-        customerDataSource.delete(customer, saveContext: true)
-        viewReloader.forceReload()
     }
 }
 
