@@ -22,6 +22,8 @@ struct CustomerRow: View {
     
     var onDeleted: (() -> Void)?
     
+    @State private var showDeleteAlert = false
+    
     
     // MARK: - Body
     
@@ -43,11 +45,12 @@ extension CustomerRow {
             onUpdate: customerDataSource.saveUpdateObject,
             enableUpdate: customer.hasPersistentChangedValues && customer.hasValidInputs(),
             rowActions: [
-                .init(title: "Delete", isDestructive: true, action: deleteCustomer)
+                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
         )
-            .navigationBarTitle("Customer Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
+            .navigationBarTitle("Customer Details", displayMode: .inline)
+            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Customer", action: deleteCustomer))
     }
     
     func setupOnAppear() {

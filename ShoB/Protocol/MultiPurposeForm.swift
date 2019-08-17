@@ -112,19 +112,6 @@ extension MultiPurposeForm {
 }
 
 
-// MARK: - Alert
-
-extension MultiPurposeForm {
-    
-    func deleteConfirmationAlert(title: String, message: String?, action: @escaping () -> Void) -> Alert {
-        let title = Text(title)
-        let message = message != nil ? Text(message!) : nil
-        let delete = Alert.Button.destructive(Text("Delete"), action: action)
-        return Alert(title: title, message: message, primaryButton: delete, secondaryButton: .cancel())
-    }
-}
-
-
 // MARK: - Row Action
 
 struct MultiPurposeFormRowAction {

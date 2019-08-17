@@ -27,6 +27,8 @@ struct OrderRow: View {
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
+    @State private var showDeleteAlert = false
+    
     var enableUpdate: Bool {
         (order.hasPersistentChangedValues || order.isMarkedValuesChanged) && order.hasValidInputs()
     }
@@ -50,8 +52,9 @@ struct OrderRow: View {
             enableUpdate: enableUpdate,
             rowActions: rowActions()
         )
-            .navigationBarTitle("Order Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
+            .navigationBarTitle("Order Details", displayMode: .inline)
+            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Order", action: deleteOrder))
     }
     
     func setupOnAppear() {
@@ -99,7 +102,7 @@ struct OrderRow: View {
     func rowActions() -> [MultiPurposeFormRowAction] {
         var actions = [MultiPurposeFormRowAction]()
         
-        actions.append(.init(title: "Delete", isDestructive: true, action: deleteOrder))
+        actions.append(.init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true }))
         
         if onOrderAgain != nil {
             actions.append(.init(title: "Place Again", action: placeOrderAgain))

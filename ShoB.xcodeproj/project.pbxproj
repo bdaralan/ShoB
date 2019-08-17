@@ -32,6 +32,7 @@
 		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
+		B484DF7C2307A06B00EE9589 /* DeleteAlertModifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F322EBFF4100778DA3 /* Constant+Image.swift */; };
 		B48E584722EA452900B9FEAB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48E584622EA452900B9FEAB /* String.swift */; };
@@ -93,6 +94,7 @@
 		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
+		B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifer.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48919F322EBFF4100778DA3 /* Constant+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constant+Image.swift"; sourceTree = "<group>"; };
 		B48E584622EA452900B9FEAB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				B451060E22F221070047F3F8 /* CenterButtonStyle.swift */,
+				B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */,
 			);
 			path = "View Modifier";
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				B42FCCAF2305ECAE0066F587 /* MultiPurposeForm.swift in Sources */,
 				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
+				B484DF7C2307A06B00EE9589 /* DeleteAlertModifer.swift in Sources */,
 				B4E6F62823052978009B7A58 /* StoreDataSource.swift in Sources */,
 				B41C11D022FA29440046AFF8 /* ValidationRequired.swift in Sources */,
 				B405260722E90A41007E2325 /* CurrencyWrapper.swift in Sources */,

@@ -18,10 +18,12 @@ struct SaleItemRow: View {
     @ObservedObject var saleItem: SaleItem
     
     var onDeleted: (() -> Void)?
-    
+        
     @State private var saleItemModel = SaleItemFormModel()
     
     @ObservedObject private var navigationState = NavigationStateHandler()
+    
+    @State private var showDeleteAlert = false
     
     
     // MARK: - Body
@@ -48,11 +50,12 @@ extension SaleItemRow {
             onUpdate: saleItemDataSource.saveUpdateObject,
             enableUpdate: saleItem.hasPersistentChangedValues && saleItem.hasValidInputs(),
             rowActions: [
-                .init(title: "Delete", isDestructive: true, action: deleteSaleItem)
+                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
         )
-            .navigationBarTitle("Item Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
+            .navigationBarTitle("Item Details", displayMode: .inline)
+            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Item", action: deleteSaleItem))
     }
     
     func setupOnAppear() {

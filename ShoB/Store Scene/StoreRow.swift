@@ -23,6 +23,8 @@ struct StoreRow: View {
     /// An antion to perform when the store is deleted.
     var onDeleted: (() -> Void)?
     
+    @State var showDeleteAlert = false
+    
     
     // MARK: - Body
     
@@ -52,11 +54,12 @@ extension StoreRow {
             onUpdate: storeDataSource.saveUpdateObject,
             enableUpdate: store.hasPersistentChangedValues && store.hasValidInputs(),
             rowActions: [
-                .init(title: "Delete", isDestructive: true, action: deleteStore)
+                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
         )
-            .navigationBarTitle("Store Details", displayMode: .inline)
             .onAppear(perform: setupOnAppear)
+            .navigationBarTitle("Store Details", displayMode: .inline)
+            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Store", action: deleteStore))
     }
     
     func setupOnAppear() {
