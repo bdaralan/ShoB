@@ -38,3 +38,19 @@ extension Importer {
         }
     }
 }
+
+
+extension Importer {
+    
+    static func importSampleData() {
+        let context = CoreDataStack.current.mainContext
+        
+        let smapleItemUrl = Bundle.main.url(forResource: "sale-item-sample-data", withExtension: "json")!
+        Importer.importManagedObjects(SaleItem.self, into: context, fromURL: smapleItemUrl)
+        
+        let sampleCustomerUrl = Bundle.main.url(forResource: "customer-sample-data", withExtension: "json")!
+        Importer.importManagedObjects(Customer.self, into: context, fromURL: sampleCustomerUrl)
+        
+        context.quickSave()
+    }
+}

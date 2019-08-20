@@ -57,6 +57,9 @@ extension StoreListView {
         }) {
             Image(systemName: "plus").imageScale(.large)
         }
+        .onLongPressGesture { // MARK: Test Code
+            Importer.importSampleData()
+        }
     }
     
     var createStoreForm: some View {

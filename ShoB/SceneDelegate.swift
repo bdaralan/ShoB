@@ -26,20 +26,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window = window
             window.makeKeyAndVisible()
         }
-        
-        // ADD sample data
-        guard UserDefaults.standard.bool(forKey: "hasImportedSampleData") == false else { return }
-        UserDefaults.standard.set(true, forKey: "hasImportedSampleData")
-        
-        let context = CoreDataStack.current.mainContext
-        
-        let smapleItemUrl = Bundle.main.url(forResource: "sale-item-sample-data", withExtension: "json")!
-        Importer.importManagedObjects(SaleItem.self, into: context, fromURL: smapleItemUrl)
-        
-        let sampleCustomerUrl = Bundle.main.url(forResource: "customer-sample-data", withExtension: "json")!
-        Importer.importManagedObjects(Customer.self, into: context, fromURL: sampleCustomerUrl)
-        
-        context.quickSave()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
