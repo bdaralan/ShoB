@@ -44,7 +44,6 @@ struct UIRTextField: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField()
-        textField.text = textFormat?(text) ?? ""
         
         configure?(textField)
         
@@ -61,7 +60,7 @@ struct UIRTextField: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
-        // no action
+        uiView.text = text
     }
     
     func configureAccessoryView(for textField: UITextField) {
