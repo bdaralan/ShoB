@@ -38,6 +38,8 @@ struct Home: View {
     
     @State private var selectedTab = 0
     
+    @ObservedObject private var coreDataNotification = NotificationObserver(name: CoreDataStack.nCoreDataStackDidChange)
+    
     
     // MARK: - Body
     
@@ -80,17 +82,29 @@ struct Home: View {
             .tabItem { tabItem(systemImage: "folder.fill", title: "Store") }
             .tag(3)
         }
+        .onAppear(perform: setupOnAppear)
     }
     
     func tabItem(systemImage: String, title: String) -> some View {
         ViewBuilder.buildBlock(Image(systemName: systemImage), Text(title))
     }
+    
+    func setupOnAppear() {
+        coreDataNotification.onReceived = { notification in
+            DispatchQueue.main.async {
+                self.orderDataSource.performFetch()
+                self.saleItemDataSource.performFetch()
+                self.customerDataSource.performFetch()
+                self.storeDataSource.performFetch()
+                self.selectedTab = 3
+            }
+        }
+    }
 }
 
-#if DEBUG
+
 struct Home_Previews : PreviewProvider {
     static var previews: some View {
         Home()
     }
 }
-#endif

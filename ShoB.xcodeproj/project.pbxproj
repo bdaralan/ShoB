@@ -28,6 +28,7 @@
 		B440E66422EE949E004EF9CD /* Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B440E66322EE949E004EF9CD /* Importer.swift */; };
 		B440E66822EE971B004EF9CD /* customer-sample-data.json in Resources */ = {isa = PBXBuildFile; fileRef = B440E66622EE971B004EF9CD /* customer-sample-data.json */; };
 		B440E66922EE971B004EF9CD /* sale-item-sample-data.json in Resources */ = {isa = PBXBuildFile; fileRef = B440E66722EE971B004EF9CD /* sale-item-sample-data.json */; };
+		B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B446955E2310C0BD0085416D /* NotificationObserver.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
@@ -90,6 +91,7 @@
 		B440E66322EE949E004EF9CD /* Importer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Importer.swift; sourceTree = "<group>"; };
 		B440E66622EE971B004EF9CD /* customer-sample-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "customer-sample-data.json"; sourceTree = "<group>"; };
 		B440E66722EE971B004EF9CD /* sale-item-sample-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sale-item-sample-data.json"; sourceTree = "<group>"; };
+		B446955E2310C0BD0085416D /* NotificationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				B440E66322EE949E004EF9CD /* Importer.swift */,
 				B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */,
 				B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */,
+				B446955E2310C0BD0085416D /* NotificationObserver.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
 				B405260222E8FFDC007E2325 /* VertialTextField.swift in Sources */,
 				B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */,
+				B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */,
 				B4F4C87422FF862D0010F191 /* CustomerDataSource.swift in Sources */,
 				B437BE3322B95282007C02C0 /* Currency.swift in Sources */,
 				B4B9D13522B2DF3B003FC4E3 /* ShoB.xcdatamodeld in Sources */,
