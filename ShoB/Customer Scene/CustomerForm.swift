@@ -53,11 +53,9 @@ struct CustomerForm: View, MultiPurposeForm {
 }
 
 
-#if DEBUG
 struct CustomerForm_Previews: PreviewProvider {
     static let model = CustomerFormModel()
     static var previews: some View {
         CustomerForm(model: .constant(model))
     }
 }
-#endif

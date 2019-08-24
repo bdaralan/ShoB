@@ -101,10 +101,8 @@ extension SaleItemListView {
 }
 
 
-#if DEBUG
 struct SaleItemList_Previews : PreviewProvider {
     static var previews: some View {
         SaleItemListView()
     }
 }
-#endif

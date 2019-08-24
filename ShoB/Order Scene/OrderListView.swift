@@ -190,10 +190,8 @@ extension OrderListView {
 }
 
 
-#if DEBUG
 struct OrderList_Previews : PreviewProvider {
     static var previews: some View {
         OrderListView()
     }
 }
-#endif

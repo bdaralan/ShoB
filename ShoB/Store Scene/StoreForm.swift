@@ -45,10 +45,8 @@ struct StoreForm: View, MultiPurposeForm {
 }
 
 
-#if DEBUG
 struct StoreForm_Previews: PreviewProvider {
     static var previews: some View {
         StoreForm(model: .init())
     }
 }
-#endif

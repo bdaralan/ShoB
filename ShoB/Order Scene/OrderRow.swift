@@ -113,11 +113,9 @@ struct OrderRow: View {
 }
 
 
-#if DEBUG
 struct OrderRow_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         OrderRow(order: order)
     }
 }
-#endif

@@ -112,10 +112,8 @@ extension CustomerListView {
 }
 
 
-#if DEBUG
 struct CustomerList_Previews : PreviewProvider {
     static var previews: some View {
         CustomerListView()
     }
 }
-#endif

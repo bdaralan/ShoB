@@ -84,10 +84,8 @@ extension StoreRow {
 }
 
 
-#if DEBUG
 struct StoreRow_Previews: PreviewProvider {
     static var previews: some View {
         StoreRow(store: .init(context: CoreDataStack.current.mainContext))
     }
 }
-#endif

@@ -79,11 +79,9 @@ extension SaleItemRow {
 }
 
 
-#if DEBUG
 struct SaleItemRow_Previews : PreviewProvider {
     static let saleItem = SaleItem(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         SaleItemRow(saleItem: saleItem, onDeleted: {})
     }
 }
-#endif

@@ -202,10 +202,8 @@ extension OrderItemForm {
 }
 
 
-#if DEBUG
 struct AddOrderItemView_Previews: PreviewProvider {
     static var previews: some View {
         OrderItemForm(orderItemModel: .constant(.init()), saleItems: [], onAdd: {}, onCancel: {})
     }
 }
-#endif

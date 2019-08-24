@@ -85,10 +85,8 @@ class SearchField: ObservableObject {
 }
 
 
-#if DEBUG
 struct SearchTextField_Previews: PreviewProvider {
     static var previews: some View {
         SearchTextField(searchField: .init())
     }
 }
-#endif

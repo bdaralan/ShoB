@@ -57,10 +57,8 @@ extension VertialTextField {
 }
 
 
-#if DEBUG
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         VertialTextField("Label", placeholder: "Placeholder", text: .constant(""))
     }
 }
-#endif

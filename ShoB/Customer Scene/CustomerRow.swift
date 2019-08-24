@@ -72,11 +72,9 @@ extension CustomerRow {
 }
 
 
-#if DEBUG
 struct CustomerRow_Previews: PreviewProvider {
     static let customer = Customer(context: CoreDataStack.current.mainContext)
     static var previews: some View {
         CustomerRow(customer: customer)
     }
 }
-#endif

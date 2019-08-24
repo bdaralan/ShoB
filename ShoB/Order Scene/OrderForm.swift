@@ -355,11 +355,9 @@ extension OrderForm {
 }
 
 
-#if DEBUG
 struct OrderForm_Previews : PreviewProvider {
     static let order = Order(context: CoreDataStack.current.mainContext.newChildContext())
     static var previews: some View {
         OrderForm(model: .constant(.init()))
     }
 }
-#endif
