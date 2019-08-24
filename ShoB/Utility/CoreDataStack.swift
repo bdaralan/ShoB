@@ -10,13 +10,10 @@
 import CoreData
 
 
-typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
-
-
 /// The core data stack that manages user's object graph.
 class CoreDataStack: NSObject {
     
-    static private(set) var current = CoreDataStack(userIdentityToken: FileManager.default.ubiquityIdentityToken)
+    static private(set) var current = CoreDataStack()
     
     
     let persistentContainer: NSPersistentContainer
@@ -26,25 +23,9 @@ class CoreDataStack: NSObject {
     }
     
     
-    private init(userIdentityToken: UbiquityIdentityToken?) {
+    private override init() {
         // use CloudKit container
         persistentContainer = NSPersistentCloudKitContainer(name: "ShoB")
-        
-        // locate user store location using user token
-        let userIdentityTokenUUID = CoreDataStack.getUserIdentityTokenUUID(for: userIdentityToken)
-        let storeDefaultUrl = NSPersistentContainer.defaultDirectoryURL()
-        let storeUrl = storeDefaultUrl.appendingPathComponent("\(userIdentityTokenUUID)/database.store")
-        
-        // create store description
-        let storeDescription = NSPersistentStoreDescription(url: storeUrl)
-        
-        // initialize the CloudKit schema
-        let options = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.bdaralan.ShoB")
-//        options.shouldInitializeSchema = true // toggle to false when go in production
-        storeDescription.cloudKitContainerOptions = options
-        
-        // assign store description
-        persistentContainer.persistentStoreDescriptions = [storeDescription]
         
         // auto merge new changes when store gets new updates
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
@@ -56,55 +37,57 @@ class CoreDataStack: NSObject {
         
         super.init()
         
-        // keep track of last user
-        StandardUserDefaults.lastUserIdentityToken = userIdentityTokenUUID
-        
-        // listen to user identity token changed notitfication
-        NotificationCenter.default.addObserver(self, selector: #selector(userIdentifyChanged(_:)), name: .NSUbiquityIdentityDidChange, object: nil)
-    }
-    
-    @objc func userIdentifyChanged(_ notification: Notification) {
-        let newToken = FileManager.default.ubiquityIdentityToken
-        
-        let lastTokenUUID = StandardUserDefaults.lastUserIdentityToken
-        let newTokenUUID = CoreDataStack.getUserIdentityTokenUUID(for: newToken)
-        
-        guard lastTokenUUID != newTokenUUID else { return }
-        let coreDataStack = CoreDataStack(userIdentityToken: newToken)
-        CoreDataStack.current = coreDataStack
-        StandardUserDefaults.lastUserIdentityToken = newTokenUUID
-        
-        NotificationCenter.default.post(name: CoreDataStack.nUserUbiquityIdentityTokenChanged, object: coreDataStack)
+        cacheUbiquityIdentityToken(FileManager.default.ubiquityIdentityToken)
+        setupUserIdentityChangeNotification()
     }
 }
 
 
-// MARK: - User Account Token for Local Use
-
+// MARK: - Handle Identity Changed
 
 extension CoreDataStack {
     
-    static var nUserUbiquityIdentityTokenChanged: Notification.Name {
-        .init(rawValue: "CoreDataStack.nUserUbiquityIdentityTokenChanged")
+    typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
+    
+    static let nCoreDataStackDidChange = Notification.Name("CoreDataStack.nCoreDataStackDidChange")
+    
+    static let kCachedUbiquityIdentityToken = "CoreDataStack.kCachedCurrentUserIdentity"
+    
+    static var cachedUbiquityIdentityToken: UbiquityIdentityToken? {
+        UserDefaults.standard.value(forKey: CoreDataStack.kCachedUbiquityIdentityToken) as? UbiquityIdentityToken
     }
     
-    static func getUserIdentityTokenUUID(for token: UbiquityIdentityToken?) -> String {
-        guard let token = token else {
-            return StandardUserDefaults.unknownUserIdentityToken
+    
+    func cacheUbiquityIdentityToken(_ token: UbiquityIdentityToken?) {
+        UserDefaults.standard.setValue(token, forKey: CoreDataStack.kCachedUbiquityIdentityToken)
+    }
+    
+    func setupUserIdentityChangeNotification() {
+        let notificationCenter = NotificationCenter.default
+        let notification = Notification.Name.NSUbiquityIdentityDidChange
+        let handler = #selector(userIdentifyChanged(_:))
+        notificationCenter.addObserver(self, selector: handler, name: notification, object: nil)
+    }
+    
+    @objc func userIdentifyChanged(_ notification: Notification) {
+        let cachedToken = CoreDataStack.cachedUbiquityIdentityToken
+        let currentToken = FileManager.default.ubiquityIdentityToken
+        cacheUbiquityIdentityToken(currentToken)
+        
+        switch (cachedToken == nil, currentToken == nil) {
+            
+        case (false, true), (true, false):
+            reloadCoreDataStore()
+            
+        case (false, false) where !cachedToken!.isEqual(currentToken!):
+            reloadCoreDataStore()
+            
+        default: break
         }
-        
-        // find uuid from the dictionary
-        var tokenDict = StandardUserDefaults.userIdentityTokenDictionary
-        for (tokenUUID, ubiquityToken) in tokenDict where ubiquityToken.isEqual(token) {
-            return tokenUUID
-        }
-        
-        // if does not exist, create one and store it
-        let newTokenUUID = UUID().uuidString
-        tokenDict[newTokenUUID] = token
-        StandardUserDefaults.userIdentityTokenDictionary = tokenDict
-        
-        return newTokenUUID
+    }
+    
+    func reloadCoreDataStore() {
+        CoreDataStack.current = CoreDataStack()
+        NotificationCenter.default.post(name: CoreDataStack.nCoreDataStackDidChange, object: nil)
     }
 }
-

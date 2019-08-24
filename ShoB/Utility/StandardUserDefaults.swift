@@ -9,18 +9,6 @@
 import Foundation
 
 
-enum StandardUserDefaults {
-    
-    static let unknownUserIdentityToken = "unknownUserIdentityToken"
-    
-    @UserDefaultsValue(forKey: "kSetting.lastUserIdentityToken", default: unknownUserIdentityToken)
-    static var lastUserIdentityToken: String
-    
-    @UserDefaultsValue(forKey: "kSetting.userIdentityTokenDictionary", default: [String: UbiquityIdentityToken]())
-    static var userIdentityTokenDictionary: [String: UbiquityIdentityToken]
-}
-
-
 @propertyWrapper
 struct UserDefaultsValue<T> {
     
