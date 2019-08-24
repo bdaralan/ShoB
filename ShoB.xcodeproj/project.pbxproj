@@ -30,6 +30,8 @@
 		B440E66922EE971B004EF9CD /* sale-item-sample-data.json in Resources */ = {isa = PBXBuildFile; fileRef = B440E66722EE971B004EF9CD /* sale-item-sample-data.json */; };
 		B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B446955E2310C0BD0085416D /* NotificationObserver.swift */; };
 		B44695632310CBA70085416D /* AppCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695622310CBA70085416D /* AppCache.swift */; };
+		B44695652310CFBE0085416D /* UIRTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695642310CFBE0085416D /* UIRTextField.swift */; };
+		B44695672310E7100085416D /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695662310E7100085416D /* CurrencyTextField.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
@@ -94,6 +96,8 @@
 		B440E66722EE971B004EF9CD /* sale-item-sample-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sale-item-sample-data.json"; sourceTree = "<group>"; };
 		B446955E2310C0BD0085416D /* NotificationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
 		B44695622310CBA70085416D /* AppCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCache.swift; sourceTree = "<group>"; };
+		B44695642310CFBE0085416D /* UIRTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRTextField.swift; sourceTree = "<group>"; };
+		B44695662310E7100085416D /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
@@ -154,6 +158,8 @@
 			children = (
 				B405260122E8FFDC007E2325 /* VertialTextField.swift */,
 				B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */,
+				B44695662310E7100085416D /* CurrencyTextField.swift */,
+				B44695642310CFBE0085416D /* UIRTextField.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -442,6 +448,7 @@
 				B4F4D2B822E2452300E849B4 /* Date.swift in Sources */,
 				B405261122E938E9007E2325 /* Text.swift in Sources */,
 				B42FCCAF2305ECAE0066F587 /* MultiPurposeForm.swift in Sources */,
+				B44695652310CFBE0085416D /* UIRTextField.swift in Sources */,
 				B44695632310CBA70085416D /* AppCache.swift in Sources */,
 				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
@@ -471,6 +478,7 @@
 				B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */,
 				B4D346B222B6A31B0051AABB /* UserDefaultsValue.swift in Sources */,
 				B4B9D14B22B2E4A0003FC4E3 /* OrderItem.swift in Sources */,
+				B44695672310E7100085416D /* CurrencyTextField.swift in Sources */,
 				B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */,
 				B4A5D97522CBF7F200695A3F /* Home.swift in Sources */,
 				B4B9D12222B2DF24003FC4E3 /* SceneDelegate.swift in Sources */,

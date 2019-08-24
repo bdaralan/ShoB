@@ -101,8 +101,7 @@ struct OrderForm: View, MultiPurposeForm {
                 HStack {
                     Image.SFOrder.discount
                     Text("Discount")
-                    TextField("$0.00", text: $model.discount)
-                        .multilineTextAlignment(.trailing)
+                    CurrencyTextField(text: $model.discount)
                 }
             }
             

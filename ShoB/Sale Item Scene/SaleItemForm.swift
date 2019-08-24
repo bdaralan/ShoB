@@ -33,7 +33,10 @@ struct SaleItemForm: View, MultiPurposeForm {
             // MARK: Name & Price
             Section {
                 VertialTextField("Name", text: $model.name)
-                VertialTextField("Price", placeholder: "$0.00", text: $model.price)
+                HStack {
+                    Text("Price")
+                    CurrencyTextField(text: $model.price)
+                }
             }
             
             setupRowActionSection()

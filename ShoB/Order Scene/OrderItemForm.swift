@@ -38,11 +38,19 @@ struct OrderItemForm: View {
         Form {
             // Input Section
             Section(header: Text.topSection("ORDER ITEM")) {
-                Group {
-                    VertialTextField("Name", placeholder: "Select an item", text: $orderItemModel.name)
-                    VertialTextField("Price", placeholder: "$0.00", text: $orderItemModel.price)
+                // MARK: Name
+                Text(orderItemModel.name.isEmpty ? "Select an item" : orderItemModel.name)
+                    .fontWeight(orderItemModel.name.isEmpty ? .regular : .semibold)
+                    .foregroundColor(orderItemModel.name.isEmpty ? .secondary : .primary)
+                
+                // MARK: Price
+                HStack {
+                    Text("Price")
+                        .multilineTextAlignment(.leading)
+                    Spacer()
+                    Text(orderItemModel.price)
+                        .multilineTextAlignment(.trailing)
                 }
-                .disabled(true)
                 
                 // MARK: Subtotal
                 HStack {
