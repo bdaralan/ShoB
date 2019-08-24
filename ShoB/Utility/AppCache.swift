@@ -13,9 +13,9 @@ enum AppCache {
     
     typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
     
-    private static let ubiquityIdentityTokenNil: UbiquityIdentityToken? = nil
     
-    
-    @UserDefaultsValue(forKey: "CoreDataStack.kCachedCurrentUserIdentity", default: ubiquityIdentityTokenNil)
-    static var ubiquityIdentityToken: UbiquityIdentityToken?
+    static var ubiquityIdentityToken: UbiquityIdentityToken? {
+        set { UserDefaults.standard.setValue(newValue, forKey: "AppCache.kUbiquityIdentityToken") }
+        get { UserDefaults.standard.value(forKey: "AppCache.kUbiquityIdentityToken") as? UbiquityIdentityToken }
+    }
 }
