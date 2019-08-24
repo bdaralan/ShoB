@@ -29,6 +29,7 @@
 		B440E66822EE971B004EF9CD /* customer-sample-data.json in Resources */ = {isa = PBXBuildFile; fileRef = B440E66622EE971B004EF9CD /* customer-sample-data.json */; };
 		B440E66922EE971B004EF9CD /* sale-item-sample-data.json in Resources */ = {isa = PBXBuildFile; fileRef = B440E66722EE971B004EF9CD /* sale-item-sample-data.json */; };
 		B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B446955E2310C0BD0085416D /* NotificationObserver.swift */; };
+		B44695632310CBA70085416D /* AppCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695622310CBA70085416D /* AppCache.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
@@ -57,7 +58,7 @@
 		B4B9D15522B2E4A0003FC4E3 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B9D14922B2E4A0003FC4E3 /* Order.swift */; };
 		B4B9D15822B2EC94003FC4E3 /* OrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */; };
 		B4BE1CFF22E3DC6C00667CAF /* OrderFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BE1CFE22E3DC6C00667CAF /* OrderFormModel.swift */; };
-		B4D346B222B6A31B0051AABB /* StandardUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */; };
+		B4D346B222B6A31B0051AABB /* UserDefaultsValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D346B122B6A31B0051AABB /* UserDefaultsValue.swift */; };
 		B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */; };
 		B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D5E6CE22C0558800BE7580 /* OrderRow.swift */; };
 		B4E6F62823052978009B7A58 /* StoreDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6F62723052978009B7A58 /* StoreDataSource.swift */; };
@@ -92,6 +93,7 @@
 		B440E66622EE971B004EF9CD /* customer-sample-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "customer-sample-data.json"; sourceTree = "<group>"; };
 		B440E66722EE971B004EF9CD /* sale-item-sample-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sale-item-sample-data.json"; sourceTree = "<group>"; };
 		B446955E2310C0BD0085416D /* NotificationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
+		B44695622310CBA70085416D /* AppCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCache.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
@@ -123,7 +125,7 @@
 		B4B9D14922B2E4A0003FC4E3 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderForm.swift; sourceTree = "<group>"; };
 		B4BE1CFE22E3DC6C00667CAF /* OrderFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderFormModel.swift; sourceTree = "<group>"; };
-		B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardUserDefaults.swift; sourceTree = "<group>"; };
+		B4D346B122B6A31B0051AABB /* UserDefaultsValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsValue.swift; sourceTree = "<group>"; };
 		B4D5E6CC22C0476A00BE7580 /* ManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
 		B4D5E6CE22C0558800BE7580 /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
 		B4E6F62723052978009B7A58 /* StoreDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreDataSource.swift; sourceTree = "<group>"; };
@@ -317,12 +319,13 @@
 			isa = PBXGroup;
 			children = (
 				B4B9D13A22B2DF7D003FC4E3 /* CoreDataStack.swift */,
-				B4D346B122B6A31B0051AABB /* StandardUserDefaults.swift */,
 				B437BE3222B95282007C02C0 /* Currency.swift */,
 				B440E66322EE949E004EF9CD /* Importer.swift */,
 				B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */,
 				B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */,
 				B446955E2310C0BD0085416D /* NotificationObserver.swift */,
+				B4D346B122B6A31B0051AABB /* UserDefaultsValue.swift */,
+				B44695622310CBA70085416D /* AppCache.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -439,6 +442,7 @@
 				B4F4D2B822E2452300E849B4 /* Date.swift in Sources */,
 				B405261122E938E9007E2325 /* Text.swift in Sources */,
 				B42FCCAF2305ECAE0066F587 /* MultiPurposeForm.swift in Sources */,
+				B44695632310CBA70085416D /* AppCache.swift in Sources */,
 				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
 				B484DF7C2307A06B00EE9589 /* DeleteAlertModifer.swift in Sources */,
@@ -465,7 +469,7 @@
 				B4B9D13522B2DF3B003FC4E3 /* ShoB.xcdatamodeld in Sources */,
 				B42FCCAD2305EC730066F587 /* StoreFormModel.swift in Sources */,
 				B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */,
-				B4D346B222B6A31B0051AABB /* StandardUserDefaults.swift in Sources */,
+				B4D346B222B6A31B0051AABB /* UserDefaultsValue.swift in Sources */,
 				B4B9D14B22B2E4A0003FC4E3 /* OrderItem.swift in Sources */,
 				B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */,
 				B4A5D97522CBF7F200695A3F /* Home.swift in Sources */,

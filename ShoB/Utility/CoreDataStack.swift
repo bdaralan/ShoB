@@ -37,7 +37,7 @@ class CoreDataStack: NSObject {
         
         super.init()
         
-        cacheUbiquityIdentityToken(FileManager.default.ubiquityIdentityToken)
+        AppCache.ubiquityIdentityToken = FileManager.default.ubiquityIdentityToken
         setupUserIdentityChangeNotification()
     }
 }
@@ -47,20 +47,8 @@ class CoreDataStack: NSObject {
 
 extension CoreDataStack {
     
-    typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
-    
     static let nCoreDataStackDidChange = Notification.Name("CoreDataStack.nCoreDataStackDidChange")
     
-    static let kCachedUbiquityIdentityToken = "CoreDataStack.kCachedCurrentUserIdentity"
-    
-    static var cachedUbiquityIdentityToken: UbiquityIdentityToken? {
-        UserDefaults.standard.value(forKey: CoreDataStack.kCachedUbiquityIdentityToken) as? UbiquityIdentityToken
-    }
-    
-    
-    func cacheUbiquityIdentityToken(_ token: UbiquityIdentityToken?) {
-        UserDefaults.standard.setValue(token, forKey: CoreDataStack.kCachedUbiquityIdentityToken)
-    }
     
     func setupUserIdentityChangeNotification() {
         let notificationCenter = NotificationCenter.default
@@ -70,9 +58,10 @@ extension CoreDataStack {
     }
     
     @objc func userIdentifyChanged(_ notification: Notification) {
-        let cachedToken = CoreDataStack.cachedUbiquityIdentityToken
+        let cachedToken = AppCache.ubiquityIdentityToken
         let currentToken = FileManager.default.ubiquityIdentityToken
-        cacheUbiquityIdentityToken(currentToken)
+        
+        AppCache.ubiquityIdentityToken = currentToken // update cache
         
         switch (cachedToken == nil, currentToken == nil) {
             
