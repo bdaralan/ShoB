@@ -7,13 +7,18 @@
 //
 
 import Foundation
+import CoreData
+
 
 /// An object that provide access to application's values stored in `UserDefaults`.
-enum AppCache {
+struct AppCache {
     
     typealias UbiquityIdentityToken = (NSCoding & NSCopying & NSObjectProtocol)
     
     
     @UserDefaultsOptionalValue(forKey: "AppCache.kUbiquityIdentityToken", default: nil)
     static var ubiquityIdentityToken: UbiquityIdentityToken?
+    
+    @UserDefaultsOptionalValue(forKey: "AppCache.kCurrentStoreURIData", default: nil)
+    static var currentStoreURIData: Data?
 }

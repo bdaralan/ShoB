@@ -20,7 +20,7 @@ extension AnyView {
 extension View {
     
     /// Flat view to `AnyView`.
-    func toAnyView() -> AnyView {
+    func eraseToAnyView() -> AnyView {
         AnyView(self)
     }
 }

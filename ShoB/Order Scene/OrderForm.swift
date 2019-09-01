@@ -144,7 +144,7 @@ struct OrderForm: View, MultiPurposeForm {
             content: { self.modalPresentationSheet }
         )
         
-        return setupNavItems(forForm: form.toAnyView())
+        return setupNavItems(forForm: form.eraseToAnyView())
     }
 }
 
@@ -160,7 +160,7 @@ extension OrderForm {
                 CustomerRowContentView(customer: customer)
             }
             .buttonStyle(PlainButtonStyle())
-            .toAnyView()
+            .eraseToAnyView()
             
         } else { // no customer selected
             return Button(action: showCustomerSelectionView) {
@@ -173,7 +173,7 @@ extension OrderForm {
                 .foregroundColor(.secondary)
             }
             .buttonStyle(PlainButtonStyle())
-            .toAnyView()
+            .eraseToAnyView()
         }
     }
     
@@ -334,21 +334,21 @@ extension OrderForm {
     
     /// Present `customerSelectionView` sheet.
     func showCustomerSelectionView() {
-        modalPresentationSheet = customerSelectionView.toAnyView()
+        modalPresentationSheet = customerSelectionView.eraseToAnyView()
         showModalPresentationSheet = true
     }
     
     /// Present `editOrderItemForm` sheet.
     func showEditOrderItemForm(with item: OrderItem) {
         editOrderItemModel = .init(orderItem: item)
-        modalPresentationSheet = editOrderItemForm.toAnyView()
+        modalPresentationSheet = editOrderItemForm.eraseToAnyView()
         showModalPresentationSheet = true
     }
     
     /// Present `addOrderItemForm` sheet.
     func showAddOrderItemForm() {
         newOrderItemModel = .init()
-        modalPresentationSheet = addOrderItemForm.toAnyView()
+        modalPresentationSheet = addOrderItemForm.eraseToAnyView()
         showModalPresentationSheet = true
     }
 }

@@ -64,3 +64,45 @@ extension Store {
         return request
     }
 }
+
+
+extension Store {
+    
+    static let kCurrentStoreDidChange = "Store.kCurrentStoreDidChange"
+    
+    /// Set the store as the current store.
+    ///
+    /// This method post a notification `kCurrentStoreDidChange`.
+    ///
+    /// The notification includes the store object from the main context or `nil`.
+    /// - Parameter store: The store that will become current store.
+    static func setCurrent(_ store: Store?) {
+        AppCache.currentStoreURIData = store?.objectID.uriRepresentation().dataRepresentation
+        
+        let notificationName = Notification.Name(kCurrentStoreDidChange)
+        guard let store = store else {
+            NotificationCenter.default.post(name: notificationName, object: nil)
+            return
+        }
+        
+        let mainContext = CoreDataStack.current.mainContext
+        let storeInMainContext = mainContext.object(with: store.objectID) as! Store
+        NotificationCenter.default.post(name: notificationName, object: storeInMainContext)
+    }
+    
+    /// The store that is set as current.
+    ///
+    /// - Important: The store object is from the main context.
+    static func current() -> Store? {
+        guard let uriData = AppCache.currentStoreURIData else { return nil }
+        
+        guard let uri = URL(dataRepresentation: uriData, relativeTo: nil) else { return nil }
+        let coreDataStack = CoreDataStack.current
+        let storeCoodinator = coreDataStack.persistentContainer.persistentStoreCoordinator
+        let mainContext = coreDataStack.mainContext
+        
+        guard let objectID =  storeCoodinator.managedObjectID(forURIRepresentation: uri) else { return nil }
+        let storeInMainContext = mainContext.object(with: objectID) as! Store
+        return storeInMainContext
+    }
+}

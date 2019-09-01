@@ -130,7 +130,7 @@ extension OrderItemForm {
     
     func leadingNavItem() -> some View {
         if onCancel != nil {
-            return cancelNavItem.toAnyView()
+            return cancelNavItem.eraseToAnyView()
         }
         
         return AnyView.emptyView
@@ -138,11 +138,11 @@ extension OrderItemForm {
     
     func trailingNavItem() -> some View {
         if onAdd != nil, onDone == nil {
-            return addNavItem.toAnyView()
+            return addNavItem.eraseToAnyView()
         }
         
         if onDone != nil, onAdd == nil {
-            return doneNavItem.toAnyView()
+            return doneNavItem.eraseToAnyView()
         }
         
         return AnyView.emptyView

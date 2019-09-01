@@ -48,7 +48,7 @@ struct CustomerForm: View, MultiPurposeForm {
             setupRowActionSection()
         }
         
-        return setupNavItems(forForm: form.toAnyView())
+        return setupNavItems(forForm: form.eraseToAnyView())
     }
 }
 

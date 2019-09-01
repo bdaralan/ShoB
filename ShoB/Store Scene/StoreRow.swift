@@ -20,24 +20,35 @@ struct StoreRow: View {
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
+    var showCheckMark = false
+    
     /// An antion to perform when the store is deleted.
     var onDeleted: (() -> Void)?
     
-    @State var showDeleteAlert = false
+    @State private var showDeleteAlert = false
     
     
     // MARK: - Body
     
     var body: some View {
         NavigationLink(destination: storeDetailView, isActive: $navigationState.isPushed) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(store.name).fontWeight(.semibold)
-                Group {
-                    Text.contactInfo(image: Image.SFCustomer.phone, text: store.phone)
-                    Text.contactInfo(image: Image.SFCustomer.email, text: store.email)
-                    Text.contactInfo(image: Image.SFCustomer.address, text: store.address)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(store.name).fontWeight(.semibold)
+                    Group {
+                        Text.contactInfo(image: Image.SFCustomer.phone, text: store.phone)
+                        Text.contactInfo(image: Image.SFCustomer.email, text: store.email)
+                        Text.contactInfo(image: Image.SFCustomer.address, text: store.address)
+                    }
+                    .font(.caption)
                 }
-                .font(.caption)
+                
+                if showCheckMark {
+                    Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .imageScale(.large)
+                        .padding()
+                }
             }
         }
     }

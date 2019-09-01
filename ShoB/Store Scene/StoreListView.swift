@@ -18,9 +18,13 @@ struct StoreListView: View {
     
     @State private var showCannotCreateStoreAlert = false
     
+    @State private var currentStore = Store.current()
+    
     @ObservedObject private var createStoreModel = StoreFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
+    
+    @ObservedObject private var storeChangedObserver = NotificationObserver(name: .init(Store.kCurrentStoreDidChange))
     
     
     // MARK: - Body
@@ -30,8 +34,10 @@ struct StoreListView: View {
             ForEach(storeDataSource.fetchedResult.fetchedObjects ?? []) { store in
                 StoreRow(
                     store: self.storeDataSource.readObject(store),
+                    showCheckMark: store.objectID == self.currentStore?.objectID,
                     onDeleted: { self.viewReloader.forceReload() }
                 )
+                    .contextMenu(self.storeRowContextMenu(for: store))
             }
         }
         .navigationBarItems(trailing: addNewStoreNavItem)
@@ -40,6 +46,7 @@ struct StoreListView: View {
             onDismiss: cancelCreateStore,
             content: { self.createStoreForm }
         )
+        .onAppear(perform: setupOnAppear)
     }
 }
 
@@ -110,6 +117,23 @@ extension StoreListView {
         storeDataSource.discardNewObject()
         storeDataSource.discardCreateContext()
         showCreateStoreForm = false
+    }
+    
+    func storeRowContextMenu(for store: Store) -> ContextMenu<AnyView> {
+        ContextMenu {
+            Button(action: { Store.setCurrent(store) }) {
+                Text("Set Current Store")
+                Image(systemName: "checkmark.circle.fill")
+            }
+            .eraseToAnyView()
+        }
+    }
+    
+    func setupOnAppear() {
+        storeChangedObserver.onReceived = { notification in
+            let store = notification.object as? Store
+            self.currentStore = store
+        }
     }
 }
 

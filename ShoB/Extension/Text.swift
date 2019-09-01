@@ -27,6 +27,6 @@ extension Text {
             image
             Text(text)
         }
-        .toAnyView()
+        .eraseToAnyView()
     }
 }
