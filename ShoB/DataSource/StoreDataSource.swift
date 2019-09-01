@@ -56,8 +56,9 @@ class StoreDataSource: NSObject, DataSource {
     
     func saveUpdateObject() {
         guard let store = updateObject else { return }
+        store.objectWillChange.send() // still need in beta 7
         
-        if store.hasPersistentChangedValues, !store.name.isEmpty {
+        if store.hasPersistentChangedValues, store.hasValidInputs() {
             saveUpdateContext()
         } else {
             discardUpdateContext()
