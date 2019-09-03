@@ -284,9 +284,11 @@ extension OrderForm {
         Button(action: { self.selectCustomer(customer) }) {
             HStack {
                 CustomerRowContentView(customer: customer)
+                    .layoutPriority(1)
                 if customer.objectID == self.model.order?.customer?.objectID {
                     Spacer()
                     Image(systemName: "checkmark")
+                        .imageScale(.small)
                 }
             }
         }
