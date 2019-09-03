@@ -42,6 +42,7 @@ struct StoreRow: View {
                     }
                     .font(.caption)
                 }
+                .layoutPriority(1)
                 
                 if showCheckMark {
                     Spacer()
