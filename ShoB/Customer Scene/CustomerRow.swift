@@ -42,8 +42,8 @@ extension CustomerRow {
     var customerDetailView: some View {
         CustomerForm(
             model: $model,
-            onUpdate: customerDataSource.saveUpdateObject,
-            enableUpdate: customer.hasPersistentChangedValues && customer.hasValidInputs(),
+            onUpdate: updateCustomer,
+            enableUpdate: customer.hasPersistentChangedValues && customer.isValid(),
             rowActions: [
                 .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
@@ -61,6 +61,16 @@ extension CustomerRow {
             self.customerDataSource.setUpdateObject(nil)
             guard self.customer.hasChanges, let context = self.customer.managedObjectContext else { return }
             context.rollback()
+        }
+    }
+    
+    /// Save customer's changes.
+    func updateCustomer() {
+        let result = customerDataSource.saveUpdateObject()
+        switch result {
+        case .saved, .unchanged: break
+        case .failed:
+            print("failed to update order \(customerDataSource.updateObject?.description ?? "nil")")
         }
     }
     

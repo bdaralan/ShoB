@@ -41,10 +41,19 @@ protocol DataSource: NSFetchedResultsControllerDelegate, ObservableObject {
     var updateObject: Object? { set get }
     
     /// Save `newObject` to its context.
-    func saveNewObject()
+    func saveNewObject() -> DataSourceSaveResult
     
     /// Save changes of the `updateObject` to its context.
-    func saveUpdateObject()
+    func saveUpdateObject() -> DataSourceSaveResult
+}
+
+
+// MARK: - Save Result Enum
+
+enum DataSourceSaveResult {
+    case saved
+    case failed
+    case unchanged
 }
 
 

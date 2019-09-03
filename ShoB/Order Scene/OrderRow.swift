@@ -30,7 +30,7 @@ struct OrderRow: View {
     @State private var showDeleteAlert = false
     
     var enableUpdate: Bool {
-        (order.hasPersistentChangedValues || order.isMarkedValuesChanged) && order.hasValidInputs()
+        (order.hasPersistentChangedValues || order.isMarkedValuesChanged) && order.isValid()
     }
     
     
@@ -48,7 +48,7 @@ struct OrderRow: View {
     var orderDetailView: some View {
         OrderForm(
             model: $orderModel,
-            onUpdate: orderDataSource.saveUpdateObject,
+            onUpdate: updateOrder,
             enableUpdate: enableUpdate,
             rowActions: rowActions()
         )
@@ -85,6 +85,16 @@ struct OrderRow: View {
             self.order.isMarkedValuesChanged = false
             
             context.rollback()
+        }
+    }
+    
+    /// Save order's changes.
+    func updateOrder() {
+        let result = orderDataSource.saveUpdateObject()
+        switch result {
+        case .saved, .unchanged: break
+        case .failed:
+            print("failed to update order \(orderDataSource.updateObject?.description ?? "nil")")
         }
     }
     

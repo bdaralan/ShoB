@@ -47,8 +47,8 @@ extension SaleItemRow {
     var saleItemDetailView: some View {
         SaleItemForm(
             model: $saleItemModel,
-            onUpdate: saleItemDataSource.saveUpdateObject,
-            enableUpdate: saleItem.hasPersistentChangedValues && saleItem.hasValidInputs(),
+            onUpdate: updateSaleItem,
+            enableUpdate: saleItem.hasPersistentChangedValues && saleItem.isValid(),
             rowActions: [
                 .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
@@ -68,6 +68,16 @@ extension SaleItemRow {
             self.saleItemDataSource.setUpdateObject(nil)
             guard self.saleItem.hasChanges, let context = self.saleItem.managedObjectContext else { return }
             context.rollback()
+        }
+    }
+    
+    /// Save sale item's changes.
+    func updateSaleItem() {
+        let result = saleItemDataSource.saveUpdateObject()
+        switch result {
+        case .saved, .unchanged: break
+        case .failed:
+            print("failed to update order \(saleItemDataSource.updateObject?.description ?? "nil")")
         }
     }
     

@@ -48,20 +48,23 @@ class OrderDataSource: NSObject, DataSource {
         objectWillChange.send()
     }
     
-    func saveNewObject() {
-        guard let order = newObject, order.hasValidInputs() else { return }
+    func saveNewObject() -> DataSourceSaveResult {
+        guard let order = newObject, order.isValid() else { return .failed }
         saveCreateContext()
+        return .saved
     }
     
-    func saveUpdateObject() {
-        guard let order = updateObject, order.hasValidInputs() else { return }
+    func saveUpdateObject() -> DataSourceSaveResult {
+        guard let order = updateObject, order.isValid() else { return .failed }
         order.objectWillChange.send() // still need this (beta 5)
         
         if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
             order.isMarkedValuesChanged = false
             saveUpdateContext()
+            return .saved
         } else {
             discardUpdateContext()
+            return .unchanged
         }
     }
 }

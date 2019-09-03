@@ -105,4 +105,8 @@ extension Store {
         let storeInMainContext = mainContext.object(with: objectID) as! Store
         return storeInMainContext
     }
+    
+    static func isCurrent(_ store: Store) -> Bool {
+        store.objectID == current()?.objectID
+    }
 }

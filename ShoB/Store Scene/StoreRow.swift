@@ -62,8 +62,8 @@ extension StoreRow {
     var storeDetailView: some View {
         StoreForm(
             model: storeModel,
-            onUpdate: storeDataSource.saveUpdateObject,
-            enableUpdate: store.hasPersistentChangedValues && store.hasValidInputs(),
+            onUpdate: updateStore,
+            enableUpdate: store.hasPersistentChangedValues && store.isValid(),
             rowActions: [
                 .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
             ]
@@ -82,9 +82,14 @@ extension StoreRow {
         }
     }
     
+    /// Save store's changes.
     func updateStore() {
-        store.objectWillChange.send()
-        storeDataSource.saveUpdateContext()
+        let result = storeDataSource.saveUpdateObject()
+        switch result {
+        case .saved, .unchanged: break
+        case .failed:
+            print("failed to update order \(storeDataSource.updateObject?.description ?? "nil")")
+        }
     }
     
     func deleteStore() {

@@ -34,7 +34,7 @@ struct StoreListView: View {
             ForEach(storeDataSource.fetchedResult.fetchedObjects ?? []) { store in
                 StoreRow(
                     store: self.storeDataSource.readObject(store),
-                    showCheckMark: store.objectID == self.currentStore?.objectID,
+                    showCheckMark: self.isCurrentStore(store),
                     onDeleted: { self.viewReloader.forceReload() }
                 )
                     .contextMenu(self.storeRowContextMenu(for: store))
@@ -57,9 +57,11 @@ extension StoreListView {
     
     var addNewStoreNavItem: some View {
         Button(action: {
-            self.storeDataSource.discardNewObject()
-            self.storeDataSource.prepareNewObject()
-            self.createStoreModel.store = self.storeDataSource.newObject!
+            // discard and prepare a new object for the form
+            let dataSource = self.storeDataSource
+            dataSource.discardNewObject()
+            dataSource.prepareNewObject()
+            self.createStoreModel.store = dataSource.newObject!
             self.showCreateStoreForm = true
         }) {
             Image(systemName: "plus").imageScale(.large)
@@ -121,12 +123,37 @@ extension StoreListView {
     
     func storeRowContextMenu(for store: Store) -> ContextMenu<AnyView> {
         ContextMenu {
-            Button(action: { Store.setCurrent(store) }) {
-                Text("Set Current Store")
-                Image(systemName: "checkmark.circle.fill")
+            Button(action: {
+                let shouldBecomeCurrent = !self.isCurrentStore(store)
+                self.setCurrentStore(store, current: shouldBecomeCurrent)
+            }) {
+                Text(isCurrentStore(store) ? "Deselect Current Store" : "Set Current Store")
+                Image(systemName: isCurrentStore(store) ? "xmark.circle.fill" : "checkmark.circle.fill")
+                    .imageScale(.small)
             }
             .eraseToAnyView()
         }
+    }
+    
+    /// Set or unset the store as current store.
+    ///
+    /// If the store is not the current store, pass `false` will do nothing.
+    /// - Parameter store: The store to be set.
+    /// - Parameter current: Pass `true` to set as current; otherwise, `false`.
+    func setCurrentStore(_ store: Store, current: Bool) {
+        switch current {
+        case true:
+            Store.setCurrent(store)
+        case false:
+            guard isCurrentStore(store) else { return }
+            Store.setCurrent(nil)
+        }
+    }
+    
+    /// Check is the store is the current store.
+    /// - Parameter store: The store to be checked.
+    func isCurrentStore(_ store: Store) -> Bool {
+        store.objectID == currentStore?.objectID
     }
     
     func setupOnAppear() {

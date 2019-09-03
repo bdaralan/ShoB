@@ -48,19 +48,22 @@ class SaleItemDataSource: NSObject, DataSource {
         objectWillChange.send()
     }
     
-    func saveNewObject() {
-        guard let saleItem = newObject, saleItem.hasValidInputs() else { return }
+    func saveNewObject() -> DataSourceSaveResult {
+        guard let saleItem = newObject, saleItem.isValid() else { return .failed }
         saveCreateContext()
+        return .saved
     }
     
-    func saveUpdateObject() {
-        guard let saleItem = updateObject, saleItem.hasValidInputs() else { return }
+    func saveUpdateObject() -> DataSourceSaveResult {
+        guard let saleItem = updateObject, saleItem.isValid() else { return .failed }
         saleItem.objectWillChange.send() // still need this (beta 5)
         
         if saleItem.hasPersistentChangedValues {
             saveUpdateContext()
+            return .saved
         } else {
             discardUpdateContext()
+            return .unchanged
         }
     }
 }

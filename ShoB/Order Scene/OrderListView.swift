@@ -60,9 +60,11 @@ extension OrderListView {
     
     var placeNewOrderNavItem: some View {
         Button(action: {
-            // discard and create a new order object for the form
-            self.orderDataSource.discardNewObject()
-            self.orderDataSource.prepareNewObject()
+            // discard and prepare a new order object for the form
+            let dataSource = self.orderDataSource
+            dataSource.discardNewObject()
+            dataSource.prepareNewObject()
+            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
             self.newOrderModel = .init(order: self.orderDataSource.newObject!)
             self.showCreateOrderForm = true
         }, label: {
@@ -77,7 +79,7 @@ extension OrderListView {
                 model: $newOrderModel,
                 onCreate: saveNewOrder,
                 onCancel: dismissCreateOrderForm,
-                enableCreate: newOrderModel.order!.hasValidInputs()
+                enableCreate: newOrderModel.order!.isValid()
             )
                 .environmentObject(saleItemDataSource)
                 .environmentObject(customerDataSource)
@@ -118,8 +120,13 @@ extension OrderListView {
     
     /// Save the new order to the data source.
     func saveNewOrder() {
-        guard newOrderModel.order!.hasValidInputs() else { return }
-        orderDataSource.saveNewObject()
+        let result = orderDataSource.saveNewObject()
+        switch result {
+        case .saved: break
+        case .failed: break
+        case .unchanged: break
+        }
+        print(result)
         showCreateOrderForm = false
     }
     

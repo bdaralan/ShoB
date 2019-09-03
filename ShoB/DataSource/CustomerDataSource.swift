@@ -48,19 +48,22 @@ class CustomerDataSource: NSObject, DataSource {
         objectWillChange.send()
     }
     
-    func saveNewObject() {
-        guard let customer = newObject, customer.hasValidInputs() else { return }
+    func saveNewObject() -> DataSourceSaveResult {
+        guard let customer = newObject, customer.isValid() else { return .failed }
         saveCreateContext()
+        return .saved
     }
     
-    func saveUpdateObject() {
-        guard let customer = updateObject, customer.hasValidInputs() else { return }
+    func saveUpdateObject() -> DataSourceSaveResult {
+        guard let customer = updateObject, customer.isValid() else { return .failed }
         customer.objectWillChange.send() // still need this (beta 5)
         
         if customer.hasPersistentChangedValues {
             saveUpdateContext()
+            return .saved
         } else {
             discardUpdateContext()
+            return .unchanged
         }
     }
 }

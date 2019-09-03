@@ -57,9 +57,11 @@ extension CustomerListView {
     
     var createNewCustomerNavItem: some View {
         Button(action: {
-            // discard and create a new object for the form
-            self.customerDataSource.discardNewObject()
-            self.customerDataSource.prepareNewObject()
+            // discard and prepare a new object for the form
+            let dataSource = self.customerDataSource
+            dataSource.discardNewObject()
+            dataSource.prepareNewObject()
+            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
             self.newCustomerModel = .init(customer: self.customerDataSource.newObject!)
             self.showCreateCustomerForm = true
         }) {
@@ -80,7 +82,7 @@ extension CustomerListView {
                 model: $newCustomerModel,
                 onCreate: saveNewCustomer,
                 onCancel: dismissCreateNewCustomerForm,
-                enableCreate: newCustomerModel.customer!.hasValidInputs()
+                enableCreate: newCustomerModel.customer!.isValid()
             )
                 .navigationBarTitle("New Customer", displayMode: .inline)
         }
@@ -92,7 +94,13 @@ extension CustomerListView {
     }
     
     func saveNewCustomer() {
-        customerDataSource.saveNewObject()
+        let result = customerDataSource.saveNewObject()
+        switch result {
+        case .saved: break
+        case .failed: break
+        case .unchanged: break
+        }
+        print(result)
         showCreateCustomerForm = false
     }
 }

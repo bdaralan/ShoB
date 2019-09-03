@@ -53,10 +53,12 @@ extension SaleItemListView {
     
     var addNewSaleItemNavItem: some View {
         Button(action: {
-            // discard and create new item for the form
-            self.saleItemDataSource.discardNewObject()
-            self.saleItemDataSource.prepareNewObject()
-            self.newSaleItemModel = .init(saleItem: self.saleItemDataSource.newObject!)
+            // discard and prepare a new item for the form
+            let dataSource = self.saleItemDataSource
+            dataSource.discardNewObject()
+            dataSource.prepareNewObject()
+            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
+            self.newSaleItemModel = .init(saleItem: dataSource.newObject!)
             self.showCreateSaleItemForm = true
         }, label: {
             Image(systemName: "plus").imageScale(.large)
@@ -69,7 +71,7 @@ extension SaleItemListView {
                 model: $newSaleItemModel,
                 onCreate: saveNewSaleItem,
                 onCancel: dismisCreateSaleItem,
-                enableCreate: newSaleItemModel.saleItem!.hasValidInputs()
+                enableCreate: newSaleItemModel.saleItem!.isValid()
             )
                 .navigationBarTitle("New Item", displayMode: .inline)
         }
@@ -87,7 +89,13 @@ extension SaleItemListView {
     }
     
     func saveNewSaleItem() {
-        saleItemDataSource.saveNewObject()
+        let result = saleItemDataSource.saveNewObject()
+        switch result {
+        case .saved: break
+        case .failed: break
+        case .unchanged: break
+        }
+        print(result)
         showCreateSaleItemForm = false
     }
     
