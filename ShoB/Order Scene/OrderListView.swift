@@ -83,12 +83,6 @@ extension OrderListView {
         Picker("", selection: $model.currentSegment) {
             ForEach(model.segmentOptions, id: \.self) { segment in
                 Text(segment.title).tag(segment)
-                    // use fixedSize to fix the following outputs:
-                    //
-                    // clamping fail!
-                    // proposed: _ProposedSize(width: Optional(0.0), height: Optional(0.0)) => (0.0, 197.5)
-                    // clamped: (0.0, 21.5) => (0.0, 21.5)
-                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .pickerStyle(SegmentedPickerStyle())
@@ -179,14 +173,16 @@ extension OrderListView {
     }
     
     func setupView() {
-        fetchItems()
+        fetchData()
     }
     
-    func fetchItems() {
+    func fetchData() {
         if let storeID = AppCache.currentStoreUniqueID {
             saleItemDataSource.performFetch(SaleItem.requestObjects(storeID: storeID))
+            customerDataSource.performFetch(Customer.requestObjects(storeID: storeID))
         } else {
             saleItemDataSource.performFetch(SaleItem.requestNoObject())
+            customerDataSource.performFetch(Customer.requestNoObject())
         }
         viewReloader.forceReload()
     }

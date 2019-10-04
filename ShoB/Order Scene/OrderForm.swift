@@ -154,25 +154,26 @@ extension OrderForm {
     
     /// Customer row displaying selected customer
     func customerRow(for customer: Customer?) -> some View {
+        let rowContent: AnyView
+        
         if let customer = customer {
-            return Button(action: showCustomerSelectionView) {
-                CustomerRowContentView(customer: customer)
-            }
-            .buttonStyle(PlainButtonStyle())
-            .eraseToAnyView()
+            rowContent = CustomerRowContentView(customer: customer)
+                .foregroundColor(.primary)
+                .eraseToAnyView()
             
         } else { // no customer selected
-            return Button(action: showCustomerSelectionView) {
-                HStack {
-                    Image.SFCustomer.profile
-                    Text("None")
-                    Spacer()
-                    Text("Select Customer")
-                }
-                .foregroundColor(.secondary)
+            rowContent = HStack {
+                Image.SFCustomer.profile
+                Text("None")
+                Spacer()
+                Text("Select Customer")
             }
-            .buttonStyle(PlainButtonStyle())
+            .foregroundColor(.secondary)
             .eraseToAnyView()
+        }
+        
+        return Button(action: showCustomerSelectionView) {
+            rowContent
         }
     }
     
@@ -292,7 +293,6 @@ extension OrderForm {
                 }
             }
         }
-        .buttonStyle(PlainButtonStyle())
     }
     
     /// Assign a customer to the order or `nil` for no customer.
