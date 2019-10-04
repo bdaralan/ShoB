@@ -24,6 +24,8 @@ struct OrderListView: View {
     /// A flag used to present or dismiss `createOrderForm`.
     @State private var showCreateOrderForm = false
     
+    @State private var showCreateOrderFailedAlert = false
+    
     /// The model used to create new order.
     @State private var newOrderModel = OrderFormModel()
     
@@ -35,21 +37,19 @@ struct OrderListView: View {
     var body: some View {
         List {
             Section(header: segmentPicker) {
-                ForEach(orderDataSource.fetchedResult.fetchedObjects ?? []) { order in
+                ForEach(orderDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) { order in
                     OrderRow(
                         order: self.orderDataSource.readObject(order),
-                        onDeleted: { self.viewReloader.forceReload() },
+                        onDeleted: self.viewReloader.forceReload,
                         onOrderAgain: self.placeOrderAgain
                     )
                 }
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
-        .sheet(
-            isPresented: $showCreateOrderForm,
-            onDismiss: dismissCreateOrderForm,
-            content: { self.createOrderForm }
-        )
+        .sheet(isPresented: $showCreateOrderForm, onDismiss: dismissCreateOrderForm, content: { self.createOrderForm })
+        .alert(isPresented: $showCreateOrderFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Order") })
+        .onAppear(perform: setupView)
     }
 }
 
@@ -59,17 +59,9 @@ struct OrderListView: View {
 extension OrderListView {
     
     var placeNewOrderNavItem: some View {
-        Button(action: {
-            // discard and prepare a new order object for the form
-            let dataSource = self.orderDataSource
-            dataSource.discardNewObject()
-            dataSource.prepareNewObject()
-            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
-            self.newOrderModel = .init(order: self.orderDataSource.newObject!)
-            self.showCreateOrderForm = true
-        }, label: {
+        Button(action: beginCreateNewOrder) {
             Image(systemName: "plus").imageScale(.large)
-        })
+        }
     }
     
     /// Form form creating new order.
@@ -118,16 +110,27 @@ extension OrderListView {
         showCreateOrderForm = false
     }
     
+    func beginCreateNewOrder() {
+        if let store = Store.current(from: orderDataSource.createContext) {
+            // discard and prepare a new order object for the form
+            orderDataSource.discardNewObject()
+            orderDataSource.prepareNewObject()
+            orderDataSource.newObject!.store = store
+            newOrderModel = .init(order: orderDataSource.newObject!)
+            showCreateOrderForm = true
+        } else {
+            showCreateOrderFailedAlert = true
+        }
+    }
+    
     /// Save the new order to the data source.
     func saveNewOrder() {
         let result = orderDataSource.saveNewObject()
         switch result {
-        case .saved: break
-        case .failed: break
+        case .saved: showCreateOrderForm = false
+        case .failed: break // TODO: add alert
         case .unchanged: break
         }
-        print(result)
-        showCreateOrderForm = false
     }
     
     /// Create a new order from an old order.
@@ -173,6 +176,19 @@ extension OrderListView {
         case .pastDay(let day):
             orderDataSource.performFetch(Order.requestDeliver(fromPastDay: day))
         }
+    }
+    
+    func setupView() {
+        fetchItems()
+    }
+    
+    func fetchItems() {
+        if let storeID = AppCache.currentStoreUniqueID {
+            saleItemDataSource.performFetch(SaleItem.requestObjects(storeID: storeID))
+        } else {
+            saleItemDataSource.performFetch(SaleItem.requestNoObject())
+        }
+        viewReloader.forceReload()
     }
 }
 

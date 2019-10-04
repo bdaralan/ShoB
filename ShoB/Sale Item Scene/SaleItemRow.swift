@@ -35,7 +35,9 @@ struct SaleItemRow: View {
                 Spacer()
                 Text(verbatim: "\(Currency(saleItem.price))")
             }
+            .contextMenu(menuItems: contextMenuItems)
         }
+        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Item", action: deleteSaleItem))
     }
 }
 
@@ -49,13 +51,10 @@ extension SaleItemRow {
             model: $saleItemModel,
             onUpdate: updateSaleItem,
             enableUpdate: saleItem.hasPersistentChangedValues && saleItem.isValid(),
-            rowActions: [
-                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
-            ]
+            rowActions: []
         )
             .onAppear(perform: setupOnAppear)
             .navigationBarTitle("Item Details", displayMode: .inline)
-            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Item", action: deleteSaleItem))
     }
     
     func setupOnAppear() {
@@ -83,8 +82,20 @@ extension SaleItemRow {
     
     func deleteSaleItem() {
         saleItemDataSource.delete(saleItem, saveContext: true)
-        navigationState.pop()
         onDeleted?()
+    }
+    
+    func confirmDelete() {
+        showDeleteAlert = true
+    }
+    
+    func contextMenuItems() -> some View {
+        Group {
+            Button(action: confirmDelete) {
+                Text("Delete")
+                Image(systemName: "trash")
+            }
+        }
     }
 }
 

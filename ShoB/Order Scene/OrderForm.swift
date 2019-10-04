@@ -122,7 +122,6 @@ struct OrderForm: View, MultiPurposeForm {
                     Button(action: { self.showEditOrderItemForm(with: item) }) {
                         self.orderItemRow(for: item)
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
 
@@ -188,6 +187,7 @@ extension OrderForm {
                 .imageScale(.large)
                 .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
+        .foregroundColor(.primary)
     }
 }
 
@@ -257,7 +257,7 @@ extension OrderForm {
     var customerSelectionView: some View {
         NavigationView {
             List {
-                ForEach(customerDataSource.fetchedResult.fetchedObjects ?? []) { customer in
+                ForEach(customerDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) { customer in
                     self.customerSelectionRow(for: customer)
                 }
             }

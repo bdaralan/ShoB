@@ -13,7 +13,7 @@ import Combine
 
 
 /// A customer of a store.
-class Customer: NSManagedObject, Identifiable, ValidationRequired {
+class Customer: NSManagedObject, ValidationRequired {
     
     @NSManaged var familyName: String
     @NSManaged var givenName: String
@@ -80,6 +80,20 @@ extension Customer {
         }
         
         request.sortDescriptors = []
+        return request
+    }
+    
+    static func requestObjects(storeID: String) -> NSFetchRequest<Customer> {
+        let request = Customer.fetchRequest() as NSFetchRequest<Customer>
+        let customerStoreID = #keyPath(Customer.store.uniqueID)
+        request.predicate = .init(format: "\(customerStoreID) == %@", storeID)
+        request.sortDescriptors = []
+        return request
+    }
+    
+    static func requestNoObject() -> NSFetchRequest<Customer> {
+        let request = Customer.fetchRequest() as NSFetchRequest<Customer>
+        request.predicate = .init(value: false)
         return request
     }
 }

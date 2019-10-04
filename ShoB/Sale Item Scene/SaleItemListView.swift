@@ -22,6 +22,9 @@ struct SaleItemListView: View {
     @ObservedObject private var viewReloader = ViewForceReloader()
     
     @ObservedObject private var searchField = SearchField()
+        
+    @State private var showCreateItemFailedAlert = false
+    
     
     
     // MARK: - Body
@@ -29,20 +32,17 @@ struct SaleItemListView: View {
     var body: some View {
         List {
             SearchTextField(searchField: searchField)
-            ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? []) {  saleItem in
+            ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) {  saleItem in
                 SaleItemRow(
                     saleItem: self.saleItemDataSource.readObject(saleItem),
-                    onDeleted: { self.viewReloader.forceReload() }
+                    onDeleted: self.viewReloader.forceReload
                 )
             }
         }
-        .onAppear(perform: setupSearchField)
+        .onAppear(perform: setupView)
         .navigationBarItems(trailing: addNewSaleItemNavItem)
-        .sheet(
-            isPresented: $showCreateSaleItemForm,
-            onDismiss: dismisCreateSaleItem,
-            content: { self.createSaleItemForm }
-        )
+        .sheet(isPresented: $showCreateSaleItemForm, onDismiss: dismisCreateSaleItem, content: { self.createSaleItemForm })
+        .alert(isPresented: $showCreateItemFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Item") })
     }
 }
  
@@ -52,17 +52,9 @@ struct SaleItemListView: View {
 extension SaleItemListView {
     
     var addNewSaleItemNavItem: some View {
-        Button(action: {
-            // discard and prepare a new item for the form
-            let dataSource = self.saleItemDataSource
-            dataSource.discardNewObject()
-            dataSource.prepareNewObject()
-            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
-            self.newSaleItemModel = .init(saleItem: dataSource.newObject!)
-            self.showCreateSaleItemForm = true
-        }, label: {
+        Button(action: beginCreateNewSaleItem) {
             Image(systemName: "plus").imageScale(.large)
-        })
+        }
     }
     
     var createSaleItemForm: some View {
@@ -88,15 +80,40 @@ extension SaleItemListView {
         showCreateSaleItemForm = false
     }
     
+    func beginCreateNewSaleItem() {
+        if let store = Store.current(from: saleItemDataSource.createContext) {
+            // discard and prepare a new item for the form
+            saleItemDataSource.discardNewObject()
+            saleItemDataSource.prepareNewObject()
+            saleItemDataSource.newObject!.store = store
+            newSaleItemModel = .init(saleItem: saleItemDataSource.newObject!)
+            showCreateSaleItemForm = true
+        } else {
+            showCreateItemFailedAlert = true
+        }
+    }
+    
     func saveNewSaleItem() {
         let result = saleItemDataSource.saveNewObject()
         switch result {
-        case .saved: break
-        case .failed: break
+        case .saved: showCreateSaleItemForm = false
+        case .failed: break // TODO: add alert
         case .unchanged: break
         }
-        print(result)
-        showCreateSaleItemForm = false
+    }
+    
+    func setupView() {
+        fetchSaleItems()
+        setupSearchField()
+    }
+    
+    func fetchSaleItems() {
+        if let storeID = AppCache.currentStoreUniqueID {
+            saleItemDataSource.performFetch(SaleItem.requestObjects(storeID: storeID))
+        } else {
+            saleItemDataSource.performFetch(SaleItem.requestNoObject())
+        }
+        viewReloader.forceReload()
     }
     
     func setupSearchField() {

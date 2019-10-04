@@ -16,6 +16,8 @@ struct CustomerListView: View {
     
     @State private var showCreateCustomerForm = false
     
+    @State private var showCreateCustomerFailedAlert = false
+    
     @State private var newCustomerModel = CustomerFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
@@ -33,20 +35,17 @@ struct CustomerListView: View {
     var body: some View {
         List {
             SearchTextField(searchField: searchField)
-            ForEach(sortedCustomers) { customer in
+            ForEach(sortedCustomers, id: \.self) { customer in
                 CustomerRow(
                     customer: self.customerDataSource.readObject(customer),
                     onDeleted: { self.viewReloader.forceReload() }
                 )
             }
         }
-        .onAppear(perform: setupSearchField)
+        .onAppear(perform: setupView)
         .navigationBarItems(trailing: createNewCustomerNavItem)
-        .sheet(
-            isPresented: $showCreateCustomerForm,
-            onDismiss: dismissCreateNewCustomerForm,
-            content: { self.createCustomerForm }
-        )
+        .sheet(isPresented: $showCreateCustomerForm, onDismiss: dismissCreateNewCustomerForm, content: { self.createCustomerForm })
+        .alert(isPresented: $showCreateCustomerFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Customer") })
     }
 }
 
@@ -56,15 +55,7 @@ struct CustomerListView: View {
 extension CustomerListView {
     
     var createNewCustomerNavItem: some View {
-        Button(action: {
-            // discard and prepare a new object for the form
-            let dataSource = self.customerDataSource
-            dataSource.discardNewObject()
-            dataSource.prepareNewObject()
-            dataSource.newObject!.store = Store.current()?.get(from: dataSource.createContext)
-            self.newCustomerModel = .init(customer: self.customerDataSource.newObject!)
-            self.showCreateCustomerForm = true
-        }) {
+        Button(action: beginCreateNewCustomer) {
             Image(systemName: "plus").imageScale(.large)
         }
     }
@@ -93,15 +84,26 @@ extension CustomerListView {
         showCreateCustomerForm = false
     }
     
+    func beginCreateNewCustomer() {
+        if let store = Store.current(from: customerDataSource.createContext) {
+            // discard and prepare a new object for the form
+            customerDataSource.discardNewObject()
+            customerDataSource.prepareNewObject()
+            customerDataSource.newObject!.store = store
+            newCustomerModel = .init(customer: customerDataSource.newObject!)
+            showCreateCustomerForm = true
+        } else {
+            showCreateCustomerFailedAlert = true
+        }
+    }
+    
     func saveNewCustomer() {
         let result = customerDataSource.saveNewObject()
         switch result {
-        case .saved: break
-        case .failed: break
+        case .saved: showCreateCustomerForm = false
+        case .failed: break // TODO: add alert
         case .unchanged: break
         }
-        print(result)
-        showCreateCustomerForm = false
     }
 }
 
@@ -109,6 +111,20 @@ extension CustomerListView {
 // MARK: - Method
 
 extension CustomerListView {
+    
+    func setupView() {
+        fetchCustomers()
+        setupSearchField()
+    }
+    
+    func fetchCustomers() {
+        if let storeID = AppCache.currentStoreUniqueID {
+            customerDataSource.performFetch(Customer.requestObjects(storeID: storeID))
+        } else {
+            customerDataSource.performFetch(Customer.requestNoObject())
+        }
+        viewReloader.forceReload()
+    }
     
     func setupSearchField() {
         searchField.placeholder = "Search name, phone, email, etc..."

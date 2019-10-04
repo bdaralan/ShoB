@@ -13,7 +13,7 @@ import Combine
 
 
 /// An order of a store or a customer.
-class Order: NSManagedObject, Identifiable, ValidationRequired {
+class Order: NSManagedObject, ValidationRequired {
     
     @NSManaged var orderDate: Date!
     @NSManaged var deliverDate: Date!

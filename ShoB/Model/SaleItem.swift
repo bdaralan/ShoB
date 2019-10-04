@@ -13,7 +13,7 @@ import Combine
 
 
 /// A sale item of a store.
-class SaleItem: NSManagedObject, Identifiable, ValidationRequired {
+class SaleItem: NSManagedObject, ValidationRequired {
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -60,6 +60,21 @@ extension SaleItem {
         let sortByName = NSSortDescriptor(key: #keyPath(SaleItem.name), ascending: true)
         request.sortDescriptors = [sortByName]
         
+        return request
+    }
+    
+    static func requestObjects(storeID: String) -> NSFetchRequest<SaleItem> {
+        let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
+        let itemStoreID = #keyPath(SaleItem.store.uniqueID)
+        let itemName = #keyPath(SaleItem.name)
+        request.predicate = .init(format: "\(itemStoreID) == %@", storeID)
+        request.sortDescriptors = [.init(key: itemName, ascending: true)]
+        return request
+    }
+    
+    static func requestNoObject() -> NSFetchRequest<SaleItem> {
+        let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
+        request.predicate = .init(value: false)
         return request
     }
 }

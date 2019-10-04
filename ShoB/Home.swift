@@ -12,23 +12,11 @@ import SwiftUI
 /// The root view of the application.
 struct Home: View {
     
-    @ObservedObject var orderDataSource: OrderDataSource = {
-        let dataSource = OrderDataSource(parentContext: CoreDataStack.current.mainContext)
-        dataSource.performFetch(Order.requestDeliverToday())
-        return dataSource
-    }()
+    @ObservedObject var orderDataSource = OrderDataSource(parentContext: CoreDataStack.current.mainContext)
     
-    @ObservedObject var saleItemDataSource: SaleItemDataSource = {
-        let dataSource = SaleItemDataSource(parentContext: CoreDataStack.current.mainContext)
-        dataSource.performFetch(SaleItem.requestAllObjects())
-        return dataSource
-    }()
+    @ObservedObject var saleItemDataSource = SaleItemDataSource(parentContext: CoreDataStack.current.mainContext)
     
-    @ObservedObject var customerDataSource: CustomerDataSource = {
-        let dataSource = CustomerDataSource(parentContext: CoreDataStack.current.mainContext)
-        dataSource.performFetch(Customer.requestAllCustomer())
-        return dataSource
-    }()
+    @ObservedObject var customerDataSource = CustomerDataSource(parentContext: CoreDataStack.current.mainContext)
     
     @ObservedObject var storeDataSource: StoreDataSource = {
         let dataSource = StoreDataSource(parentContext: CoreDataStack.current.mainContext)

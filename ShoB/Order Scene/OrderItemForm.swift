@@ -157,7 +157,7 @@ extension OrderItemForm {
             }
             
             // Sale Item List
-            ForEach(orderItemModel.shouldExpandSelectionList ? saleItems : []) { item in
+            ForEach(orderItemModel.shouldExpandSelectionList ? saleItems : [], id: \.self) { item in
                 Button(action: {
                     // only need to get values for the model
                     // do not keep reference to avoid editing the item's original values
@@ -171,8 +171,8 @@ extension OrderItemForm {
                         Spacer()
                         Text(verbatim: "\(Currency(item.price))")
                     }
+                    .foregroundColor(.primary)
                 }
-                .buttonStyle(PlainButtonStyle())
             }
         }
     }

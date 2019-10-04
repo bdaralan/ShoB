@@ -16,10 +16,11 @@ import CloudKit
 /// An object that holds user's records including
 /// sale items, orders, and customers.
 ///
-class Store: NSManagedObject, Identifiable, ValidationRequired {
+class Store: NSManagedObject, ValidationRequired {
     
     /// The owner's `CKRecord.ID`'s `recordName`.
     @NSManaged private(set) var ownerID: String
+    @NSManaged private(set) var uniqueID: String
     @NSManaged var name: String
     @NSManaged var phone: String
     @NSManaged var email: String
@@ -28,6 +29,11 @@ class Store: NSManagedObject, Identifiable, ValidationRequired {
     @NSManaged var orders: Set<Order>
     @NSManaged var customers: Set<Customer>
     
+    
+    override func awakeFromInsert() {
+        super.awakeFromInsert()
+        uniqueID = UUID().uuidString
+    }
     
     override func willChangeValue(forKey key: String) {
         super.willChangeValue(forKey: key)
@@ -45,6 +51,14 @@ class Store: NSManagedObject, Identifiable, ValidationRequired {
     func setOwnerID(with recordID: CKRecord.ID) {
         guard recordID.zoneID.ownerName == CKCurrentUserDefaultName else { return }
         ownerID = recordID.recordName
+    }
+}
+
+
+extension Store {
+    
+    var isCurrent: Bool {
+        uniqueID == AppCache.currentStoreUniqueID
     }
 }
 
@@ -77,36 +91,25 @@ extension Store {
     /// The notification includes the store object from the main context or `nil`.
     /// - Parameter store: The store that will become current store.
     static func setCurrent(_ store: Store?) {
-        AppCache.currentStoreURIData = store?.objectID.uriRepresentation().dataRepresentation
-        
-        let notificationName = Notification.Name(kCurrentStoreDidChange)
-        guard let store = store else {
-            NotificationCenter.default.post(name: notificationName, object: nil)
-            return
-        }
-        
-        let mainContext = CoreDataStack.current.mainContext
-        let storeInMainContext = mainContext.object(with: store.objectID) as! Store
-        NotificationCenter.default.post(name: notificationName, object: storeInMainContext)
+        let storeID = store?.uniqueID
+        AppCache.currentStoreUniqueID = storeID
+        NotificationCenter.default.post(name: .init(kCurrentStoreDidChange), object: storeID)
     }
     
-    /// The store that is set as current.
-    ///
-    /// - Important: The store object is from the main context.
-    static func current() -> Store? {
-        guard let uriData = AppCache.currentStoreURIData else { return nil }
-        
-        guard let uri = URL(dataRepresentation: uriData, relativeTo: nil) else { return nil }
-        let coreDataStack = CoreDataStack.current
-        let storeCoodinator = coreDataStack.persistentContainer.persistentStoreCoordinator
-        let mainContext = coreDataStack.mainContext
-        
-        guard let objectID =  storeCoodinator.managedObjectID(forURIRepresentation: uri) else { return nil }
-        let storeInMainContext = mainContext.object(with: objectID) as! Store
-        return storeInMainContext
+    /// Fetch store with the uniqueID.
+    /// - Parameters:
+    ///   - uniqueID: Store's uniqueID.
+    ///   - context: The context to fetch from.
+    static func fetch(uniqueID: String, from context: NSManagedObjectContext) -> Store? {
+        let request = Store.fetchRequest() as NSFetchRequest<Store>
+        let storeUniqueID = #keyPath(Store.uniqueID)
+        request.predicate = .init(format: "\(storeUniqueID) == %@", uniqueID)
+        let results = try? context.fetch(request)
+        return results?.first
     }
     
-    static func isCurrent(_ store: Store) -> Bool {
-        store.objectID == current()?.objectID
+    static func current(from context: NSManagedObjectContext) -> Store? {
+        guard let currentStoreID = AppCache.currentStoreUniqueID else { return nil }
+        return fetch(uniqueID: currentStoreID, from: context)
     }
 }

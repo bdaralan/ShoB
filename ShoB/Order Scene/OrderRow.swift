@@ -39,7 +39,9 @@ struct OrderRow: View {
     var body: some View {
         NavigationLink(destination: orderDetailView, isActive: $navigationState.isPushed) { // row content
             OrderRowContentView(order: order)
+                .contextMenu(menuItems: contextMenuItems)
         }
+        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Order", action: deleteOrder))
     }
 
     
@@ -50,11 +52,10 @@ struct OrderRow: View {
             model: $orderModel,
             onUpdate: updateOrder,
             enableUpdate: enableUpdate,
-            rowActions: rowActions()
+            rowActions: []
         )
             .onAppear(perform: setupOnAppear)
             .navigationBarTitle("Order Details", displayMode: .inline)
-            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Order", action: deleteOrder))
     }
     
     func setupOnAppear() {
@@ -100,25 +101,28 @@ struct OrderRow: View {
     
     func deleteOrder() {
         orderDataSource.delete(order, saveContext: true)
-        navigationState.pop()
         onDeleted?()
     }
     
     func placeOrderAgain() {
-        navigationState.pop()
         onOrderAgain?(order)
     }
     
-    func rowActions() -> [MultiPurposeFormRowAction] {
-        var actions = [MultiPurposeFormRowAction]()
-        
-        actions.append(.init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true }))
-        
-        if onOrderAgain != nil {
-            actions.append(.init(title: "Place Again", action: placeOrderAgain))
+    func confirmDelete() {
+        showDeleteAlert = true
+    }
+    
+    func contextMenuItems() -> some View {
+        Group {
+            Button(action: placeOrderAgain) {
+                Text("Place Order Again")
+                Image(systemName: "plus.square.on.square")
+            }
+            Button(action: confirmDelete) {
+                Text("Delete")
+                Image(systemName: "trash")
+            }
         }
-        
-        return actions
     }
 }
 

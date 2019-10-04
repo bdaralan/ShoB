@@ -20,7 +20,8 @@ struct StoreRow: View {
     
     @ObservedObject private var navigationState = NavigationStateHandler()
     
-    var showCheckMark = false
+    /// An action to perform when a store is set as as current.
+    var onSetCurrent: (() -> Void)?
     
     /// An antion to perform when the store is deleted.
     var onDeleted: (() -> Void)?
@@ -44,13 +45,14 @@ struct StoreRow: View {
                 }
                 .layoutPriority(1)
                 
-                if showCheckMark {
-                    Spacer()
-                    Image(systemName: "checkmark.circle.fill")
-                        .imageScale(.large)
-                        .padding()
-                }
+                Spacer()
+                Image(systemName: "checkmark.circle")
+                    .imageScale(.large)
+                    .padding(.horizontal)
+                    .opacity(store.isCurrent ? 1 : 0)
             }
+            .contextMenu(menuItems: contextMenuItems)
+            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Store", action: deleteStore))
         }
     }
 }
@@ -65,16 +67,26 @@ extension StoreRow {
             model: storeModel,
             onUpdate: updateStore,
             enableUpdate: store.hasPersistentChangedValues && store.isValid(),
-            rowActions: [
-                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
-            ]
+            rowActions: []
         )
-            .onAppear(perform: setupOnAppear)
+            .onAppear(perform: setupStoreDetailView)
             .navigationBarTitle("Store Details", displayMode: .inline)
-            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Store", action: deleteStore))
     }
     
-    func setupOnAppear() {
+    func contextMenuItems() -> some View {
+        Group {
+            Button(action: setCurrentStore) {
+                Text(store.isCurrent ? "Unset Current" : "Set Current")
+                Image(systemName: store.isCurrent ? "xmark.circle" : "checkmark.circle")
+            }
+            Button(action: confirmDeleteStore) {
+                Text("Delete")
+                Image(systemName: "trash")
+            }
+        }
+    }
+    
+    func setupStoreDetailView() {
         storeModel.store = store
         storeDataSource.setUpdateObject(store)
         navigationState.onPopped = {
@@ -93,10 +105,21 @@ extension StoreRow {
         }
     }
     
+    func confirmDeleteStore() {
+        showDeleteAlert = true
+    }
+    
     func deleteStore() {
+        if AppCache.currentStoreUniqueID == store.uniqueID {
+            Store.setCurrent(nil)
+        }
         storeDataSource.delete(store, saveContext: true)
-        navigationState.pop()
         onDeleted?()
+    }
+    
+    func setCurrentStore() {
+        Store.setCurrent(store.isCurrent ? nil : store)
+        onSetCurrent?()
     }
 }
 

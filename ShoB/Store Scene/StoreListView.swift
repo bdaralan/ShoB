@@ -16,37 +16,27 @@ struct StoreListView: View {
     
     @State private var showCreateStoreForm = false
     
-    @State private var showCannotCreateStoreAlert = false
-    
-    @State private var currentStore = Store.current()
+    @State private var showCreateStoreFailedAlert = false
     
     @ObservedObject private var createStoreModel = StoreFormModel()
     
     @ObservedObject private var viewReloader = ViewForceReloader()
-    
-    @ObservedObject private var storeChangedObserver = NotificationObserver(name: .init(Store.kCurrentStoreDidChange))
     
     
     // MARK: - Body
     
     var body: some View {
         List {
-            ForEach(storeDataSource.fetchedResult.fetchedObjects ?? []) { store in
+            ForEach(storeDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) { store in
                 StoreRow(
                     store: self.storeDataSource.readObject(store),
-                    showCheckMark: self.isCurrentStore(store),
-                    onDeleted: { self.viewReloader.forceReload() }
+                    onSetCurrent: self.viewReloader.forceReload,
+                    onDeleted: self.viewReloader.forceReload
                 )
-                    .contextMenu(self.storeRowContextMenu(for: store))
             }
         }
         .navigationBarItems(trailing: addNewStoreNavItem)
-        .sheet(
-            isPresented: $showCreateStoreForm,
-            onDismiss: cancelCreateStore,
-            content: { self.createStoreForm }
-        )
-        .onAppear(perform: setupOnAppear)
+        .sheet(isPresented: $showCreateStoreForm, onDismiss: cancelCreateStore, content: { self.createStoreForm })
     }
 }
 
@@ -66,7 +56,7 @@ extension StoreListView {
         }) {
             Image(systemName: "plus").imageScale(.large)
         }
-        .onLongPressGesture { // MARK: Test Code
+        .onLongPressGesture { // MARK: Test Code :]
             Importer.importSampleData()
         }
     }
@@ -80,11 +70,11 @@ extension StoreListView {
                 enableCreate: !createStoreModel.name.isEmpty
             )
                 .navigationBarTitle("New Store", displayMode: .inline)
-                .alert(isPresented: $showCannotCreateStoreAlert, content: { cannotCreateStoreAlert })
+                .alert(isPresented: $showCreateStoreFailedAlert, content: { createStoreFailedAlert })
         }
     }
     
-    var cannotCreateStoreAlert: Alert {
+    var createStoreFailedAlert: Alert {
         Alert(
             title: Text("Create Failed"),
             message: Text("""
@@ -100,7 +90,7 @@ extension StoreListView {
         CKContainer.default().fetchUserRecordID { recordID, error in
             defer {
                 // show error alert if cannot get user record id or the store is invalid
-                self.showCannotCreateStoreAlert = !self.createStoreModel.store!.isValid()
+                self.showCreateStoreFailedAlert = !self.createStoreModel.store!.isValid()
             }
             
             // assign user record id to store object
@@ -110,6 +100,12 @@ extension StoreListView {
             // save store object and dismiss form
             guard self.createStoreModel.store!.isValid() else { return }
             self.storeDataSource.saveCreateContext()
+            
+            // set as current store if there is no current store
+            if AppCache.currentStoreUniqueID == nil {
+                Store.setCurrent(self.createStoreModel.store)
+            }
+            
             self.storeDataSource.discardNewObject()
             self.showCreateStoreForm = false
         }
@@ -119,48 +115,6 @@ extension StoreListView {
         storeDataSource.discardNewObject()
         storeDataSource.discardCreateContext()
         showCreateStoreForm = false
-    }
-    
-    func storeRowContextMenu(for store: Store) -> ContextMenu<AnyView> {
-        ContextMenu {
-            Button(action: {
-                let shouldBecomeCurrent = !self.isCurrentStore(store)
-                self.setCurrentStore(store, current: shouldBecomeCurrent)
-            }) {
-                Text(isCurrentStore(store) ? "Deselect Current Store" : "Set Current Store")
-                Image(systemName: isCurrentStore(store) ? "xmark.circle.fill" : "checkmark.circle.fill")
-                    .imageScale(.small)
-            }
-            .eraseToAnyView()
-        }
-    }
-    
-    /// Set or unset the store as current store.
-    ///
-    /// If the store is not the current store, pass `false` will do nothing.
-    /// - Parameter store: The store to be set.
-    /// - Parameter current: Pass `true` to set as current; otherwise, `false`.
-    func setCurrentStore(_ store: Store, current: Bool) {
-        switch current {
-        case true:
-            Store.setCurrent(store)
-        case false:
-            guard isCurrentStore(store) else { return }
-            Store.setCurrent(nil)
-        }
-    }
-    
-    /// Check is the store is the current store.
-    /// - Parameter store: The store to be checked.
-    func isCurrentStore(_ store: Store) -> Bool {
-        store.objectID == currentStore?.objectID
-    }
-    
-    func setupOnAppear() {
-        storeChangedObserver.onReceived = { notification in
-            let store = notification.object as? Store
-            self.currentStore = store
-        }
     }
 }
 

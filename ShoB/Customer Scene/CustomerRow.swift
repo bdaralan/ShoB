@@ -30,7 +30,9 @@ struct CustomerRow: View {
     var body: some View {
         NavigationLink(destination: customerDetailView, isActive: $navigationState.isPushed) {
             CustomerRowContentView(customer: customer)
+                .contextMenu(menuItems: contextMenuItems)
         }
+        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Customer", action: deleteCustomer))
     }
 }
 
@@ -44,13 +46,10 @@ extension CustomerRow {
             model: $model,
             onUpdate: updateCustomer,
             enableUpdate: customer.hasPersistentChangedValues && customer.isValid(),
-            rowActions: [
-                .init(title: "Delete", isDestructive: true, action: { self.showDeleteAlert = true })
-            ]
+            rowActions: []
         )
             .onAppear(perform: setupOnAppear)
             .navigationBarTitle("Customer Details", displayMode: .inline)
-            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Customer", action: deleteCustomer))
     }
     
     func setupOnAppear() {
@@ -76,8 +75,20 @@ extension CustomerRow {
     
     func deleteCustomer() {
         customerDataSource.delete(customer, saveContext: true)
-        navigationState.pop()
         onDeleted?()
+    }
+    
+    func confirmDelete() {
+        showDeleteAlert = true
+    }
+    
+    func contextMenuItems() -> some View {
+        Group {
+            Button(action: confirmDelete) {
+                Text("Delete")
+                Image(systemName: "trash")
+            }
+        }
     }
 }
 
