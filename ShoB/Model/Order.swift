@@ -67,24 +67,26 @@ extension Order {
         return NSFetchRequest<Order>(entityName: "Order")
     }
     
-    static func requestDeliverToday() -> NSFetchRequest<Order> {
-        requestDeliver(from: Date.startOfToday(), endDate: Date.startOfToday(addingDay: 1))
+    static func requestDeliverToday(storeID: String) -> NSFetchRequest<Order> {
+        requestDeliver(from: Date.startOfToday(), to: Date.startOfToday(addingDay: 1), storeID: storeID)
     }
     
     /// A request to fetch orders from date to another date.
     /// - Parameter startDate: The earliest date to be included.
     /// - Parameter endDate: The latest date but NOT included. The default is `nil` which means no boundary.
-    static func requestDeliver(from startDate: Date, endDate: Date? = nil) -> NSFetchRequest<Order> {
+    static func requestDeliver(from startDate: Date, to endDate: Date? = nil, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
     
         let deliverDate = #keyPath(Order.deliverDate)
+        let storeUniqueID = #keyPath(Order.store.uniqueID)
+        let matchStoreID = "\(storeUniqueID) == %@"
         
         if let endDate = endDate {
-            let format = "\(deliverDate) >= %@ AND \(deliverDate) < %@"
-            request.predicate = .init(format: format, startDate as NSDate, endDate as NSDate)
+            let format = "\(deliverDate) >= %@ AND \(deliverDate) < %@ AND \(matchStoreID)"
+            request.predicate = .init(format: format, startDate as NSDate, endDate as NSDate, storeID)
         } else {
-            let format = "\(deliverDate) >= %@"
-            request.predicate = .init(format: format, startDate as NSDate)
+            let format = "\(deliverDate) >= %@ AND \(matchStoreID)"
+            request.predicate = .init(format: format, startDate as NSDate, storeID)
         }
         
         request.sortDescriptors = [
@@ -96,18 +98,26 @@ extension Order {
     
     /// A request to fetch orders from the past day up to but not including today.
     /// - Parameter fromPastDay: The number of days that have been passed. For instance, 7 means last week.
-    static func requestDeliver(fromPastDay: Int) -> NSFetchRequest<Order> {
+    static func requestDeliver(fromPastDay: Int, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
         
         let today = Date.startOfToday() as NSDate
         let pastDay = Date.startOfToday(addingDay: -fromPastDay) as NSDate
         let deliverDate = #keyPath(Order.deliverDate)
-        request.predicate = .init(format: "\(deliverDate) >= %@ AND \(deliverDate) < %@", pastDay, today)
+        let storeUniqueID = #keyPath(Order.store.uniqueID)
+        let matchStoreID = "\(storeUniqueID) == %@"
+        request.predicate = .init(format: "\(deliverDate) >= %@ AND \(deliverDate) < %@ AND \(matchStoreID)", pastDay, today, storeID)
         
         request.sortDescriptors = [
             .init(key: deliverDate, ascending: false)
         ]
         
+        return request
+    }
+    
+    static func requestNoObject() -> NSFetchRequest<Order> {
+        let request = Order.fetchRequest() as NSFetchRequest<Order>
+        request.predicate = .init(value: false)
         return request
     }
 }

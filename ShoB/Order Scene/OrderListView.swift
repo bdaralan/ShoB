@@ -158,17 +158,21 @@ extension OrderListView {
     }
     
     func reloadList(for segment: Segment) {
-        switch segment {
+        guard let storeID = AppCache.currentStoreUniqueID else {
+            orderDataSource.performFetch(Order.requestNoObject())
+            return
+        }
         
+        switch segment {
         case .today:
-            orderDataSource.performFetch(Order.requestDeliverToday())
+            orderDataSource.performFetch(Order.requestDeliverToday(storeID: storeID))
         
         case .upcoming:
             let tomorrow = Date.startOfToday(addingDay: 1)
-            orderDataSource.performFetch(Order.requestDeliver(from: tomorrow))
+            orderDataSource.performFetch(Order.requestDeliver(from: tomorrow, storeID: storeID))
         
         case .pastDay(let day):
-            orderDataSource.performFetch(Order.requestDeliver(fromPastDay: day))
+            orderDataSource.performFetch(Order.requestDeliver(fromPastDay: day, storeID: storeID))
         }
     }
     
