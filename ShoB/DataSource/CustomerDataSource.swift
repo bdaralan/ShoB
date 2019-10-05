@@ -9,7 +9,7 @@
 import CoreData
 
 
-class CustomerDataSource: NSObject, DataSource {
+class CustomerDataSource: NSObject, ObjectDataSource {
     
     let parentContext: NSManagedObjectContext
     
@@ -46,24 +46,5 @@ class CustomerDataSource: NSObject, DataSource {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         objectWillChange.send()
-    }
-    
-    func saveNewObject() -> DataSourceSaveResult {
-        guard let customer = newObject, customer.isValid() else { return .failed }
-        saveCreateContext()
-        return .saved
-    }
-    
-    func saveUpdateObject() -> DataSourceSaveResult {
-        guard let customer = updateObject, customer.isValid() else { return .failed }
-        customer.objectWillChange.send() // still need this (beta 5)
-        
-        if customer.hasPersistentChangedValues {
-            saveUpdateContext()
-            return .saved
-        } else {
-            discardUpdateContext()
-            return .unchanged
-        }
     }
 }

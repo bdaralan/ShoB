@@ -16,7 +16,7 @@ import CloudKit
 /// An object that holds user's records including
 /// sale items, orders, and customers.
 ///
-class Store: NSManagedObject, ValidationRequired {
+class Store: NSManagedObject, ObjectValidatable {
     
     /// The owner's `CKRecord.ID`'s `recordName`.
     @NSManaged private(set) var ownerID: String
@@ -29,6 +29,11 @@ class Store: NSManagedObject, ValidationRequired {
     @NSManaged var orders: Set<Order>
     @NSManaged var customers: Set<Customer>
     
+    /// Check if it is the current store.
+    var isCurrent: Bool {
+        uniqueID == AppCache.currentStoreUniqueID
+    }
+    
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -40,13 +45,6 @@ class Store: NSManagedObject, ValidationRequired {
         objectWillChange.send()
     }
     
-    func hasValidInputs() -> Bool {
-        !name.isEmpty
-    }
-    
-    func isValid() -> Bool {
-        hasValidInputs() && !ownerID.isEmpty
-    }
     
     func setOwnerID(with recordID: CKRecord.ID) {
         guard recordID.zoneID.ownerName == CKCurrentUserDefaultName else { return }
@@ -57,8 +55,16 @@ class Store: NSManagedObject, ValidationRequired {
 
 extension Store {
     
-    var isCurrent: Bool {
-        uniqueID == AppCache.currentStoreUniqueID
+    func isValid() -> Bool {
+        hasValidInputs() && !ownerID.isEmpty
+    }
+    
+    func hasValidInputs() -> Bool {
+        !name.isEmpty
+    }
+    
+    func hasChangedValues() -> Bool {
+        hasPersistentChangedValues
     }
 }
 

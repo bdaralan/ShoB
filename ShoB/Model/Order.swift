@@ -13,7 +13,7 @@ import Combine
 
 
 /// An order of a store or a customer.
-class Order: NSManagedObject, ValidationRequired {
+class Order: NSManagedObject, ObjectValidatable {
     
     @NSManaged var orderDate: Date!
     @NSManaged var deliverDate: Date!
@@ -39,13 +39,11 @@ class Order: NSManagedObject, ValidationRequired {
         objectWillChange.send()
     }
     
-    func hasValidInputs() -> Bool {
-        !self.orderItems.isEmpty
+    override func didSave() {
+        super.didSave()
+        isMarkedValuesChanged = false
     }
     
-    func isValid() -> Bool {
-        hasValidInputs() && store != nil
-    }
     
     /// The total after discount.
     func total() -> Cent {
@@ -55,6 +53,22 @@ class Order: NSManagedObject, ValidationRequired {
     /// The total before discount.
     func subtotal() -> Cent {
         orderItems.map({ $0.price * $0.quantity }).reduce(0, +)
+    }
+}
+
+
+extension Order {
+    
+    func isValid() -> Bool {
+        hasValidInputs() && store != nil
+    }
+    
+    func hasValidInputs() -> Bool {
+        !self.orderItems.isEmpty
+    }
+    
+    func hasChangedValues() -> Bool {
+        hasPersistentChangedValues || isMarkedValuesChanged
     }
 }
 

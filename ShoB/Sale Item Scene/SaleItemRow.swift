@@ -50,7 +50,7 @@ extension SaleItemRow {
         SaleItemForm(
             model: $saleItemModel,
             onUpdate: updateSaleItem,
-            enableUpdate: saleItem.hasPersistentChangedValues && saleItem.isValid(),
+            enableUpdate: saleItem.hasChangedValues() && saleItem.isValid(),
             rowActions: []
         )
             .onAppear(perform: setupOnAppear)

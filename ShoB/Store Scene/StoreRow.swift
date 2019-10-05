@@ -66,7 +66,7 @@ extension StoreRow {
         StoreForm(
             model: storeModel,
             onUpdate: updateStore,
-            enableUpdate: store.hasPersistentChangedValues && store.isValid(),
+            enableUpdate: store.hasChangedValues() && store.isValid(),
             rowActions: []
         )
             .onAppear(perform: setupStoreDetailView)

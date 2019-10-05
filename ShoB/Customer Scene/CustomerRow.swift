@@ -45,7 +45,7 @@ extension CustomerRow {
         CustomerForm(
             model: $model,
             onUpdate: updateCustomer,
-            enableUpdate: customer.hasPersistentChangedValues && customer.isValid(),
+            enableUpdate: customer.hasChangedValues() && customer.isValid(),
             rowActions: []
         )
             .onAppear(perform: setupOnAppear)

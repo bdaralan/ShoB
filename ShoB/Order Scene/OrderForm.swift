@@ -118,7 +118,7 @@ struct OrderForm: View, MultiPurposeForm {
                 }
                 
                 // Order Item List
-                ForEach(model.order?.orderItems.sorted(by: { $0.name < $1.name }) ?? []) { item in
+                ForEach(model.order?.orderItems.sorted(by: { $0.name < $1.name }) ?? [], id: \.self) { item in
                     Button(action: { self.showEditOrderItemForm(with: item) }) {
                         self.orderItemRow(for: item)
                     }
@@ -322,7 +322,7 @@ extension OrderForm {
             // manually mark order as has changed if its item has changed
             // because hasPersistentChangedValues only check the object property
             // but not its array's object's property
-            let hasOrderItemsChanged = order.orderItems.map({ $0.hasPersistentChangedValues }).contains(true)
+            let hasOrderItemsChanged = order.orderItems.map({ $0.hasChangedValues() }).contains(true)
             order.isMarkedValuesChanged = hasOrderItemsChanged
             
             // set orderItem to nil to avoid updating the item (safeguard)

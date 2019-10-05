@@ -13,7 +13,7 @@ import Combine
 
 
 /// A sale item of a store.
-class SaleItem: NSManagedObject, ValidationRequired {
+class SaleItem: NSManagedObject, ObjectValidatable {
     
     @NSManaged var name: String
     @NSManaged var price: Cent
@@ -24,14 +24,22 @@ class SaleItem: NSManagedObject, ValidationRequired {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
     }
+}
+
+
+extension SaleItem {
+    
+    func isValid() -> Bool {
+        hasValidInputs() && store != nil
+    }
     
     func hasValidInputs() -> Bool {
         return !self.name.trimmed().isEmpty
             && self.price > 0
     }
     
-    func isValid() -> Bool {
-        hasValidInputs() && store != nil
+    func hasChangedValues() -> Bool {
+        hasPersistentChangedValues
     }
 }
 

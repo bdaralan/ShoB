@@ -1,5 +1,5 @@
 //
-//  InStoreObject.swift
+//  ObjectValidatable.swift
 //  ShoB
 //
 //  Created by Dara Beng on 8/6/19.
@@ -10,11 +10,14 @@ import Foundation
 
 
 /// A protocol for object required validation.
-protocol ValidationRequired {
+protocol ObjectValidatable {
     
     /// Check if object is valid to save.
     func isValid() -> Bool
     
     /// Check if object has valid inputs from the user.
     func hasValidInputs() -> Bool
+    
+    /// Check if the object has changed values.
+    func hasChangedValues() -> Bool
 }

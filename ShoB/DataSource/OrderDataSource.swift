@@ -9,7 +9,7 @@
 import CoreData
 
 
-class OrderDataSource: NSObject, DataSource {
+class OrderDataSource: NSObject, ObjectDataSource {
     
     let parentContext: NSManagedObjectContext
     
@@ -46,25 +46,5 @@ class OrderDataSource: NSObject, DataSource {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         objectWillChange.send()
-    }
-    
-    func saveNewObject() -> DataSourceSaveResult {
-        guard let order = newObject, order.isValid() else { return .failed }
-        saveCreateContext()
-        return .saved
-    }
-    
-    func saveUpdateObject() -> DataSourceSaveResult {
-        guard let order = updateObject, order.isValid() else { return .failed }
-        order.objectWillChange.send() // still need this (beta 5)
-        
-        if order.hasPersistentChangedValues || order.isMarkedValuesChanged {
-            order.isMarkedValuesChanged = false
-            saveUpdateContext()
-            return .saved
-        } else {
-            discardUpdateContext()
-            return .unchanged
-        }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  DataSource.swift
+//  ObjectDataSource.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/3/19.
@@ -11,10 +11,10 @@ import Combine
 
 
 /// A data source protocol for creating, reading, updating, and deleting object.
-protocol DataSource: NSFetchedResultsControllerDelegate, ObservableObject {
+protocol ObjectDataSource: NSFetchedResultsControllerDelegate, ObservableObject {
     
     /// The type of object that the data source will work with.
-    associatedtype Object: NSManagedObject
+    associatedtype Object: NSManagedObject & ObjectValidatable
     
     /// - Parameter parentContext: The parent context.
     init(parentContext: NSManagedObjectContext)
@@ -41,25 +41,49 @@ protocol DataSource: NSFetchedResultsControllerDelegate, ObservableObject {
     var updateObject: Object? { set get }
     
     /// Save `newObject` to its context.
-    func saveNewObject() -> DataSourceSaveResult
+    func saveNewObject() -> ObjectDataSourceSaveResult
     
     /// Save changes of the `updateObject` to its context.
-    func saveUpdateObject() -> DataSourceSaveResult
+    func saveUpdateObject() -> ObjectDataSourceSaveResult
 }
 
 
 // MARK: - Save Result Enum
 
-enum DataSourceSaveResult {
+enum ObjectDataSourceSaveResult {
     case saved
     case failed
     case unchanged
 }
 
 
+// MARK: - Default Save & Update
+
+extension ObjectDataSource {
+    
+    func saveNewObject() -> ObjectDataSourceSaveResult {
+        guard let object = newObject, object.isValid() else { return .failed }
+        saveCreateContext()
+        return .saved
+    }
+    
+    func saveUpdateObject() -> ObjectDataSourceSaveResult {
+        guard let object = updateObject, object.isValid() else { return .failed }
+        object.objectWillChange.send()
+        if object.hasChangedValues() {
+            saveUpdateContext()
+            return .saved
+        } else {
+            discardUpdateContext()
+            return .unchanged
+        }
+    }
+}
+
+
 // MARK: - Fetch Method
 
-extension DataSource {
+extension ObjectDataSource {
     
     /// Perform fetch on the `fetchController`.
     /// - Parameter request: The request to perform or `nil` to perform the current request.
@@ -80,7 +104,7 @@ extension DataSource {
 
 // MARK: Object Method
 
-extension DataSource {
+extension ObjectDataSource {
     
     /// Set `newObject` to `nil`.
     func discardNewObject() {
@@ -129,7 +153,7 @@ extension DataSource {
 
 // MARK: Context Method
 
-extension DataSource {
+extension ObjectDataSource {
     
     func saveCreateContext() {
         saveContext(createContext)

@@ -29,10 +29,6 @@ struct OrderRow: View {
     
     @State private var showDeleteAlert = false
     
-    var enableUpdate: Bool {
-        (order.hasPersistentChangedValues || order.isMarkedValuesChanged) && order.isValid()
-    }
-    
     
     // MARK: - Body
     
@@ -51,7 +47,7 @@ struct OrderRow: View {
         OrderForm(
             model: $orderModel,
             onUpdate: updateOrder,
-            enableUpdate: enableUpdate,
+            enableUpdate: order.hasChangedValues() && order.isValid(),
             rowActions: []
         )
             .onAppear(perform: setupOnAppear)
@@ -59,10 +55,6 @@ struct OrderRow: View {
     }
     
     func setupOnAppear() {
-        // DEVELOPER NOTE:
-        // Do the assignment here for now until finding a better place for the assignment
-        print("DEVELOPER NOTE: OrderRow.orderDetailView.onAppear")
-        
         // assign the order to the model.
         orderModel = .init(order: order)
         orderDataSource.setUpdateObject(order)
