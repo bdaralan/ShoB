@@ -24,9 +24,9 @@ struct Home: View {
         return dataSource
     }()
     
-    @State private var selectedTab = 0
+    @ObservedObject private var coreDataObserver = NotificationObserver(name: CoreDataStack.nCoreDataStackDidChange)
     
-    @ObservedObject private var coreDataNotification = NotificationObserver(name: CoreDataStack.nCoreDataStackDidChange)
+    @State private var selectedTab = HomeTab.order
     
     
     // MARK: - Body
@@ -39,53 +39,84 @@ struct Home: View {
                     .environmentObject(orderDataSource)
                     .environmentObject(saleItemDataSource)
                     .environmentObject(customerDataSource)
-                    .navigationBarTitle("Orders", displayMode: .large)
+                    .navigationBarTitle(Text(HomeTab.order.title), displayMode: .large)
             }
-            .tabItem { tabItem(systemImage: "cube.box.fill", title: "Orders") }
-            .tag(0)
+            .tabItem(HomeTab.order.tabItem)
+            .tag(HomeTab.order)
             
             // MARK: Customer List
             NavigationView {
                 CustomerListView()
                     .environmentObject(customerDataSource)
-                    .navigationBarTitle("Customers", displayMode: .large)
+                    .navigationBarTitle(Text(HomeTab.customer.title), displayMode: .large)
             }
-            .tabItem { tabItem(systemImage: "rectangle.stack.person.crop.fill", title: "Customers") }
-            .tag(1)
+            .tabItem(HomeTab.customer.tabItem)
+            .tag(HomeTab.customer)
 
             // MARK: Sale Item List
             NavigationView {
                 SaleItemListView()
                     .environmentObject(saleItemDataSource)
-                    .navigationBarTitle("Items", displayMode: .large)
+                    .navigationBarTitle(Text(HomeTab.item.title), displayMode: .large)
             }
-            .tabItem { tabItem(systemImage: "list.dash", title: "Items") }
-            .tag(2)
+            .tabItem(HomeTab.item.tabItem)
+            .tag(HomeTab.item)
             
             NavigationView {
                 StoreListView()
                     .environmentObject(storeDataSource)
-                    .navigationBarTitle("Store", displayMode: .large)
+                    .navigationBarTitle(Text(HomeTab.store.title), displayMode: .large)
             }
-            .tabItem { tabItem(systemImage: "folder.fill", title: "Store") }
-            .tag(3)
+            .tabItem(HomeTab.store.tabItem)
+            .tag(HomeTab.store)
         }
         .onAppear(perform: setupOnAppear)
     }
     
-    func tabItem(systemImage: String, title: String) -> some View {
-        ViewBuilder.buildBlock(Image(systemName: systemImage), Text(title))
+    func setupOnAppear() {
+        coreDataObserver.onReceived = { notification in
+            DispatchQueue.main.async {
+                self.orderDataSource.performFetch(Order.requestNoObject())
+                self.saleItemDataSource.performFetch(SaleItem.requestNoObject())
+                self.customerDataSource.performFetch(Customer.requestNoObject())
+                self.storeDataSource.performFetch(Store.requestAllStores())
+                self.selectedTab = HomeTab.store
+            }
+        }
+    }
+}
+
+
+// MARK: - Home Tab Enum
+
+enum HomeTab {
+    case order
+    case customer
+    case item
+    case store
+    
+    var title: String {
+        switch self {
+        case .order: return "Orders"
+        case .customer: return "Customers"
+        case .item: return "Items"
+        case .store: return "Stores"
+        }
     }
     
-    func setupOnAppear() {
-        coreDataNotification.onReceived = { notification in
-            DispatchQueue.main.async {
-                self.orderDataSource.performFetch()
-                self.saleItemDataSource.performFetch()
-                self.customerDataSource.performFetch()
-                self.storeDataSource.performFetch()
-                self.selectedTab = 3
-            }
+    var systemImage: String {
+        switch self {
+        case .order: return "cube.box.fill"
+        case .customer: return "rectangle.stack.person.crop.fill"
+        case .item: return "list.dash"
+        case .store: return "folder.fill"
+        }
+    }
+    
+    func tabItem() -> some View {
+        Group {
+            Image(systemName: systemImage)
+            Text(title)
         }
     }
 }
