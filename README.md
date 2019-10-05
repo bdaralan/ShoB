@@ -87,27 +87,37 @@ Until there is a native way of doing this, the approach right now is to use [`Na
 
 The approach right now is the make use of `EnvironmentObject`. There will be a concrete data source object specific to each type of model object that will handle all the actions.
 
-The concrete data source object will conform to [`DataSource`][DataSource] protocol. The protocol has all the methods for fetching, creating, reading, updating, deleting, and validating `NSManagedObject`.
+The concrete data source object will conform to [`ObjectDataSource`][ObjectDataSource] protocol. The protocol has all the methods for fetching, creating, reading, updating, deleting, and validating `NSManagedObject`. The `ObjectDataSource` protocol works hand in hand with [`ObjectValidatable`][ObjectValidatable] protocol.
 
 Therefore, views that have access to the `EnvironmentObject` will be able to access objects and methods to perform necessary actions.
 
-Current concrete classes conform to `DataSource`:
-
-- [`OrderDataSource`][OrderDataSource]
-- [`CustomerDataSource`][CustomerDataSource]
-- [`SaleItemDataSource`][SaleItemDataSource]
+- Concrete classes conform to `ObjectDataSource`:
+  - [`OrderDataSource`][OrderDataSource]
+  - [`CustomerDataSource`][CustomerDataSource]
+  - [`SaleItemDataSource`][SaleItemDataSource]
+  - [`StoreDataSource`][StoreDataSource]
+- Concrete classes conform to `ObjectValidatable`:
+  - `Store`
+  - `Customer`
+  - `Order`
+  - `OrderItem`
+  - `SaleItem`
 
 <!-- MARK: - Link -->
 
 [NavigationStateHandler]: https://github.com/iDara09/ShoB/blob/master/ShoB/Utility/NavigationStateHandler.swift
 
-[DataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/DataSource.swift
+[ObjectValidatable]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/ObjectValidatable.swift
+
+[ObjectDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/ObjectDataSource.swift
 
 [CustomerDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/CustomerDataSource.swift
 
 [OrderDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/OrderDataSource.swift
 
 [SaleItemDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/SaleItemDataSource.swift
+
+[StoreDataSource]: https://github.com/iDara09/ShoB/blob/master/ShoB/DataSource/StoreDataSource.swift
 
 [Setting Up Core Data with CloudKit]: https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/setting_up_core_data_with_cloudkit
 
