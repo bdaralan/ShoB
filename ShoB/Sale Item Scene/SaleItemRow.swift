@@ -37,7 +37,7 @@ struct SaleItemRow: View {
             }
             .contextMenu(menuItems: contextMenuItems)
         }
-        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Item", action: deleteSaleItem))
+        .modifier(DeleteAlertModifier($showDeleteAlert, title: "Delete Item", action: deleteSaleItem))
     }
 }
 

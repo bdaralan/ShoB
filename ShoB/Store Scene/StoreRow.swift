@@ -52,7 +52,7 @@ struct StoreRow: View {
                     .opacity(store.isCurrent ? 1 : 0)
             }
             .contextMenu(menuItems: contextMenuItems)
-            .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Store", action: deleteStore))
+            .modifier(DeleteAlertModifier($showDeleteAlert, title: "Delete Store", action: deleteStore))
         }
     }
 }

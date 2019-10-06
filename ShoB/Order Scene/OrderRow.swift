@@ -37,7 +37,7 @@ struct OrderRow: View {
             OrderRowContentView(order: order)
                 .contextMenu(menuItems: contextMenuItems)
         }
-        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Order", action: deleteOrder))
+        .modifier(DeleteAlertModifier($showDeleteAlert, title: "Delete Order", action: deleteOrder))
     }
 
     

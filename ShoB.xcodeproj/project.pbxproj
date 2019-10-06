@@ -16,6 +16,7 @@
 		B41093EC22F0A0B8005A85DF /* NavigationStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */; };
 		B412C70C22F3919300A4DE4D /* OrderItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B412C70B22F3919300A4DE4D /* OrderItemForm.swift */; };
 		B414CA4422F3603F001BFE26 /* ViewForceReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */; };
+		B41A36A4234A42D900F13C19 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41A36A3234A42D800F13C19 /* Font.swift */; };
 		B41C11D022FA29440046AFF8 /* ObjectValidatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41C11CF22FA29440046AFF8 /* ObjectValidatable.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */; };
@@ -36,7 +37,7 @@
 		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
-		B484DF7C2307A06B00EE9589 /* DeleteAlertModifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */; };
+		B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F322EBFF4100778DA3 /* Constant+Image.swift */; };
 		B48E584722EA452900B9FEAB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48E584622EA452900B9FEAB /* String.swift */; };
@@ -83,6 +84,7 @@
 		B41093EB22F0A0B8005A85DF /* NavigationStateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStateHandler.swift; sourceTree = "<group>"; };
 		B412C70B22F3919300A4DE4D /* OrderItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemForm.swift; sourceTree = "<group>"; };
 		B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewForceReloader.swift; sourceTree = "<group>"; };
+		B41A36A3234A42D800F13C19 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		B41C11CF22FA29440046AFF8 /* ObjectValidatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectValidatable.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemFormModel.swift; sourceTree = "<group>"; };
@@ -103,7 +105,7 @@
 		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
-		B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifer.swift; sourceTree = "<group>"; };
+		B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifier.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48919F322EBFF4100778DA3 /* Constant+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constant+Image.swift"; sourceTree = "<group>"; };
 		B48E584622EA452900B9FEAB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -223,7 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				B451060E22F221070047F3F8 /* CenterButtonStyle.swift */,
-				B484DF7B2307A06B00EE9589 /* DeleteAlertModifer.swift */,
+				B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */,
 			);
 			path = "View Modifier";
 			sourceTree = "<group>";
@@ -320,6 +322,7 @@
 				B48E584622EA452900B9FEAB /* String.swift */,
 				B4F4D2B722E2452300E849B4 /* Date.swift */,
 				B4A6C89E23474FDC00D76156 /* Alert.swift */,
+				B41A36A3234A42D800F13C19 /* Font.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -455,7 +458,7 @@
 				B44695632310CBA70085416D /* AppCache.swift in Sources */,
 				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
-				B484DF7C2307A06B00EE9589 /* DeleteAlertModifer.swift in Sources */,
+				B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */,
 				B4E6F62823052978009B7A58 /* StoreDataSource.swift in Sources */,
 				B41C11D022FA29440046AFF8 /* ObjectValidatable.swift in Sources */,
 				B405260722E90A41007E2325 /* CurrencyWrapper.swift in Sources */,
@@ -472,6 +475,7 @@
 				B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */,
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
 				B405260222E8FFDC007E2325 /* VertialTextField.swift in Sources */,
+				B41A36A4234A42D900F13C19 /* Font.swift in Sources */,
 				B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */,
 				B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */,
 				B4F4C87422FF862D0010F191 /* CustomerDataSource.swift in Sources */,

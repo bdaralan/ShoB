@@ -34,9 +34,9 @@ extension Date {
 
 extension DateFormatter {
     
-    static let shortDateTime: DateFormatter = {
+    static let shortTime: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .short
+        formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter
     }()

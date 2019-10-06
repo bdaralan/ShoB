@@ -9,7 +9,7 @@
 import SwiftUI
 
 
-struct DeleteAlertModifer: ViewModifier {
+struct DeleteAlertModifier: ViewModifier {
     
     @Binding var show: Bool
     

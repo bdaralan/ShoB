@@ -32,7 +32,7 @@ struct CustomerRow: View {
             CustomerRowContentView(customer: customer)
                 .contextMenu(menuItems: contextMenuItems)
         }
-        .modifier(DeleteAlertModifer($showDeleteAlert, title: "Delete Customer", action: deleteCustomer))
+        .modifier(DeleteAlertModifier($showDeleteAlert, title: "Delete Customer", action: deleteCustomer))
     }
 }
 

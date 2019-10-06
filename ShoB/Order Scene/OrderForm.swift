@@ -85,15 +85,8 @@ struct OrderForm: View, MultiPurposeForm {
             // MARK: Total Section
             Section(header: Text("TOTAL & DISCOUNT")) {
                 HStack {
-                    Image.SFOrder.totalAfterDiscount.font(Font.body.bold())
-                    Text("Total").bold()
-                    Spacer()
-                    Text(model.totalAfterDiscount).bold()
-                }
-                
-                HStack {
                     Image.SFOrder.totalBeforeDiscount
-                    Text("Before Discount")
+                    Text("Subtotal")
                     Spacer()
                     Text(model.totalBeforeDiscount)
                 }
@@ -102,6 +95,13 @@ struct OrderForm: View, MultiPurposeForm {
                     Image.SFOrder.discount
                     Text("Discount")
                     CurrencyTextField(text: $model.discount)
+                }
+                
+                HStack {
+                    Image.SFOrder.totalAfterDiscount
+                    Text("Total").font(.largeCurrency)
+                    Spacer()
+                    Text(model.totalAfterDiscount).font(.largeCurrency)
                 }
             }
             

@@ -35,31 +35,42 @@ struct OrderRowContentView: View {
             .font(.title)
             .padding(.top, 8)
             
-            // MARK: Order Date
-            HStack {
-                Image.SFOrder.orderDate
-                formattedText(for: order.orderDate)
-            }
-            
-            HStack {
-                Image.SFOrder.deliverDate
-                formattedText(for: order.deliverDate)
-            }
-            
-            HStack {
-                Image.SFOrder.delivered
-                    .foregroundColor(order.deliveredDate != nil ? .green : .primary)
-                formattedText(for: order.deliveredDate)
-            }
-            
-            // MARK: Total & Discount
-            HStack {
-                currencyText(image: Image.SFOrder.totalBeforeDiscount, amount: order.subtotal())
-                verticalDivider
-                currencyText(image: Image.SFOrder.discount, amount: order.discount)
-                verticalDivider
-                currencyText(image: Image.SFOrder.totalAfterDiscount, amount: order.total())
-                    .font(Font.body.bold())
+            HStack(alignment: .top) {
+                // MARK: Order Date
+                VStack(alignment: .leading) {
+                    HStack {
+                        Image.SFOrder.orderDate
+                        formattedText(for: order.orderDate)
+                    }
+                    HStack {
+                        Image.SFOrder.deliverDate
+                        formattedText(for: order.deliverDate)
+                    }
+                    HStack {
+                        Image.SFOrder.delivered
+                            .foregroundColor(order.deliveredDate != nil ? .green : .primary)
+                        formattedText(for: order.deliveredDate)
+                    }
+                }
+                
+                Spacer()
+                
+                // MARK: Total & Discount
+                VStack(alignment: .trailing) {
+                    HStack {
+                        Text(verbatim: "\(Currency(order.subtotal()))")
+                        Image.SFOrder.totalBeforeDiscount
+                    }
+                    HStack {
+                        Text(verbatim: "\(Currency(order.discount))")
+                        Image.SFOrder.discount
+                    }
+                    HStack {
+                        Text(verbatim: "\(Currency(order.total()))")
+                            .font(.largeCurrency)
+                        Image.SFOrder.totalAfterDiscount
+                    }
+                }
             }
         }
     }
@@ -73,7 +84,7 @@ extension OrderRowContentView {
     /// Format text for the given date
     /// - Parameter date: The date to format.
     func formattedText(for date: Date?) -> Text {
-        Text(date == nil ? "No" : "\(date!, formatter: DateFormatter.shortDateTime)")
+        Text(date == nil ? "No" : "\(date!, formatter: DateFormatter.shortTime)")
     }
     
     /// View displaying image and currency amount.

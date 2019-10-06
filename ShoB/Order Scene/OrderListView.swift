@@ -137,7 +137,7 @@ extension OrderListView {
         let newOrder = orderDataSource.newObject!
         let oldOrder = order.get(from: orderDataSource.createContext)
         
-        // copy neccessary values
+        // copy necessary values
         newOrder.discount = oldOrder.discount
         newOrder.note = oldOrder.note
         newOrder.customer = oldOrder.customer
