@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A wrapper for `UITextField`.
 struct TextFieldWrapper: UIViewRepresentable {
     
     @Binding var text: String

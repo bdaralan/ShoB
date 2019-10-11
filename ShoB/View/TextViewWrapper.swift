@@ -9,6 +9,7 @@
 import SwiftUI
 
 
+/// A wrapper for `UITextView`.
 struct TextViewWrapper: UIViewRepresentable {
     
     @Binding var text: String

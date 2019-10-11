@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+
+/// A text input view to be used as modal presentation sheet.
 struct ModalInputField: View {
     
     /// The input field mode.
