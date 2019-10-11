@@ -102,6 +102,7 @@ extension Customer {
     static func requestNoObject() -> NSFetchRequest<Customer> {
         let request = Customer.fetchRequest() as NSFetchRequest<Customer>
         request.predicate = .init(value: false)
+        request.sortDescriptors = []
         return request
     }
 }

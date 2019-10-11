@@ -83,6 +83,7 @@ extension SaleItem {
     static func requestNoObject() -> NSFetchRequest<SaleItem> {
         let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
         request.predicate = .init(value: false)
+        request.sortDescriptors = []
         return request
     }
 }

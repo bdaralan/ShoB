@@ -147,6 +147,7 @@ extension Order {
     static func requestNoObject() -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
         request.predicate = .init(value: false)
+        request.sortDescriptors = []
         return request
     }
 }
