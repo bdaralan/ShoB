@@ -50,6 +50,8 @@ struct OrderForm: View, MultiPurposeForm {
     /// A flag to show or hide model text view keyboard.
     @State private var isNoteTextViewActive = false
     
+    @State private var isDiscountTextFieldActive = false
+    
     
     // MARK: - Body
     
@@ -93,10 +95,14 @@ struct OrderForm: View, MultiPurposeForm {
                     Text(model.totalBeforeDiscount)
                 }
                 
-                HStack {
-                    Image.SFOrder.discount
-                    Text("Discount")
-                    CurrencyTextField(text: $model.discount)
+                Button(action: beginEditingDiscount) {
+                    HStack {
+                        Image.SFOrder.discount
+                        Text("Discount")
+                        Spacer()
+                        Text("\(model.discount)")
+                    }
+                    .foregroundColor(.primary)
                 }
                 
                 HStack {
@@ -193,12 +199,41 @@ extension OrderForm {
 }
 
 
+extension OrderForm {
+    
+    var orderDiscountEditingSheet: some View {
+        ModalInputField(
+            mode: .textfield,
+            text: $model.discount,
+            isActive: $isDiscountTextFieldActive,
+            prompt: "Discount",
+            placeholder: "$0.00",
+            keyboard: .numberPad,
+            returnKey: .done,
+            onDone: commitEditingDiscount
+        )
+    }
+    
+    func beginEditingDiscount() {
+        modalSheet = orderDiscountEditingSheet.eraseToAnyView()
+        isDiscountTextFieldActive = true
+        showModalSheet = true
+    }
+    
+    func commitEditingDiscount() {
+        isDiscountTextFieldActive = false
+        showModalSheet = false
+    }
+}
+
+
 // MARK: Note Edit Sheet
 
 extension OrderForm {
     
     var orderNoteEditingSheet: some View {
-        ModalTextView(
+        ModalInputField(
+            mode: .textview,
             text: $model.note,
             isActive: $isNoteTextViewActive,
             prompt: "Note",
@@ -342,6 +377,7 @@ extension OrderForm {
     func dismissPresentationSheet() {
         showModalSheet = false
         isNoteTextViewActive = false
+        isDiscountTextFieldActive = false
         
         // for add-order-item form or customer-selection list, just dismiss
         // for edit-order-item form, do some clean up and reload
