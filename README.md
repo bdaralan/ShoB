@@ -20,15 +20,21 @@ In progress...
 
 ### Order Scene
 
-![Order Scene Preview](Preview/order-scene.png)
+![Order Scene Preview](Preview/order.png)
+![Order Input 01](Preview/order-input-01.png)
+![Order Input 02](Preview/order-input-02.png)
 
 ### Customer Scene
 
-![Customer Scene Preview](Preview/customer-scene.png)
+![Customer Scene Preview](Preview/customer.png)
 
 ### Item Scene
 
-![Item Scene Preview](Preview/item-scene.png)
+![Item Scene Preview](Preview/item.png)
+
+### Store Scene
+
+![Store Scene Preview](Preview/store.png)
 
 ## Learning
 
