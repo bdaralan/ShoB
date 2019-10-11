@@ -18,6 +18,8 @@
 		B414CA4422F3603F001BFE26 /* ViewForceReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */; };
 		B41A36A4234A42D900F13C19 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41A36A3234A42D800F13C19 /* Font.swift */; };
 		B41C11D022FA29440046AFF8 /* ObjectValidatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41C11CF22FA29440046AFF8 /* ObjectValidatable.swift */; };
+		B42114D4234F0B3C00514E8D /* TextViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42114D3234F0B3C00514E8D /* TextViewWrapper.swift */; };
+		B42114D8234F0D3500514E8D /* ModalTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42114D7234F0D3500514E8D /* ModalTextView.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */; };
 		B42FCCAD2305EC730066F587 /* StoreFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42FCCAC2305EC730066F587 /* StoreFormModel.swift */; };
@@ -86,6 +88,8 @@
 		B414CA4322F3603F001BFE26 /* ViewForceReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewForceReloader.swift; sourceTree = "<group>"; };
 		B41A36A3234A42D800F13C19 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		B41C11CF22FA29440046AFF8 /* ObjectValidatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectValidatable.swift; sourceTree = "<group>"; };
+		B42114D3234F0B3C00514E8D /* TextViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWrapper.swift; sourceTree = "<group>"; };
+		B42114D7234F0D3500514E8D /* ModalTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalTextView.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemFormModel.swift; sourceTree = "<group>"; };
 		B42FCCAC2305EC730066F587 /* StoreFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFormModel.swift; sourceTree = "<group>"; };
@@ -164,6 +168,8 @@
 				B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */,
 				B44695662310E7100085416D /* CurrencyTextField.swift */,
 				B44695642310CFBE0085416D /* UIRTextField.swift */,
+				B42114D3234F0B3C00514E8D /* TextViewWrapper.swift */,
+				B42114D7234F0D3500514E8D /* ModalTextView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -261,15 +267,15 @@
 				B4B9D11F22B2DF24003FC4E3 /* AppDelegate.swift */,
 				B4B9D12122B2DF24003FC4E3 /* SceneDelegate.swift */,
 				B4A5D97422CBF7F200695A3F /* Home.swift */,
+				B4F4D2AB22E2244100E849B4 /* Protocol */,
+				B4F4C87522FFB6E50010F191 /* DataSource */,
 				B4B9D13E22B2E48C003FC4E3 /* Model */,
-				B405260022E8FFBF007E2325 /* View */,
-				B451061022F222310047F3F8 /* View Modifier */,
 				B427503A22CDCEC4009FF939 /* Order Scene */,
 				B4D5E6CB22C043E700BE7580 /* Customer Scene */,
 				B427503B22CDCEE6009FF939 /* Sale Item Scene */,
 				B42FD55B2304E0FE00104AEA /* Store Scene */,
-				B4F4D2AB22E2244100E849B4 /* Protocol */,
-				B4F4C87522FFB6E50010F191 /* DataSource */,
+				B405260022E8FFBF007E2325 /* View */,
+				B451061022F222310047F3F8 /* View Modifier */,
 				B4D346B022B6A2FE0051AABB /* Utility */,
 				B48919F222EBFF1D00778DA3 /* Constant */,
 				B4B9D16222B40527003FC4E3 /* Extension */,
@@ -469,6 +475,7 @@
 				B4E6F62A23053142009B7A58 /* StoreRow.swift in Sources */,
 				B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */,
 				B412C70C22F3919300A4DE4D /* OrderItemForm.swift in Sources */,
+				B42114D8234F0D3500514E8D /* ModalTextView.swift in Sources */,
 				B4E80D1F22F79D9200052B36 /* OrderListViewModel.swift in Sources */,
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
 				B42FD55F2304E3B400104AEA /* StoreForm.swift in Sources */,
@@ -493,6 +500,7 @@
 				B4F4C87022FF15C90010F191 /* OrderDataSource.swift in Sources */,
 				B4B9D15522B2E4A0003FC4E3 /* Order.swift in Sources */,
 				B4B9D15822B2EC94003FC4E3 /* OrderForm.swift in Sources */,
+				B42114D4234F0B3C00514E8D /* TextViewWrapper.swift in Sources */,
 				B4F4C87222FF82020010F191 /* SaleItemDataSource.swift in Sources */,
 				B4D5E6CF22C0558800BE7580 /* OrderRow.swift in Sources */,
 				B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */,

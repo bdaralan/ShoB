@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="18G103" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Customer" representedClassName=".Customer" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="email" optional="YES" attributeType="String" defaultValueString=""/>
@@ -12,6 +12,7 @@
     </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
         <attribute name="deliverDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deliverDateSection" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="deliveredDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="discount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="note" optional="YES" attributeType="String" defaultValueString=""/>
@@ -44,7 +45,7 @@
     </entity>
     <elements>
         <element name="Customer" positionX="-36" positionY="45" width="128" height="163"/>
-        <element name="Order" positionX="0" positionY="108" width="128" height="163"/>
+        <element name="Order" positionX="0" positionY="108" width="128" height="178"/>
         <element name="OrderItem" positionX="-9" positionY="99" width="128" height="103"/>
         <element name="SaleItem" positionX="-18" positionY="81" width="128" height="88"/>
         <element name="Store" positionX="-54" positionY="18" width="128" height="178"/>

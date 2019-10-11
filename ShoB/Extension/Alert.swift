@@ -11,7 +11,7 @@ import SwiftUI
 
 extension Alert {
     
-    static func creatObjectWithoutCurrentStore(object: String) -> Alert {
+    static func createObjectWithoutCurrentStore(object: String) -> Alert {
         Alert(
             title: Text("Cannot Create \(object)"),
             message: Text("Please create or set a current store and try again."),

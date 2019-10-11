@@ -17,7 +17,7 @@ class SaleItemDataSource: NSObject, ObjectDataSource {
     
     let updateContext: NSManagedObjectContext
     
-    let fetchedResult: NSFetchedResultsController<SaleItem>
+    var fetchedResult: NSFetchedResultsController<SaleItem>
     
     var newObject: SaleItem?
     

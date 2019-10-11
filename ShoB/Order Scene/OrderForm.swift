@@ -37,15 +37,18 @@ struct OrderForm: View, MultiPurposeForm {
     /// Model used to edit order's item.
     @State private var editOrderItemModel = SaleItemFormModel()
     
-    /// Flag used to show `modalPresentationSheet`.
-    @State private var showModalPresentationSheet = false
+    /// Flag used to show `modalSheet`.
+    @State private var showModalSheet = false
     
     /// A modal presentation sheet.
     ///
     /// The sheet can be set and used to present:
     /// - add or edit order item form
     /// - customer selection list
-    @State private var modalPresentationSheet = AnyView.emptyView
+    @State private var modalSheet = AnyView.emptyView
+    
+    /// A flag to show or hide model text view keyboard.
+    @State private var isNoteTextViewActive = false
     
     
     // MARK: - Body
@@ -74,12 +77,11 @@ struct OrderForm: View, MultiPurposeForm {
                     Text("Delivered")
                 }
                 
-                if model.isDelivered {
-                    DatePicker(selection: $model.deliveredDate) {
-                        Image.SFOrder.delivered.foregroundColor(.green)
-                        Text("Delivered Date")
-                    }
+                DatePicker(selection: $model.deliveredDate) {
+                    Image.SFOrder.delivered.foregroundColor(.green)
+                    Text("Delivered Date")
                 }
+                .hidden(!model.isDelivered)
             }
             
             // MARK: Total Section
@@ -128,20 +130,18 @@ struct OrderForm: View, MultiPurposeForm {
             // MARK: Note Section
             Section(header: Text("NOTE")) {
                 VStack {
-                    TextField(". . .", text: $model.note)
-                        .lineLimit(nil)
-                        .padding([.top, .bottom])
-                    Spacer()
+                    Text(model.note.isEmpty ? ". . ." : model.note)
+                        .foregroundColor(model.note.isEmpty ? .secondary : .primary)
                 }
-                .frame(minHeight: 200)
+                .frame(maxWidth: .infinity, minHeight: 200, alignment: .topLeading)
+                .padding([.top, .bottom])
+                .contentShape(Rectangle())
+                .onTapGesture(perform: beginEditOrderNote)
             }
+            
             setupRowActionSection()
         }
-        .sheet(
-            isPresented: $showModalPresentationSheet,
-            onDismiss: dismissPresentationSheet,
-            content: { self.modalPresentationSheet }
-        )
+        .sheet(isPresented: $showModalSheet, onDismiss: dismissPresentationSheet, content: { self.modalSheet })
         
         return setupNavItems(forForm: form.eraseToAnyView())
     }
@@ -189,6 +189,32 @@ extension OrderForm {
                 .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
         }
         .foregroundColor(.primary)
+    }
+}
+
+
+// MARK: Note Edit Sheet
+
+extension OrderForm {
+    
+    var orderNoteEditingSheet: some View {
+        ModalTextView(
+            text: $model.note,
+            isActive: $isNoteTextViewActive,
+            prompt: "Note",
+            onDone: commitEditOrderNote
+        )
+    }
+    
+    func beginEditOrderNote() {
+        modalSheet = orderNoteEditingSheet.eraseToAnyView()
+        showModalSheet = true
+        isNoteTextViewActive = true
+    }
+    
+    func commitEditOrderNote() {
+        showModalSheet = false
+        isNoteTextViewActive = false
     }
 }
 
@@ -276,7 +302,7 @@ extension OrderForm {
     
     /// Deselect customer nav item for `customerSelectionView`.
     var customerSelectionCancelNavItem: some View {
-        Button("Cancel", action: { self.showModalPresentationSheet = false })
+        Button("Cancel", action: { self.showModalSheet = false })
     }
     
     /// Customer row for `customerSelectionView`.
@@ -303,7 +329,7 @@ extension OrderForm {
         } else {
             model.order?.customer = nil
         }
-        showModalPresentationSheet = false
+        showModalSheet = false
     }
 }
 
@@ -314,6 +340,9 @@ extension OrderForm {
     
     /// Dismiss the presenting add or edit order form sheet and clean up as needed.
     func dismissPresentationSheet() {
+        showModalSheet = false
+        isNoteTextViewActive = false
+        
         // for add-order-item form or customer-selection list, just dismiss
         // for edit-order-item form, do some clean up and reload
         if editOrderItemModel.orderItem != nil, let order = model.order {
@@ -330,28 +359,26 @@ extension OrderForm {
             // because of @State
             editOrderItemModel.orderItem = nil
         }
-        
-        showModalPresentationSheet = false
     }
     
     /// Present `customerSelectionView` sheet.
     func showCustomerSelectionView() {
-        modalPresentationSheet = customerSelectionView.eraseToAnyView()
-        showModalPresentationSheet = true
+        modalSheet = customerSelectionView.eraseToAnyView()
+        showModalSheet = true
     }
     
     /// Present `editOrderItemForm` sheet.
     func showEditOrderItemForm(with item: OrderItem) {
         editOrderItemModel = .init(orderItem: item)
-        modalPresentationSheet = editOrderItemForm.eraseToAnyView()
-        showModalPresentationSheet = true
+        modalSheet = editOrderItemForm.eraseToAnyView()
+        showModalSheet = true
     }
     
     /// Present `addOrderItemForm` sheet.
     func showAddOrderItemForm() {
         newOrderItemModel = .init()
-        modalPresentationSheet = addOrderItemForm.eraseToAnyView()
-        showModalPresentationSheet = true
+        modalSheet = addOrderItemForm.eraseToAnyView()
+        showModalSheet = true
     }
 }
 

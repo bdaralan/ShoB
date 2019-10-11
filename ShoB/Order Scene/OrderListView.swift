@@ -36,19 +36,16 @@ struct OrderListView: View {
     
     var body: some View {
         List {
-            Section(header: segmentPicker) {
-                ForEach(orderDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) { order in
-                    OrderRow(
-                        order: self.orderDataSource.readObject(order),
-                        onDeleted: self.viewReloader.forceReload,
-                        onOrderAgain: self.placeOrderAgain
-                    )
-                }
+            segmentPicker
+            if model.currentSegment == .today {
+                listRows(for: orderDataSource.fetchedResult.fetchedObjects ?? [])
+            } else { // for upcoming and past days
+                listSectionedRows
             }
         }
         .navigationBarItems(trailing: placeNewOrderNavItem)
         .sheet(isPresented: $showCreateOrderForm, onDismiss: dismissCreateOrderForm, content: { self.createOrderForm })
-        .alert(isPresented: $showCreateOrderFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Order") })
+        .alert(isPresented: $showCreateOrderFailedAlert, content: { .createObjectWithoutCurrentStore(object: "Order") })
         .onAppear(perform: setupView)
     }
 }
@@ -88,6 +85,29 @@ extension OrderListView {
         .pickerStyle(SegmentedPickerStyle())
         .padding(.vertical, 8)
         .onReceive(model.$currentSegment, perform: reloadList)
+    }
+    
+    /// A list of order rows grouped into sections.
+    /// - Note: Use with upcoming and past segment.
+    var listSectionedRows: some View {
+        let fetchedResult = orderDataSource.fetchedResult
+        return ForEach(0..<(fetchedResult.sections!.count), id: \.self) { sectionIndex in
+            Section(header: Text(self.sectionTitle(forDate: fetchedResult.sections![sectionIndex].name))) {
+                self.listRows(for: fetchedResult.sections![sectionIndex].objects as! [Order])
+            }
+        }
+    }
+    
+    /// A list of order rows.
+    /// - Parameter orders: The orders to display
+    func listRows(for orders: [Order]) -> some View {
+        ForEach(orders, id: \.self) { order in
+            OrderRow(
+                order: self.orderDataSource.readObject(order),
+                onDeleted: self.viewReloader.forceReload,
+                onOrderAgain: self.placeOrderAgain
+            )
+        }
     }
 }
 
@@ -165,13 +185,16 @@ extension OrderListView {
         
         switch segment {
         case .today:
+            orderDataSource.setFetchResultSectionKeyPath(nil)
             orderDataSource.performFetch(Order.requestDeliverToday(storeID: storeID))
         
         case .upcoming:
             let tomorrow = Date.startOfToday(addingDay: 1)
+            orderDataSource.setFetchResultSectionKeyPath(#keyPath(Order.deliverDateSection))
             orderDataSource.performFetch(Order.requestDeliver(from: tomorrow, storeID: storeID))
         
         case .pastDay(let day):
+            orderDataSource.setFetchResultSectionKeyPath(#keyPath(Order.deliverDateSection))
             orderDataSource.performFetch(Order.requestDeliver(fromPastDay: day, storeID: storeID))
         }
     }
@@ -189,6 +212,17 @@ extension OrderListView {
             customerDataSource.performFetch(Customer.requestNoObject())
         }
         viewReloader.forceReload()
+    }
+    
+    /// Format order row section title for upcoming and past days.
+    /// - Parameter fromDate: The order's deliver date section string.
+    func sectionTitle(forDate dateString: String) -> String {
+        guard let date = Order.deliverDateSectionFormatter.date(from: dateString) else { return "???" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        formatter.doesRelativeDateFormatting = true
+        return formatter.string(from: date)
     }
 }
 

@@ -45,7 +45,7 @@ struct CustomerListView: View {
         .onAppear(perform: setupView)
         .navigationBarItems(trailing: createNewCustomerNavItem)
         .sheet(isPresented: $showCreateCustomerForm, onDismiss: dismissCreateNewCustomerForm, content: { self.createCustomerForm })
-        .alert(isPresented: $showCreateCustomerFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Customer") })
+        .alert(isPresented: $showCreateCustomerFailedAlert, content: { .createObjectWithoutCurrentStore(object: "Customer") })
     }
 }
 

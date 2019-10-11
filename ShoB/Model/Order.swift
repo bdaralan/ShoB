@@ -24,6 +24,11 @@ class Order: NSManagedObject, ObjectValidatable {
     @NSManaged var customer: Customer?
     @NSManaged var store: Store?
     
+    /// A formatted string of deliver date. Example: 12-31-2019.
+    ///
+    /// Used to group date into section when using fetch controller.
+    @NSManaged private(set) var deliverDateSection: String
+    
     /// Used to manually mark order as has changes.
     var isMarkedValuesChanged = false
 
@@ -37,6 +42,16 @@ class Order: NSManagedObject, ObjectValidatable {
     override func willChangeValue(forKey key: String) {
         super.willChangeValue(forKey: key)
         objectWillChange.send()
+    }
+    
+    override func didChangeValue(forKey key: String) {
+        // update deliverDateSection when deliverDate value changed
+        if key == #keyPath(Order.deliverDate) {
+            let deliverDateSection = #keyPath(Order.deliverDateSection)
+            let value = Self.deliverDateSectionFormatter.string(from: deliverDate)
+            setPrimitiveValue(value, forKey: deliverDateSection)
+        }
+        super.didChangeValue(forKey: key)
     }
     
     override func didSave() {
@@ -134,4 +149,15 @@ extension Order {
         request.predicate = .init(value: false)
         return request
     }
+}
+
+
+extension Order {
+    
+    /// A formatter used to format `deliverDateSection`.
+    static let deliverDateSectionFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy" // example: 12-31-2019
+        return formatter
+    }()
 }

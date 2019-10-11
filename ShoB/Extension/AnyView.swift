@@ -23,4 +23,8 @@ extension View {
     func eraseToAnyView() -> AnyView {
         AnyView(self)
     }
+    
+    func hidden(_ hidden: Bool) -> some View {
+        hidden ? AnyView(EmptyView()) : AnyView(self)
+    }
 }

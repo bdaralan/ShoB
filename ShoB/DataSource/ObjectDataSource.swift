@@ -29,7 +29,7 @@ protocol ObjectDataSource: NSFetchedResultsControllerDelegate, ObservableObject 
     var updateContext: NSManagedObjectContext { get }
     
     /// Fetch result controller.
-    var fetchedResult: NSFetchedResultsController<Object> { get }
+    var fetchedResult: NSFetchedResultsController<Object> { set get }
     
     /// A new object to be created.
     ///
@@ -98,6 +98,21 @@ extension ObjectDataSource {
         } catch {
             print(error)
         }
+    }
+    
+    /// Set fetch controller section key path.
+    ///
+    /// - Parameter keyPath: The key path to set.
+    func setFetchResultSectionKeyPath(_ keyPath: String?) {
+        let request = fetchedResult.fetchRequest
+        let context = fetchedResult.managedObjectContext
+        fetchedResult = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: context,
+            sectionNameKeyPath: keyPath,
+            cacheName: nil
+        )
+        fetchedResult.delegate = self
     }
 }
 

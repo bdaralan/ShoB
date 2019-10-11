@@ -17,7 +17,7 @@ class OrderDataSource: NSObject, ObjectDataSource {
     
     let updateContext: NSManagedObjectContext
     
-    let fetchedResult: NSFetchedResultsController<Order>
+    var fetchedResult: NSFetchedResultsController<Order>
     
     var newObject: Order?
     

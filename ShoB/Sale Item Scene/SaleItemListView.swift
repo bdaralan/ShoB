@@ -41,8 +41,8 @@ struct SaleItemListView: View {
         }
         .onAppear(perform: setupView)
         .navigationBarItems(trailing: addNewSaleItemNavItem)
-        .sheet(isPresented: $showCreateSaleItemForm, onDismiss: dismisCreateSaleItem, content: { self.createSaleItemForm })
-        .alert(isPresented: $showCreateItemFailedAlert, content: { .creatObjectWithoutCurrentStore(object: "Item") })
+        .sheet(isPresented: $showCreateSaleItemForm, onDismiss: dismissCreateSaleItem, content: { self.createSaleItemForm })
+        .alert(isPresented: $showCreateItemFailedAlert, content: { .createObjectWithoutCurrentStore(object: "Item") })
     }
 }
  
@@ -62,7 +62,7 @@ extension SaleItemListView {
             SaleItemForm(
                 model: $newSaleItemModel,
                 onCreate: saveNewSaleItem,
-                onCancel: dismisCreateSaleItem,
+                onCancel: dismissCreateSaleItem,
                 enableCreate: newSaleItemModel.saleItem!.isValid()
             )
                 .navigationBarTitle("New Item", displayMode: .inline)
@@ -75,7 +75,7 @@ extension SaleItemListView {
 
 extension SaleItemListView {
     
-    func dismisCreateSaleItem() {
+    func dismissCreateSaleItem() {
         saleItemDataSource.discardCreateContext()
         showCreateSaleItemForm = false
     }

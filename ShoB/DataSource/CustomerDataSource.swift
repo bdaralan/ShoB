@@ -17,7 +17,7 @@ class CustomerDataSource: NSObject, ObjectDataSource {
     
     let updateContext: NSManagedObjectContext
     
-    let fetchedResult: NSFetchedResultsController<Customer>
+    var fetchedResult: NSFetchedResultsController<Customer>
     
     var newObject: Customer?
     
