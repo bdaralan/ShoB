@@ -36,7 +36,7 @@ struct StoreListView: View {
             }
         }
         .navigationBarItems(trailing: addNewStoreNavItem)
-        .sheet(isPresented: $showCreateStoreForm, onDismiss: cancelCreateStore, content: { self.createStoreForm })
+        .sheet(isPresented: $showCreateStoreForm, onDismiss: cancelCreateNewStore, content: { self.createStoreForm })
     }
 }
 
@@ -46,18 +46,8 @@ struct StoreListView: View {
 extension StoreListView {
     
     var addNewStoreNavItem: some View {
-        Button(action: {
-            // discard and prepare a new object for the form
-            let dataSource = self.storeDataSource
-            dataSource.discardNewObject()
-            dataSource.prepareNewObject()
-            self.createStoreModel.store = dataSource.newObject!
-            self.showCreateStoreForm = true
-        }) {
+        Button(action: beginCreateNewStore) {
             Image(systemName: "plus").imageScale(.large)
-        }
-        .onLongPressGesture { // MARK: Test Code :]
-            Importer.importSampleData()
         }
     }
     
@@ -65,8 +55,8 @@ extension StoreListView {
         NavigationView {
             StoreForm(
                 model: createStoreModel,
-                onCreate: commitCreateStore,
-                onCancel: cancelCreateStore,
+                onCreate: commitCreateNewStore,
+                onCancel: cancelCreateNewStore,
                 enableCreate: !createStoreModel.name.isEmpty
             )
                 .navigationBarTitle("New Store", displayMode: .inline)
@@ -85,7 +75,22 @@ extension StoreListView {
         )
     }
     
-    func commitCreateStore() {
+    func beginCreateNewStore() {
+        // discard and prepare a new object for the form
+        storeDataSource.discardNewObject()
+        storeDataSource.prepareNewObject()
+        self.createStoreModel.store = storeDataSource.newObject!
+        self.showCreateStoreForm = true
+    }
+    
+    func commitCreateNewStore() {
+        // MARK: TEST CODE importing sample data
+        if storeDataSource.newObject!.name.lowercased() == "import sample data" {
+            Importer.importSampleData()
+            showCreateStoreForm = false
+            return
+        }
+        
         // MARK: TODO add activity indicator while fetching user record
         CKContainer.default().fetchUserRecordID { recordID, error in
             defer {
@@ -111,10 +116,14 @@ extension StoreListView {
         }
     }
     
-    func cancelCreateStore() {
+    func cancelCreateNewStore() {
         storeDataSource.discardNewObject()
         storeDataSource.discardCreateContext()
         showCreateStoreForm = false
+    }
+    
+    func deleteStore(_ store: Store) {
+        
     }
 }
 
