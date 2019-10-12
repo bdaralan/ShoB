@@ -40,7 +40,7 @@ struct OrderItemForm: View {
             Section(header: Text.topSection("ORDER ITEM")) {
                 // MARK: Name
                 Text(orderItemModel.name.isEmpty ? "Select an item" : orderItemModel.name)
-                    .fontWeight(orderItemModel.name.isEmpty ? .regular : .semibold)
+                    .fontWeight(.semibold)
                     .foregroundColor(orderItemModel.name.isEmpty ? .secondary : .primary)
                 
                 // MARK: Price
@@ -54,9 +54,9 @@ struct OrderItemForm: View {
                 
                 // MARK: Subtotal
                 HStack {
-                    Text("Subtotal").bold()
+                    Text("Subtotal").fontWeight(.semibold)
                     Spacer()
-                    Text("\(orderItemModel.subtotal)").bold()
+                    Text("\(orderItemModel.subtotal)").fontWeight(.semibold)
                 }
                 
                 // MARK: Quantity
@@ -93,15 +93,17 @@ struct OrderItemForm: View {
                 }
             }
         
-            // Sale Item Selection List Section
-            if !saleItems.isEmpty {
-                saleItemListSection
-            }
+            // MARK: Sale Item Selection List
+            saleItemListSection
+                .hidden(saleItems.isEmpty)
             
-            if onDelete != nil {
-                Button("Delete", action: onDelete!)
-                    .buttonStyle(CenterButtonStyle(.destructive))
+            // MARK: Delete Button
+            Button(action: onDelete ?? {}) {
+                Text("Delete")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(.red)
             }
+            .hidden(onDelete == nil)
         }
         .navigationBarItems(leading: leadingNavItem(), trailing: trailingNavItem())
     }

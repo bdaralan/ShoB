@@ -35,7 +35,6 @@
 		B44695652310CFBE0085416D /* UIRTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695642310CFBE0085416D /* UIRTextField.swift */; };
 		B44695672310E7100085416D /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695662310E7100085416D /* CurrencyTextField.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
-		B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451060E22F221070047F3F8 /* CenterButtonStyle.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
 		B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */; };
@@ -106,7 +105,6 @@
 		B44695642310CFBE0085416D /* UIRTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRTextField.swift; sourceTree = "<group>"; };
 		B44695662310E7100085416D /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
-		B451060E22F221070047F3F8 /* CenterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterButtonStyle.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
 		B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifier.swift; sourceTree = "<group>"; };
@@ -233,7 +231,6 @@
 		B451061022F222310047F3F8 /* View Modifier */ = {
 			isa = PBXGroup;
 			children = (
-				B451060E22F221070047F3F8 /* CenterButtonStyle.swift */,
 				B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */,
 			);
 			path = "View Modifier";
@@ -465,7 +462,6 @@
 				B42FCCAF2305ECAE0066F587 /* MultiPurposeForm.swift in Sources */,
 				B44695652310CFBE0085416D /* UIRTextField.swift in Sources */,
 				B44695632310CBA70085416D /* AppCache.swift in Sources */,
-				B451060F22F221070047F3F8 /* CenterButtonStyle.swift in Sources */,
 				B440E66422EE949E004EF9CD /* Importer.swift in Sources */,
 				B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */,
 				B4E6F62823052978009B7A58 /* StoreDataSource.swift in Sources */,

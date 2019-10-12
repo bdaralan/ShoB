@@ -104,8 +104,11 @@ extension MultiPurposeForm {
     func setupRowActionSection() -> some View {
         Section {
             ForEach(rowActions, id: \.title) { row in
-                Button(row.title, action: row.action)
-                    .buttonStyle(CenterButtonStyle(row.isDestructive ? .destructive : .normal))
+                Button(action: row.action) {
+                    Text(row.title)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundColor(row.isDestructive ? .red : .accentColor)
+                }
             }
         }
     }

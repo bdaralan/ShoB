@@ -23,7 +23,7 @@ extension Image.SFCustomer {
     
     static let organization = Image(systemName: "briefcase")
     
-    static let phone = Image(systemName: "bubble.left")
+    static let phone = Image(systemName: "phone")
     
     static let email = Image(systemName: "paperplane")
     
@@ -46,4 +46,6 @@ extension Image.SFOrder {
     static let discount = Image(systemName: "minus.circle")
     
     static let note = Image(systemName: "doc.text")
+    
+    static let addOrderItem = Image(systemName: "cart.badge.plus")
 }

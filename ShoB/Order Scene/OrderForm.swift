@@ -124,7 +124,7 @@ struct OrderForm: View, MultiPurposeForm {
                     HStack {
                         Text("Add Item")
                         Spacer()
-                        Image(systemName: "plus.circle").imageScale(.large)
+                        Image.SFOrder.addOrderItem.imageScale(.large)
                     }
                 }
                 

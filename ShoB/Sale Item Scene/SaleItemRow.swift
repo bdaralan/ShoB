@@ -34,6 +34,7 @@ struct SaleItemRow: View {
                 Text(saleItem.name)
                 Spacer()
                 Text(verbatim: "\(Currency(saleItem.price))")
+                    .padding(.trailing)
             }
             .contextMenu(menuItems: contextMenuItems)
         }
