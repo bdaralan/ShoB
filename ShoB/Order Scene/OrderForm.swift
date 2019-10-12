@@ -379,8 +379,11 @@ extension OrderForm {
     /// Dismiss the presenting add or edit order form sheet and clean up as needed.
     func dismissPresentationSheet() {
         showModalSheet = false
-        isNoteTextViewActive = false
         isDiscountTextFieldActive = false
+        isNoteTextViewActive = false
+        
+        // trim the note text if user drags to dismiss the modal
+        model.note = model.note.trimmed()
         
         // for add-order-item form or customer-selection list, just dismiss
         // for edit-order-item form, do some clean up and reload
