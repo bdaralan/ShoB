@@ -32,7 +32,7 @@ struct SaleItemForm: View, MultiPurposeForm {
         let form = Form {
             // MARK: Name & Price
             Section {
-                VertialTextField("Name", text: $model.name)
+                VerticalTextField(text: $model.name, label: "name", placeholder: "Name")
                 HStack {
                     Text("Price")
                     CurrencyTextField(text: $model.price)

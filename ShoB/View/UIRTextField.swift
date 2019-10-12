@@ -12,10 +12,6 @@ import UIKit
 
 struct UIRTextField: UIViewRepresentable {
     
-    typealias UIViewType = UITextField
-    
-    typealias Coordinator = Coordiantor
-    
     @Binding var text: String
     
     var enableToolBar: Bool = false
@@ -34,28 +30,12 @@ struct UIRTextField: UIViewRepresentable {
     // MARK: Make & Create
     
     func makeCoordinator() -> Coordinator {
-        let coordinator = Coordiantor(text: $text)
-        coordinator.onEditingBegan = onEditingBegan
-        coordinator.onEditingChanged = onEditingChanged
-        coordinator.onEditingEnded = onEditingEnded
-        coordinator.textFormat = textFormat
-        return coordinator
+        Coordinator(wrapper: self)
     }
     
     func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField()
-        
+        let textField = context.coordinator.textField
         configure?(textField)
-        
-        if enableToolBar {
-            configureAccessoryView(for: textField)
-        }
-        
-        let coordinator = context.coordinator
-        textField.addTarget(coordinator, action: #selector(coordinator.textFieldBegan), for: .editingDidBegin)
-        textField.addTarget(coordinator, action: #selector(coordinator.textFieldChanged), for: .editingChanged)
-        textField.addTarget(coordinator, action: #selector(coordinator.textFieldEnd), for: .editingDidEnd)
-        
         return textField
     }
     
@@ -63,51 +43,54 @@ struct UIRTextField: UIViewRepresentable {
         uiView.text = text
     }
     
-    func configureAccessoryView(for textField: UITextField) {
-        let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: 0, height: 44))
-        
-        toolBar.items = [
-            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-            .init(barButtonSystemItem: .done, target: textField, action: #selector(textField.resignFirstResponder))
-        ]
-        
-        textField.inputAccessoryView = toolBar
-    }
-    
     
     // MARK: Coordinator
     
-    class Coordiantor: NSObject {
+    class Coordinator: NSObject {
         
-        @Binding var text: String
+        let wrapper: UIRTextField
         
-        var onEditingBegan: ((UITextField) -> Void)?
-        
-        var onEditingChanged: ((String) -> Void)?
-        
-        var onEditingEnded: ((String) -> Void)?
-        
-        var textFormat: ((String) -> String)?
+        let textField = UITextField()
         
         
-        init(text: Binding<String>) {
-            _text = text
+        init(wrapper: UIRTextField) {
+            self.wrapper = wrapper
+            
+            super.init()
+            textField.addTarget(self, action: #selector(textFieldBegan), for: .editingDidBegin)
+            textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+            textField.addTarget(self, action: #selector(textFieldEnd), for: .editingDidEnd)
+            
+            if wrapper.enableToolBar {
+                configureAccessoryView(for: textField)
+            }
         }
         
         
         @objc func textFieldChanged(_ sender: UITextField) {
-            let text = textFormat?(sender.text!) ?? sender.text!
+            let text = wrapper.textFormat?(sender.text!) ?? sender.text!
             sender.text = text
-            $text.wrappedValue = text
-            onEditingChanged?(text)
+            wrapper.$text.wrappedValue = text
+            wrapper.onEditingChanged?(text)
         }
         
         @objc func textFieldEnd(_ sender: UITextField) {
-            onEditingEnded?(sender.text!)
+            wrapper.onEditingEnded?(sender.text!)
         }
         
         @objc func textFieldBegan(_ sender: UITextField) {
-            onEditingBegan?(sender)
+            wrapper.onEditingBegan?(sender)
+        }
+        
+        private func configureAccessoryView(for textField: UITextField) {
+            let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: 0, height: 44))
+            
+            toolBar.items = [
+                .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+                .init(barButtonSystemItem: .done, target: textField, action: #selector(textField.resignFirstResponder))
+            ]
+            
+            textField.inputAccessoryView = toolBar
         }
     }
 }

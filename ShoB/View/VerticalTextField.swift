@@ -1,5 +1,5 @@
 //
-//  InputField.swift
+//  VerticalTextField.swift
 //  ShoB
 //
 //  Created by Dara Beng on 7/24/19.
@@ -10,7 +10,7 @@ import SwiftUI
 
 
 /// A text field with a description label below it.
-struct VertialTextField: View {
+struct VerticalTextField: View {
     
     /// The binding text for the text field.
     @Binding var text: String
@@ -22,25 +22,19 @@ struct VertialTextField: View {
     /// If `nil`, the label is used.
     var placeholder: String?
     
-    var textContentType: UITextContentType?
+    var content: UITextContentType?
     
-    
-    init(_ label: String, placeholder: String? = nil, text: Binding<String>, content: UITextContentType? = nil) {
-        self._text = text
-        self.label = label
-        self.placeholder = placeholder
-        self.textContentType = content
-    }
+    var onEditingChanged: ((Bool) -> Void)?
     
     
     // MARK: - Body
     
     var body: some View {
         VStack(alignment: .leading) {
-            TextField(placeholder ?? label, text: $text)
+            TextField(placeholder ?? label, text: $text, onEditingChanged: onEditingChanged ?? { _ in })
                 .multilineTextAlignment(.leading)
                 .padding(.top, Self.topPadding)
-                .textContentType(textContentType)
+                .textContentType(content)
             Text(label)
                 .font(.caption)
                 .foregroundColor(Self.labelColor)
@@ -49,7 +43,7 @@ struct VertialTextField: View {
 }
 
 
-extension VertialTextField {
+extension VerticalTextField {
     
     static let topPadding: CGFloat = 4
     
@@ -59,6 +53,6 @@ extension VertialTextField {
 
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
-        VertialTextField("Label", placeholder: "Placeholder", text: .constant(""))
+        VerticalTextField(text: .constant("Text"), label: "label", placeholder: "placeholder", content: nil, onEditingChanged: nil)
     }
 }

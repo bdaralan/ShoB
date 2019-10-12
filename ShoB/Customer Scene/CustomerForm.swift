@@ -26,6 +26,8 @@ struct CustomerForm: View, MultiPurposeForm {
     
     var rowActions: [MultiPurposeFormRowAction] = []
     
+    @State private var offsetY: CGFloat = 0
+    
     
     // MARK: - Body
     
@@ -33,22 +35,68 @@ struct CustomerForm: View, MultiPurposeForm {
         let form = Form {
             // MARK: Info Section
             Section(header: Text.topSection("INFO")) {
-                VertialTextField("Given Name", text: $model.givenName, content: .givenName)
-                VertialTextField("Family Name", text: $model.familyName, content: .familyName)
-                VertialTextField("Organization", text: $model.organization, content: .organizationName)
+                VerticalTextField(
+                    text: $model.givenName,
+                    label: "given name",
+                    placeholder: "Given Name",
+                    content: .givenName
+                )
+                VerticalTextField(
+                    text: $model.familyName,
+                    label: "family name",
+                    placeholder: "Family Name",
+                    content: .familyName
+                )
+                VerticalTextField(
+                    text: $model.organization,
+                    label: "organization",
+                    placeholder: "Organization",
+                    content: .organizationName
+                )
             }
             
             // MARK: Contact Section
             Section(header: Text("CONTACT").padding(.top)) {
-                VertialTextField("Phone", text: $model.phone, content: .telephoneNumber)
-                VertialTextField("Email", text: $model.email, content: .emailAddress).autocapitalization(.none)
-                VertialTextField("Address", text: $model.address, content: .fullStreetAddress)
+                VerticalTextField(
+                    text: $model.phone,
+                    label: "phone",
+                    placeholder: "Phone",
+                    content: .telephoneNumber,
+                    onEditingChanged: updateOffsetY
+                )
+                    .keyboardType(.numberPad)
+                VerticalTextField(
+                    text: $model.email,
+                    label: "email",
+                    placeholder: "Email",
+                    content: .emailAddress,
+                    onEditingChanged: updateOffsetY
+                )
+                    .keyboardType(.emailAddress)
+                VerticalTextField(
+                    text: $model.address,
+                    label: "address",
+                    placeholder: "Address",
+                    content: .fullStreetAddress,
+                    onEditingChanged: updateOffsetY
+                )
             }
             
             setupRowActionSection()
         }
+        .offset(y: offsetY)
         
         return setupNavItems(forForm: form.eraseToAnyView())
+    }
+}
+
+
+extension CustomerForm {
+    
+    func updateOffsetY(keyboardWillShow: Bool) {
+        withAnimation {
+            self.offsetY = keyboardWillShow ? -200 : 0
+        }
     }
 }
 

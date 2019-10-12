@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B405260222E8FFDC007E2325 /* VertialTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260122E8FFDC007E2325 /* VertialTextField.swift */; };
+		B405260222E8FFDC007E2325 /* VerticalTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260122E8FFDC007E2325 /* VerticalTextField.swift */; };
 		B405260422E902C7007E2325 /* CustomerFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260322E902C7007E2325 /* CustomerFormModel.swift */; };
 		B405260722E90A41007E2325 /* CurrencyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260622E90A41007E2325 /* CurrencyWrapper.swift */; };
 		B405260D22E910B6007E2325 /* CustomerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B405260C22E910B6007E2325 /* CustomerRow.swift */; };
@@ -78,7 +78,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B405260122E8FFDC007E2325 /* VertialTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertialTextField.swift; sourceTree = "<group>"; };
+		B405260122E8FFDC007E2325 /* VerticalTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalTextField.swift; sourceTree = "<group>"; };
 		B405260322E902C7007E2325 /* CustomerFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerFormModel.swift; sourceTree = "<group>"; };
 		B405260622E90A41007E2325 /* CurrencyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWrapper.swift; sourceTree = "<group>"; };
 		B405260C22E910B6007E2325 /* CustomerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerRow.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 		B405260022E8FFBF007E2325 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B405260122E8FFDC007E2325 /* VertialTextField.swift */,
+				B405260122E8FFDC007E2325 /* VerticalTextField.swift */,
 				B4A2C3E922FB9EFC006EE586 /* SearchTextField.swift */,
 				B44695662310E7100085416D /* CurrencyTextField.swift */,
 				B44695642310CFBE0085416D /* UIRTextField.swift */,
@@ -483,7 +483,7 @@
 				B42FD55F2304E3B400104AEA /* StoreForm.swift in Sources */,
 				B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */,
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
-				B405260222E8FFDC007E2325 /* VertialTextField.swift in Sources */,
+				B405260222E8FFDC007E2325 /* VerticalTextField.swift in Sources */,
 				B41A36A4234A42D900F13C19 /* Font.swift in Sources */,
 				B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */,
 				B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */,

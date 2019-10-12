@@ -68,11 +68,13 @@ struct OrderForm: View, MultiPurposeForm {
                     Image.SFOrder.orderDate
                     Text("Order Date")
                 }
+                .foregroundColor(.primary)
                 
                 DatePicker(selection: $model.deliverDate) {
                     Image.SFOrder.deliverDate
                     Text("Deliver Date")
                 }
+                .foregroundColor(.primary)
 
                 Toggle(isOn: $model.isDelivered) {
                     Image.SFOrder.delivered
@@ -83,6 +85,7 @@ struct OrderForm: View, MultiPurposeForm {
                     Image.SFOrder.delivered.foregroundColor(.green)
                     Text("Delivered Date")
                 }
+                .foregroundColor(.primary)
                 .hidden(!model.isDelivered)
             }
             

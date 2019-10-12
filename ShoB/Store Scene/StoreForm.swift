@@ -31,10 +31,33 @@ struct StoreForm: View, MultiPurposeForm {
     var body: some View {
         let form = Form {
             Section(header: Text.topSection("STORE INFO")) {
-                VertialTextField("Name", text: $model.name, content: .organizationName)
-                VertialTextField("Phone", text: $model.phone, content: .telephoneNumber)
-                VertialTextField("Email", text: $model.email, content: .emailAddress).autocapitalization(.none)
-                VertialTextField("Address", text: $model.address, content: .fullStreetAddress)
+                VerticalTextField(
+                    text: $model.name,
+                    label: "name",
+                    placeholder: "Name",
+                    content: .organizationName
+                )
+                VerticalTextField(
+                    text: $model.phone,
+                    label: "phone",
+                    placeholder: "Phone",
+                    content: .telephoneNumber
+                )
+                    .keyboardType(.numberPad)
+                VerticalTextField(
+                    text: $model.email,
+                    label: "email",
+                    placeholder: "Email",
+                    content: .emailAddress
+                )
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                VerticalTextField(
+                    text: $model.address,
+                    label: "address",
+                    placeholder: "Address",
+                    content: .fullStreetAddress
+                )
             }
             
             setupRowActionSection()
