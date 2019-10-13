@@ -30,7 +30,7 @@ struct SaleItemFormModel {
         }
     }
     
-    var quantity = 1 {
+    var quantity = 0 {
         didSet { orderItem?.quantity = Int64(quantity) }
     }
     
@@ -55,7 +55,7 @@ struct SaleItemFormModel {
             self.saleItem = keepReference ? item : nil
             name = item.name
             price = "\(Currency(item.price))"
-            quantity = 1 // default to 1 when create item
+            quantity = 0 // default to 0 when create item
         }
         
         if let item = orderItem {

@@ -27,9 +27,13 @@ struct OrderItemForm: View {
     
     @State private var quantityMode = QuantityMode.unit
     
+    let searchField = SearchField()
+    
     var incrementRange: ClosedRange<Int> {
         orderItemModel.name.isEmpty ? 1...1 : 1...999
     }
+    
+    @State private var filteredSaleItems = [SaleItem]()
   
     
     // MARK: - Body
@@ -37,67 +41,14 @@ struct OrderItemForm: View {
     var body: some View {
         Form {
             // Input Section
-            Section(header: Text.topSection("ORDER ITEM")) {
-                // MARK: Name
-                Text(orderItemModel.name.isEmpty ? "Select an item" : orderItemModel.name)
-                    .fontWeight(.semibold)
-                    .foregroundColor(orderItemModel.name.isEmpty ? .secondary : .primary)
-                
-                // MARK: Price
-                HStack {
-                    Text("Price")
-                        .multilineTextAlignment(.leading)
-                    Spacer()
-                    Text(orderItemModel.price)
-                        .multilineTextAlignment(.trailing)
-                }
-                
-                // MARK: Subtotal
-                HStack {
-                    Text("Subtotal").fontWeight(.semibold)
-                    Spacer()
-                    Text("\(orderItemModel.subtotal)").fontWeight(.semibold)
-                }
-                
-                // MARK: Quantity
-                HStack {
-                    Text("Quantity")
-                    Spacer()
-                    quantityText
-                }
-                
-                HStack {
-                    // MARK: Unit Segment
-                    Picker("", selection: $quantityMode) {
-                        Text("Unit").tag(QuantityMode.unit)
-                        Text("Dozen").tag(QuantityMode.dozen)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    
-                    // MARK: Increment Segment
-                    Picker("", selection: $incrementValue) {
-                        Text("1").tag(1)
-                        Text("6").tag(6)
-                        Text("12").tag(QuantityMode.dozenCount)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    
-                    // MARK: Stepper
-                    Stepper(
-                        value: $orderItemModel.quantity,
-                        in: incrementRange,
-                        step: incrementValue,
-                        onEditingChanged: updateStepperValue,
-                        label: EmptyView.init
-                    )
-                }
-            }
+            saleItemInputSection
+                .disabled(orderItemModel.quantity == 0)
         
-            // MARK: Sale Item Selection List
+            // Sale Item Selection List
             saleItemListSection
                 .hidden(saleItems.isEmpty)
             
-            // MARK: Delete Button
+            // Delete Button
             Button(action: onDelete ?? {}) {
                 Text("Delete")
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -106,18 +57,161 @@ struct OrderItemForm: View {
             .hidden(onDelete == nil)
         }
         .navigationBarItems(leading: leadingNavItem(), trailing: trailingNavItem())
+        .onAppear(perform: { self.filterSaleItems(searchText: "") })
     }
 }
 
 
-// MARK: - Body Component
+// MARK: - Section View
+
+extension OrderItemForm {
+    
+    var saleItemInputSection: some View {
+        Section(header: Text.topSection("ORDER ITEM")) {
+            // Name
+            Text(orderItemModel.name.isEmpty ? "Select an item" : orderItemModel.name)
+                .fontWeight(.semibold)
+                .foregroundColor(orderItemModel.name.isEmpty ? .secondary : .primary)
+            
+            // Price
+            HStack {
+                Text("Price")
+                    .multilineTextAlignment(.leading)
+                Spacer()
+                Text(orderItemModel.price)
+                    .multilineTextAlignment(.trailing)
+            }
+            
+            // Subtotal
+            HStack {
+                Text("Subtotal").fontWeight(.semibold)
+                Spacer()
+                Text("\(orderItemModel.subtotal)").fontWeight(.semibold)
+            }
+            
+            // Quantity
+            HStack {
+                Text("Quantity")
+                Spacer()
+                quantityText
+            }
+            
+            HStack {
+                // Unit Segment
+                Picker("", selection: $quantityMode) {
+                    Text("Unit").tag(QuantityMode.unit)
+                    Text("Dozen").tag(QuantityMode.dozen)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                
+                // Increment Segment
+                Picker("", selection: $incrementValue) {
+                    Text("1").tag(1)
+                    Text("6").tag(6)
+                    Text("12").tag(QuantityMode.dozenCount)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                
+                // Stepper
+                Stepper(
+                    value: $orderItemModel.quantity,
+                    in: incrementRange,
+                    step: incrementValue,
+                    onEditingChanged: updateStepperValue,
+                    label: EmptyView.init
+                )
+            }
+        }
+    }
+    
+    /// Selectable sale item list.
+    var saleItemListSection: some View {
+        Section(header: Text("ALL SALE ITEMS")) {
+            // Expand Sale Item List Button
+            Button("Select Item", action: beginSelectSaleItem)
+                .hidden(orderItemModel.shouldExpandSelectionList)
+            
+            // Search Field
+            SearchTextField(searchField: searchField)
+                .onAppear(perform: setupSearchField)
+                .hidden(!orderItemModel.shouldExpandSelectionList)
+            
+            // Sale Item List
+            ForEach(filteredSaleItems, id: \.self) { item in
+                Button(action: { self.selectSaleItem(item) }) {
+                    HStack {
+                        Text("\(item.name)")
+                        Spacer()
+                        Text(verbatim: "\(Currency(item.price))")
+                    }
+                    .foregroundColor(.primary)
+                }
+            }
+            .hidden(filteredSaleItems.isEmpty)
+            
+            Text("no item found")
+                .foregroundColor(.secondary)
+                .hidden(searchField.searchText.isEmpty || !filteredSaleItems.isEmpty)
+        }
+    }
+}
+
+
+extension OrderItemForm {
+    
+    func beginSelectSaleItem() {
+        orderItemModel.shouldExpandSelectionList = true
+        filteredSaleItems = saleItems
+    }
+    
+    func selectSaleItem(_ item: SaleItem) {
+        // only need to get values for the model
+        // do not keep reference to avoid editing the item's original values
+        let currentQuantity = orderItemModel.quantity
+        orderItemModel = .init(saleItem: item, keepReference: false)
+        orderItemModel.quantity = currentQuantity == 0 ? 1 : currentQuantity
+        
+        // collapse the selection list once selected
+        orderItemModel.shouldExpandSelectionList = false
+        filteredSaleItems = []
+        searchField.cancel()
+        searchField.clear()
+    }
+    
+    func filterSaleItems(searchText: String) {
+        if !orderItemModel.shouldExpandSelectionList {
+            filteredSaleItems = []
+            return
+        }
+        
+        if searchText.isEmpty {
+            filteredSaleItems = saleItems
+            return
+        }
+        
+        if let dollar = Double(searchText) {
+            let price = Currency("\(dollar)").amount
+            filteredSaleItems = saleItems.filter({ $0.price == price })
+        } else {
+            filteredSaleItems = saleItems.filter({ $0.name.range(of: searchText, options: .caseInsensitive) != nil })
+        }
+    }
+    
+    func setupSearchField() {
+        searchField.placeholder = "Search by name or price"
+        searchField.onSearchTextDebounced = { searchText in
+            self.filterSaleItems(searchText: searchText)
+        }
+    }
+}
+
 
 extension OrderItemForm {
     
     /// Add navigation item.
     var addNavItem: some View {
         Button("Add", action: onAdd!)
-            .disabled(orderItemModel.name.isEmpty)
+            .disabled(orderItemModel.name.isEmpty || orderItemModel.quantity == 0)
     }
     
     /// Cancel navigation item.
@@ -148,35 +242,6 @@ extension OrderItemForm {
         }
         
         return AnyView.emptyView
-    }
-    
-    /// Selectable sale item list.
-    var saleItemListSection: some View {
-        Section(header: Text("ALL SALE ITEMS")) {
-            // Expand Sale Item List Button
-            if !orderItemModel.shouldExpandSelectionList {
-                Button("Select Item", action: { self.orderItemModel.shouldExpandSelectionList = true })
-            }
-            
-            // Sale Item List
-            ForEach(orderItemModel.shouldExpandSelectionList ? saleItems : [], id: \.self) { item in
-                Button(action: {
-                    // only need to get values for the model
-                    // do not keep reference to avoid editing the item's original values
-                    self.orderItemModel = .init(saleItem: item, keepReference: false)
-                    
-                    // collapse the selection list once selected
-                    self.orderItemModel.shouldExpandSelectionList = false
-                }) {
-                    HStack {
-                        Text("\(item.name)")
-                        Spacer()
-                        Text(verbatim: "\(Currency(item.price))")
-                    }
-                    .foregroundColor(.primary)
-                }
-            }
-        }
     }
     
     /// View that displays quantity based on `quantityMode`.
