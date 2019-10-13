@@ -33,12 +33,21 @@ struct SearchTextField: View {
             
             // show cancel button when there is text in the text field
             if !searchField.searchText.isEmpty {
-                Button("Cancel", action: searchField.clear)
+                Button("Cancel", action: cancelSearch)
                     .foregroundColor(.accentColor)
                     .transition(.move(edge: .trailing))
                     .animation(.easeOut)
             }
         }
+    }
+}
+
+
+extension SearchTextField {
+    
+    func cancelSearch() {
+        searchField.cancel()
+        searchField.clear()
     }
 }
 
@@ -49,7 +58,6 @@ struct SearchTextField: View {
 class SearchField: ObservableObject {
 
     @Published var searchText = "" {
-        willSet { searchTextWillChange.send(newValue) }
         didSet { onSearchTextChanged?(searchText) }
     }
     
@@ -61,18 +69,14 @@ class SearchField: ObservableObject {
     /// An action to perform when debounce text changed.
     var onSearchTextDebounced: ((String) -> Void)?
     
-    /// A publisher for sending change when `text` changed.
-    private let searchTextWillChange = PassthroughSubject<String, Never>()
-    
-    private var searchTextWillChangeCancellable: AnyCancellable?
+    private var searchTextDebounceCancellable: AnyCancellable?
     
     
     init() {
-        searchTextWillChangeCancellable = searchTextWillChange
+        searchTextDebounceCancellable = $searchText
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink(receiveValue: { newValue in
-                self.objectWillChange.send()
                 self.onSearchTextDebounced?(newValue)
             })
     }
@@ -81,6 +85,12 @@ class SearchField: ObservableObject {
     /// Clear the search text.
     func clear() {
         searchText = ""
+    }
+    
+    /// Ask the application to resign the first responder, which is the keyboard.
+    func cancel() {
+        let dismissKeyboard = #selector(UIResponder.resignFirstResponder)
+        UIApplication.shared.sendAction(dismissKeyboard, to: nil, from: nil, for: nil)
     }
 }
 
