@@ -17,6 +17,8 @@ struct SearchTextField: View {
     
     @ObservedObject var searchField: SearchField
     
+    var onEditingChanged: ((Bool) -> Void)?
+    
     
     // MARK: - Body
     
@@ -24,7 +26,11 @@ struct SearchTextField: View {
         HStack {
             HStack {
                 Image(systemName: "magnifyingglass").foregroundColor(.secondary)
-                TextField(searchField.placeholder, text: $searchField.searchText)
+                TextField(
+                    searchField.placeholder,
+                    text: $searchField.searchText,
+                    onEditingChanged: onEditingChanged ?? { _ in }
+                )
             }
             .padding(8)
             .background(Color(UIColor(white: colorScheme == .light ? 0.92 : 0.1, alpha: 1)))

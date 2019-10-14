@@ -33,7 +33,11 @@ struct OrderItemForm: View {
         orderItemModel.name.isEmpty ? 1...1 : 1...999
     }
     
+    /// The sale items to display based on the search text.
     @State private var filteredSaleItems = [SaleItem]()
+    
+    /// A flag used to control how the UI will look.
+    @State private var isSearching = false
   
     
     // MARK: - Body
@@ -43,6 +47,7 @@ struct OrderItemForm: View {
             // Input Section
             saleItemInputSection
                 .disabled(orderItemModel.quantity == 0)
+                .hidden(isSearching)
         
             // Sale Item Selection List
             saleItemListSection
@@ -126,13 +131,13 @@ extension OrderItemForm {
     
     /// Selectable sale item list.
     var saleItemListSection: some View {
-        Section(header: Text("ALL SALE ITEMS")) {
+        Section(header: Text.topSection("ALL SALE ITEMS", padding: isSearching ? nil : 0)) {
             // Expand Sale Item List Button
             Button("Select Item", action: beginSelectSaleItem)
                 .hidden(orderItemModel.shouldExpandSelectionList)
             
             // Search Field
-            SearchTextField(searchField: searchField)
+            SearchTextField(searchField: searchField, onEditingChanged: searchTextFieldEditingChanged)
                 .onAppear(perform: setupSearchField)
                 .hidden(!orderItemModel.shouldExpandSelectionList)
             
@@ -202,6 +207,10 @@ extension OrderItemForm {
         searchField.onSearchTextDebounced = { searchText in
             self.filterSaleItems(searchText: searchText)
         }
+    }
+    
+    func searchTextFieldEditingChanged(_ isEditing: Bool) {
+        isSearching = isEditing
     }
 }
 
