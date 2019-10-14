@@ -69,33 +69,35 @@ extension Customer {
     }
     
     /// A request to fetch customers.
-    /// - Parameter filterInfo: Customer's info to filter. Example name, email, or address.
-    static func requestAllCustomer(filterInfo: String? = nil) -> NSFetchRequest<Customer> {
+    /// - Parameter predicate: Customer's info to filter. Example name, email, or address.
+    static func requestObjects(storeID: String, withInfo predicate: String = "") -> NSFetchRequest<Customer> {
         let request = Customer.fetchRequest() as NSFetchRequest<Customer>
+        let storeUID = #keyPath(store.uniqueID)
         
-        if let search = filterInfo {
-            let format = """
-            \(#keyPath(familyName)) CONTAINS[c] %@ OR
-            \(#keyPath(givenName)) CONTAINS[c] %@ OR
-            \(#keyPath(organization)) CONTAINS[c] %@ OR
-            \(#keyPath(phone)) CONTAINS[c] %@ OR
-            \(#keyPath(email)) CONTAINS[c] %@ OR
-            \(#keyPath(address)) CONTAINS[c] %@
-            """
-            request.predicate = .init(format: format, search, search, search, search, search, search)
-        } else {
-            request.predicate = .init(value: true)
+        let matchStore = NSPredicate(format: "\(storeUID) == %@", storeID)
+        
+        // fetch all objects when no predicate
+        if predicate.isEmpty {
+            request.predicate = matchStore
+            request.sortDescriptors = []
+            return request
         }
         
+        // fetch all objects with predicate
+        let infoQuery = """
+        \(#keyPath(familyName)) CONTAINS[c] %@ OR
+        \(#keyPath(givenName)) CONTAINS[c] %@ OR
+        \(#keyPath(organization)) CONTAINS[c] %@ OR
+        \(#keyPath(phone)) CONTAINS[c] %@ OR
+        \(#keyPath(email)) CONTAINS[c] %@ OR
+        \(#keyPath(address)) CONTAINS[c] %@
+        """
+        
+        let matchInfo = NSPredicate(format: infoQuery, predicate, predicate, predicate, predicate, predicate, predicate)
+        
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [matchStore, matchInfo])
         request.sortDescriptors = []
-        return request
-    }
-    
-    static func requestObjects(storeID: String) -> NSFetchRequest<Customer> {
-        let request = Customer.fetchRequest() as NSFetchRequest<Customer>
-        let customerStoreID = #keyPath(Customer.store.uniqueID)
-        request.predicate = .init(format: "\(customerStoreID) == %@", storeID)
-        request.sortDescriptors = []
+        
         return request
     }
     

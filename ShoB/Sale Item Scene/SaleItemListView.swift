@@ -118,7 +118,7 @@ extension SaleItemListView {
     }
     
     func setupSearchField() {
-        searchField.placeholder = "Search by name or price"
+        searchField.placeholder = "Search name or price"
         searchField.onSearchTextDebounced = fetchSaleItems
     }
 }

@@ -25,8 +25,8 @@ struct CustomerListView: View {
     @ObservedObject private var searchField = SearchField()
     
     var sortedCustomers: [Customer] {
-        customerDataSource.fetchedResult.fetchedObjects?
-            .sorted(by: { $0.identity.lowercased() < $1.identity.lowercased() }) ?? []
+        let customers = customerDataSource.fetchedResult.fetchedObjects ?? []
+        return customers.sorted(by: { $0.identity.lowercased() < $1.identity.lowercased() })
     }
     
     
@@ -35,6 +35,7 @@ struct CustomerListView: View {
     var body: some View {
         List {
             SearchTextField(searchField: searchField)
+                .onAppear(perform: setupSearchField)
             ForEach(sortedCustomers, id: \.self) { customer in
                 CustomerRow(
                     customer: self.customerDataSource.readObject(customer),
@@ -114,12 +115,12 @@ extension CustomerListView {
     
     func setupView() {
         fetchCustomers()
-        setupSearchField()
     }
     
-    func fetchCustomers() {
+    func fetchCustomers(searchText: String = "") {
         if let storeID = AppCache.currentStoreUniqueID {
-            customerDataSource.performFetch(Customer.requestObjects(storeID: storeID))
+            let request = Customer.requestObjects(storeID: storeID, withInfo: searchText)
+            customerDataSource.performFetch(request)
         } else {
             customerDataSource.performFetch(Customer.requestNoObject())
         }
@@ -128,10 +129,7 @@ extension CustomerListView {
     
     func setupSearchField() {
         searchField.placeholder = "Search name, phone, email, etc..."
-        searchField.onSearchTextDebounced = { searchText in
-            let search = searchText.isEmpty ? nil : searchText
-            self.customerDataSource.performFetch(Customer.requestAllCustomer(filterInfo: search))
-        }
+        searchField.onSearchTextDebounced = fetchCustomers
     }
 }
 
