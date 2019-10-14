@@ -77,6 +77,7 @@ class SearchField: ObservableObject {
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink(receiveValue: { newValue in
+                self.objectWillChange.send()
                 self.onSearchTextDebounced?(newValue)
             })
     }
