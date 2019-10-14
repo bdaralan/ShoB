@@ -60,19 +60,23 @@ extension SaleItem {
         
         // fetch all objects when no predicate
         if predicate.isEmpty {
-            request.predicate = .init(format: "\(storeUID) == %@", storeID)
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [])
             request.sortDescriptors = [.init(key: name, ascending: true)]
             return request
         }
         
         // fetch all objects with predicate
         if Double(predicate) != nil { // matching price
-            request.predicate = .init(format: "\(storeUID) == %@ AND \(price) == %d", storeID, Currency(predicate).amount)
+            let matchPriceQuery = "\(price) == %d"
+            let matchPrice = NSPredicate(format: matchPriceQuery, Currency(predicate).amount)
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchPrice])
             request.sortDescriptors = [.init(key: price, ascending: true)]
             return request
         
         } else { // matching name
-            request.predicate = .init(format: "\(storeUID) == %@ AND \(name) CONTAINS[c] %@", storeID, predicate)
+            let matchNameQuery = "\(name) CONTAINS[c] %@"
+            let matchName = NSPredicate(format: matchNameQuery, predicate)
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchName])
             request.sortDescriptors = [.init(key: name, ascending: true)]
             return request
         }

@@ -79,7 +79,7 @@ extension Order {
     }
     
     func hasValidInputs() -> Bool {
-        !self.orderItems.isEmpty
+        !orderItems.isEmpty
     }
     
     func hasChangedValues() -> Bool {
@@ -105,22 +105,21 @@ extension Order {
     /// - Parameter endDate: The latest date but NOT included. The default is `nil` which means no boundary.
     static func requestDeliver(from startDate: Date, to endDate: Date? = nil, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
-    
         let deliverDate = #keyPath(Order.deliverDate)
-        let storeUniqueID = #keyPath(Order.store.uniqueID)
-        let matchStoreID = "\(storeUniqueID) == %@"
+        let storeUID = #keyPath(Order.store.uniqueID)
         
         if let endDate = endDate {
-            let format = "\(deliverDate) >= %@ AND \(deliverDate) < %@ AND \(matchStoreID)"
-            request.predicate = .init(format: format, startDate as NSDate, endDate as NSDate, storeID)
+            let matchDateQuery = "\(deliverDate) >= %@ AND \(deliverDate) < %@"
+            let matchDate = NSPredicate(format: matchDateQuery, startDate as NSDate, endDate as NSDate)
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchDate])
+        
         } else {
-            let format = "\(deliverDate) >= %@ AND \(matchStoreID)"
-            request.predicate = .init(format: format, startDate as NSDate, storeID)
+            let matchDateQuery = "\(deliverDate) >= %@"
+            let matchDate = NSPredicate(format: matchDateQuery, startDate as NSDate)
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchDate])
         }
         
-        request.sortDescriptors = [
-            .init(key: deliverDate, ascending: true)
-        ]
+        request.sortDescriptors = [.init(key: deliverDate, ascending: true)]
         
         return request
     }
@@ -129,17 +128,17 @@ extension Order {
     /// - Parameter fromPastDay: The number of days that have been passed. For instance, 7 means last week.
     static func requestDeliver(fromPastDay: Int, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
+        let deliverDate = #keyPath(Order.deliverDate)
+        let storeUID = #keyPath(Order.store.uniqueID)
         
         let today = Date.startOfToday() as NSDate
         let pastDay = Date.startOfToday(addingDay: -fromPastDay) as NSDate
-        let deliverDate = #keyPath(Order.deliverDate)
-        let storeUniqueID = #keyPath(Order.store.uniqueID)
-        let matchStoreID = "\(storeUniqueID) == %@"
-        request.predicate = .init(format: "\(deliverDate) >= %@ AND \(deliverDate) < %@ AND \(matchStoreID)", pastDay, today, storeID)
         
-        request.sortDescriptors = [
-            .init(key: deliverDate, ascending: false)
-        ]
+        let matchDateQuery = "\(deliverDate) >= %@ AND \(deliverDate) < %@"
+        let matchDate = NSPredicate(format: matchDateQuery, pastDay, today)
+        request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchDate])
+        
+        request.sortDescriptors = [.init(key: deliverDate, ascending: false)]
         
         return request
     }

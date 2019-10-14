@@ -75,12 +75,10 @@ extension Store {
         return NSFetchRequest<Store>(entityName: "Store")
     }
     
-    static func requestAllStores() -> NSFetchRequest<Store> {
+    static func requestObjects() -> NSFetchRequest<Store> {
         let request = Store.fetchRequest() as NSFetchRequest<Store>
-        
         request.predicate = .init(value: true)
         request.sortDescriptors = [.init(key: #keyPath(Store.name), ascending: true)]
-        
         return request
     }
 }
@@ -108,8 +106,8 @@ extension Store {
     ///   - context: The context to fetch from.
     static func fetch(uniqueID: String, from context: NSManagedObjectContext) -> Store? {
         let request = Store.fetchRequest() as NSFetchRequest<Store>
-        let storeUniqueID = #keyPath(Store.uniqueID)
-        request.predicate = .init(format: "\(storeUniqueID) == %@", uniqueID)
+        let storeUID = #keyPath(Store.uniqueID)
+        request.predicate = NSCompoundPredicate(storeID: uniqueID, keyPath: storeUID, and: [])
         let results = try? context.fetch(request)
         return results?.first
     }

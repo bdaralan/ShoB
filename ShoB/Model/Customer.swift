@@ -49,9 +49,9 @@ extension Customer {
     }
     
     func hasValidInputs() -> Bool {
-        return !self.familyName.trimmed().isEmpty
-            || !self.givenName.trimmed().isEmpty
-            || !self.organization.trimmed().isEmpty
+        return !familyName.trimmed().isEmpty
+            || !givenName.trimmed().isEmpty
+            || !organization.trimmed().isEmpty
     }
     
     func hasChangedValues() -> Bool {
@@ -74,17 +74,15 @@ extension Customer {
         let request = Customer.fetchRequest() as NSFetchRequest<Customer>
         let storeUID = #keyPath(store.uniqueID)
         
-        let matchStore = NSPredicate(format: "\(storeUID) == %@", storeID)
-        
         // fetch all objects when no predicate
         if predicate.isEmpty {
-            request.predicate = matchStore
+            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [])
             request.sortDescriptors = []
             return request
         }
         
         // fetch all objects with predicate
-        let infoQuery = """
+        let matchInfoQuery = """
         \(#keyPath(familyName)) CONTAINS[c] %@ OR
         \(#keyPath(givenName)) CONTAINS[c] %@ OR
         \(#keyPath(organization)) CONTAINS[c] %@ OR
@@ -93,9 +91,8 @@ extension Customer {
         \(#keyPath(address)) CONTAINS[c] %@
         """
         
-        let matchInfo = NSPredicate(format: infoQuery, predicate, predicate, predicate, predicate, predicate, predicate)
-        
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [matchStore, matchInfo])
+        let matchInfo = NSPredicate(format: matchInfoQuery, predicate, predicate, predicate, predicate, predicate, predicate)
+        request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [matchInfo])
         request.sortDescriptors = []
         
         return request

@@ -20,7 +20,7 @@ struct Home: View {
     
     @ObservedObject var storeDataSource: StoreDataSource = {
         let dataSource = StoreDataSource(parentContext: CoreDataStack.current.mainContext)
-        dataSource.performFetch(Store.requestAllStores())
+        dataSource.performFetch(Store.requestObjects())
         return dataSource
     }()
     
@@ -79,7 +79,7 @@ struct Home: View {
                 self.orderDataSource.performFetch(Order.requestNoObject())
                 self.saleItemDataSource.performFetch(SaleItem.requestNoObject())
                 self.customerDataSource.performFetch(Customer.requestNoObject())
-                self.storeDataSource.performFetch(Store.requestAllStores())
+                self.storeDataSource.performFetch(Store.requestObjects())
                 self.selectedTab = HomeTab.store
             }
         }

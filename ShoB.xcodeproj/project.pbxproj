@@ -36,6 +36,7 @@
 		B44695672310E7100085416D /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44695662310E7100085416D /* CurrencyTextField.swift */; };
 		B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449978722CDE61F00126116 /* SaleItemRow.swift */; };
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
+		B451905223551D5000FBE6FB /* NSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451905123551D5000FBE6FB /* NSPredicate.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
 		B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
@@ -106,6 +107,7 @@
 		B44695662310E7100085416D /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		B449978722CDE61F00126116 /* SaleItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemRow.swift; sourceTree = "<group>"; };
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
+		B451905123551D5000FBE6FB /* NSPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPredicate.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
 		B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifier.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				B4F4D2B722E2452300E849B4 /* Date.swift */,
 				B4A6C89E23474FDC00D76156 /* Alert.swift */,
 				B41A36A3234A42D800F13C19 /* Font.swift */,
+				B451905123551D5000FBE6FB /* NSPredicate.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 				B405260222E8FFDC007E2325 /* VerticalTextField.swift in Sources */,
 				B41A36A4234A42D900F13C19 /* Font.swift in Sources */,
 				B4D5E6CD22C0476A00BE7580 /* ManagedObjectContext.swift in Sources */,
+				B451905223551D5000FBE6FB /* NSPredicate.swift in Sources */,
 				B446955F2310C0BD0085416D /* NotificationObserver.swift in Sources */,
 				B4F4C87422FF862D0010F191 /* CustomerDataSource.swift in Sources */,
 				B437BE3322B95282007C02C0 /* Currency.swift in Sources */,
