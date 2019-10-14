@@ -52,32 +52,30 @@ extension SaleItem {
         return NSFetchRequest<SaleItem>(entityName: "SaleItem")
     }
     
-    static func requestAllObjects(filterNameOrPrice: String? = nil) -> NSFetchRequest<SaleItem> {
+    static func requestObjects(storeID: String, withNameOrPrice predicate: String = "") -> NSFetchRequest<SaleItem> {
         let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
+        let storeUID = #keyPath(SaleItem.store.uniqueID)
+        let price = #keyPath(SaleItem.price)
+        let name = #keyPath(SaleItem.name)
         
-        if let search = filterNameOrPrice {
-            if Double(search) != nil { // matching price
-                request.predicate = .init(format: "\(#keyPath(SaleItem.price)) == %d", Currency(search).amount)
-            } else { // matching name
-                request.predicate = .init(format: "\(#keyPath(SaleItem.name)) CONTAINS[c] %@", search)
-            }
-        } else {
-            request.predicate = .init(value: true)
+        // fetch all objects when no predicate
+        if predicate.isEmpty {
+            request.predicate = .init(format: "\(storeUID) == %@", storeID)
+            request.sortDescriptors = [.init(key: name, ascending: true)]
+            return request
         }
         
-        let sortByName = NSSortDescriptor(key: #keyPath(SaleItem.name), ascending: true)
-        request.sortDescriptors = [sortByName]
+        // fetch all objects with predicate
+        if Double(predicate) != nil { // matching price
+            request.predicate = .init(format: "\(storeUID) == %@ AND \(price) == %d", storeID, Currency(predicate).amount)
+            request.sortDescriptors = [.init(key: price, ascending: true)]
+            return request
         
-        return request
-    }
-    
-    static func requestObjects(storeID: String) -> NSFetchRequest<SaleItem> {
-        let request = SaleItem.fetchRequest() as NSFetchRequest<SaleItem>
-        let itemStoreID = #keyPath(SaleItem.store.uniqueID)
-        let itemName = #keyPath(SaleItem.name)
-        request.predicate = .init(format: "\(itemStoreID) == %@", storeID)
-        request.sortDescriptors = [.init(key: itemName, ascending: true)]
-        return request
+        } else { // matching name
+            request.predicate = .init(format: "\(storeUID) == %@ AND \(name) CONTAINS[c] %@", storeID, predicate)
+            request.sortDescriptors = [.init(key: name, ascending: true)]
+            return request
+        }
     }
     
     static func requestNoObject() -> NSFetchRequest<SaleItem> {

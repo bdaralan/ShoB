@@ -32,6 +32,7 @@ struct SaleItemListView: View {
     var body: some View {
         List {
             SearchTextField(searchField: searchField)
+                .onAppear(perform: setupSearchField)
             ForEach(saleItemDataSource.fetchedResult.fetchedObjects ?? [], id: \.self) {  saleItem in
                 SaleItemRow(
                     saleItem: self.saleItemDataSource.readObject(saleItem),
@@ -104,12 +105,12 @@ extension SaleItemListView {
     
     func setupView() {
         fetchSaleItems()
-        setupSearchField()
     }
     
-    func fetchSaleItems() {
+    func fetchSaleItems(withNameOrPrice predicate: String = "") {
         if let storeID = AppCache.currentStoreUniqueID {
-            saleItemDataSource.performFetch(SaleItem.requestObjects(storeID: storeID))
+            let request = SaleItem.requestObjects(storeID: storeID, withNameOrPrice: predicate)
+            saleItemDataSource.performFetch(request)
         } else {
             saleItemDataSource.performFetch(SaleItem.requestNoObject())
         }
@@ -118,10 +119,7 @@ extension SaleItemListView {
     
     func setupSearchField() {
         searchField.placeholder = "Search by name or price"
-        searchField.onSearchTextDebounced = { searchText in
-            let search = searchText.isEmpty ? nil : searchText
-            self.saleItemDataSource.performFetch(SaleItem.requestAllObjects(filterNameOrPrice: search))
-        }
+        searchField.onSearchTextDebounced = fetchSaleItems
     }
 }
 
