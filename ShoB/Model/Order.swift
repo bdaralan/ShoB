@@ -88,6 +88,44 @@ extension Order {
 }
 
 
+extension Order {
+    
+    /// Copy necessary values from the an order to another order.
+    /// - Important: The two orders MUST be from the same context.
+    /// - Parameters:
+    ///   - oldOrder: The order to copy values from.
+    ///   - newOrder: The order to copy values to.
+    static func again(oldOrder: Order, newOrder: Order) {
+        // copy necessary values
+        newOrder.discount = oldOrder.discount
+        newOrder.note = oldOrder.note
+        newOrder.customer = oldOrder.customer
+        newOrder.store = oldOrder.store
+        
+        // copy delivery time but set the day to today
+        let calendar = Calendar.current
+        let today = Date.currentYMDHM
+        let newDateComponents = calendar.dateComponents([.hour, .minute], from: oldOrder.deliverDate)
+        let newDate = calendar.date(
+            bySettingHour: newDateComponents.hour!,
+            minute: newDateComponents.minute!,
+            second: 0,
+            of: today
+        )
+        newOrder.deliverDate = newDate
+        
+        // copy order items
+        oldOrder.orderItems.forEach {
+            let copyItem = OrderItem(context: newOrder.managedObjectContext!)
+            copyItem.name = $0.name
+            copyItem.price = $0.price
+            copyItem.quantity = $0.quantity
+            copyItem.order = newOrder
+        }
+    }
+}
+
+
 // MARK: - Fetch Request
 
 extension Order {
@@ -96,13 +134,17 @@ extension Order {
         return NSFetchRequest<Order>(entityName: "Order")
     }
     
+    /// A request to fetch today orders.
+    /// - Parameter storeID: The store ID.
     static func requestDeliverToday(storeID: String) -> NSFetchRequest<Order> {
         requestDeliver(from: Date.startOfToday(), to: Date.startOfToday(addingDay: 1), storeID: storeID)
     }
     
     /// A request to fetch orders from date to another date.
-    /// - Parameter startDate: The earliest date to be included.
-    /// - Parameter endDate: The latest date but NOT included. The default is `nil` which means no boundary.
+    /// - Parameters:
+    ///   - startDate: The earliest date to be included.
+    ///   - endDate: The latest date but NOT included. The default is `nil` which means no boundary.
+    ///   - storeID: The store ID.
     static func requestDeliver(from startDate: Date, to endDate: Date? = nil, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
         let deliverDate = #keyPath(Order.deliverDate)
@@ -125,7 +167,9 @@ extension Order {
     }
     
     /// A request to fetch orders from the past day up to but not including today.
-    /// - Parameter fromPastDay: The number of days that have been passed. For instance, 7 means last week.
+    /// - Parameters:
+    ///   - fromPastDay: The number of days that have been passed. For instance, 7 means last week.
+    ///   - storeID: The store ID.
     static func requestDeliver(fromPastDay: Int, storeID: String) -> NSFetchRequest<Order> {
         let request = Order.fetchRequest() as NSFetchRequest<Order>
         let deliverDate = #keyPath(Order.deliverDate)

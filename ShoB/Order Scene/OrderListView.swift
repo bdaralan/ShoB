@@ -154,23 +154,10 @@ extension OrderListView {
         orderDataSource.discardNewObject()
         orderDataSource.prepareNewObject()
         
-        let newOrder = orderDataSource.newObject!
+        // copy values
         let oldOrder = order.get(from: orderDataSource.createContext)
-        
-        // copy necessary values
-        newOrder.discount = oldOrder.discount
-        newOrder.note = oldOrder.note
-        newOrder.customer = oldOrder.customer
-        newOrder.store = oldOrder.store
-        
-        // copy order items
-        order.orderItems.forEach {
-            let copiedItem = OrderItem(context: orderDataSource.createContext)
-            copiedItem.name = $0.name
-            copiedItem.price = $0.price
-            copiedItem.quantity = $0.quantity
-            copiedItem.order = newOrder
-        }
+        let newOrder = orderDataSource.newObject!
+        Order.again(oldOrder: oldOrder, newOrder: newOrder)
         
         // show the form
         newOrderModel = .init(order: newOrder)
