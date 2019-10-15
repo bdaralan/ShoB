@@ -27,8 +27,6 @@ struct OrderItemForm: View {
     
     @State private var quantityMode = QuantityMode.unit
     
-    @State private var quantityDisplayMode = QuantityMode.unit
-    
     /// The sale items to display based on the search text.
     @State private var filteredSaleItems = [SaleItem]()
     
@@ -93,40 +91,34 @@ extension OrderItemForm {
             }
             
             // Quantity
-            Button(action: changeQuantityDisplayMode) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Quantity")
-                        Text("Tap to toggle the displayed format")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    quantityText
-                }
-                .accentColor(.primary)
+            HStack {
+                Text("Quantity")
+                Spacer()
+                quantityText
             }
             
             HStack {
                 // Unit Segment
                 Picker("", selection: $quantityMode) {
-                    Text("Unit").tag(QuantityMode.unit)
-                    Text("Dozen").tag(QuantityMode.dozen)
+                    ForEach(QuantityMode.allCases, id: \.self) { mode in
+                        Text(mode.title).tag(mode)
+                    }
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 
                 // Increment Segment
                 Picker("", selection: $quantityIncrementValue) {
-                    Text("1").tag(1)
-                    Text("5").tag(5)
+                    ForEach([1, 5, 12], id: \.self) { value in
+                        Text("\(value)").tag(value)
+                    }
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 
                 // Stepper
                 Stepper(
                     value: $orderItemModel.quantity,
-                    in: 1...1200,
-                    step: quantityIncrementValue * quantityMode.count,
+                    in: 1...999,
+                    step: quantityIncrementValue,
                     label: EmptyView.init
                 )
             }
@@ -216,11 +208,6 @@ extension OrderItemForm {
     func searchTextFieldEditingChanged(_ isEditing: Bool) {
         isSearching = isEditing
     }
-    
-    func changeQuantityDisplayMode() {
-        let nextMode = QuantityMode(rawValue: quantityDisplayMode.rawValue + 1) ?? .unit
-        quantityDisplayMode = nextMode
-    }
 }
 
 
@@ -264,16 +251,15 @@ extension OrderItemForm {
     
     /// View that displays quantity based on `quantityMode`.
     var quantityText: Text {
-        switch quantityDisplayMode {
+        switch quantityMode {
         case .unit:
             return Text("\(orderItemModel.quantity)")
         case .dozen:
-            let mode = QuantityMode.dozen
-            let dozen = orderItemModel.quantity / mode.count
-            let remain = orderItemModel.quantity % mode.count
+            let dozen = orderItemModel.quantity / quantityMode.count
+            let remain = orderItemModel.quantity % quantityMode.count
             let remainString = remain == 0 ? "" : " + \(remain)"
             let dozenText = Text("\(dozen) ")
-            let unitText = Text(mode.unitString).fontWeight(.light).italic()
+            let unitText = Text(quantityMode.unitString).fontWeight(.light).italic()
             let remainText = Text(remainString)
             return dozenText + unitText + remainText
         }
@@ -283,9 +269,16 @@ extension OrderItemForm {
 
 extension OrderItemForm {
     
-    enum QuantityMode: Int {
+    enum QuantityMode: CaseIterable {
         case unit
         case dozen
+        
+        var title: String {
+            switch self {
+            case .unit: return "Unit"
+            case .dozen: return "Dozen"
+            }
+        }
         
         var count: Int {
             switch self {
