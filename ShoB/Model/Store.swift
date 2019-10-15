@@ -102,18 +102,18 @@ extension Store {
     
     /// Fetch store with the uniqueID.
     /// - Parameters:
-    ///   - uniqueID: Store's uniqueID.
+    ///   - storeID: Store's uniqueID.
     ///   - context: The context to fetch from.
-    static func fetch(uniqueID: String, from context: NSManagedObjectContext) -> Store? {
+    static func fetch(storeID: String, from context: NSManagedObjectContext) -> Store? {
         let request = Store.fetchRequest() as NSFetchRequest<Store>
         let storeUID = #keyPath(Store.uniqueID)
-        request.predicate = NSCompoundPredicate(storeID: uniqueID, keyPath: storeUID, and: [])
+        request.predicate = .init(storeID: storeID, keyPath: storeUID)
         let results = try? context.fetch(request)
         return results?.first
     }
     
     static func current(from context: NSManagedObjectContext) -> Store? {
         guard let currentStoreID = AppCache.currentStoreUniqueID else { return nil }
-        return fetch(uniqueID: currentStoreID, from: context)
+        return fetch(storeID: currentStoreID, from: context)
     }
 }

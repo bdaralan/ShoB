@@ -75,8 +75,8 @@ extension Customer {
         let storeUID = #keyPath(store.uniqueID)
         
         // fetch all objects when no predicate
-        if predicate.isEmpty {
-            request.predicate = NSCompoundPredicate(storeID: storeID, keyPath: storeUID, and: [])
+        guard !predicate.isEmpty else {
+            request.predicate = .init(storeID: storeID, keyPath: storeUID)
             request.sortDescriptors = []
             return request
         }

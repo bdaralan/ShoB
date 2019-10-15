@@ -55,8 +55,8 @@ struct Currency: Equatable, CustomStringConvertible {
     }
     
     /// Construct with dollar string. Example: $1.00 or 2.00.
-    init(_ dollarString: String) {
-        var string = dollarString
+    init(_ dollar: String) {
+        var string = dollar
         
         if string.hasPrefix("$") {
             string.removeFirst()
@@ -71,6 +71,10 @@ struct Currency: Equatable, CustomStringConvertible {
         // convert string to cent
         self.amount = Currency.parseCent(from: dollarFormat)
     }
+}
+
+
+extension Currency {
     
     /// Parse all the digits in the string and turn them into cent.
     /// - Returns: The amount of `Cent` or 0 if no digits found.
