@@ -11,5 +11,5 @@ import SwiftUI
 
 extension Font {
     
-    static let largeCurrency = Font.system(size: 21, weight: .bold)
+    static let orderRowFocusInfo = Font.system(size: 21, weight: .bold)
 }

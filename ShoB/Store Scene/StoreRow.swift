@@ -46,8 +46,8 @@ struct StoreRow: View {
                 .layoutPriority(1)
                 
                 Spacer()
-                Image(systemName: "checkmark.circle")
-                    .imageScale(.large)
+                Image(systemName: "checkmark")
+                    .imageScale(.medium)
                     .padding(.horizontal)
                     .opacity(store.isCurrent ? 1 : 0)
             }

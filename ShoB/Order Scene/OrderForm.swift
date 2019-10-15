@@ -110,9 +110,9 @@ struct OrderForm: View, MultiPurposeForm {
                 
                 HStack {
                     Image.SFOrder.totalAfterDiscount
-                    Text("Total").font(.largeCurrency)
+                    Text("Total").font(.orderRowFocusInfo)
                     Spacer()
-                    Text(model.totalAfterDiscount).font(.largeCurrency)
+                    Text(model.totalAfterDiscount).font(.orderRowFocusInfo)
                 }
             }
             
@@ -353,7 +353,7 @@ extension OrderForm {
                 if customer.objectID == self.model.order?.customer?.objectID {
                     Spacer()
                     Image(systemName: "checkmark")
-                        .imageScale(.small)
+                        .imageScale(.medium)
                 }
             }
         }

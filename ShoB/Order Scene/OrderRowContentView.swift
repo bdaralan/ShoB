@@ -23,16 +23,17 @@ struct OrderRowContentView: View {
             HStack {
                 Group {
                     Image.SFCustomer.profile
+                        .font(Font.orderRowFocusInfo.weight(.regular))
                     Text(order.customer?.identity ?? "None")
+                        .font(.orderRowFocusInfo)
                 }
                 .foregroundColor(order.customer == nil ? .secondary : .primary)
                 
-                if !order.note.isEmpty {
-                    Spacer()
-                    Image.SFOrder.note
-                }
+                Spacer()
+                Image.SFOrder.note
+                    .font(.orderRowFocusInfo)
+                    .hidden(order.note.isEmpty)
             }
-            .font(.title)
             .padding(.top, 8)
             
             HStack(alignment: .top) {
@@ -67,7 +68,7 @@ struct OrderRowContentView: View {
                     }
                     HStack {
                         Text(verbatim: "\(Currency(order.total()))")
-                            .font(.largeCurrency)
+                            .font(.orderRowFocusInfo)
                         Image.SFOrder.totalAfterDiscount
                     }
                 }
