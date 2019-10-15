@@ -19,6 +19,8 @@ struct SearchTextField: View {
     
     var onEditingChanged: ((Bool) -> Void)?
     
+    @State private var isEditing = false
+    
     
     // MARK: - Body
     
@@ -29,7 +31,7 @@ struct SearchTextField: View {
                 TextField(
                     searchField.placeholder,
                     text: $searchField.searchText,
-                    onEditingChanged: onEditingChanged ?? { _ in }
+                    onEditingChanged: searchTextFieldEditingChanged
                 )
             }
             .padding(8)
@@ -37,13 +39,12 @@ struct SearchTextField: View {
             .cornerRadius(10)
             .animation(.easeOut)
             
-            // show cancel button when there is text in the text field
-            if !searchField.searchText.isEmpty {
-                Button("Cancel", action: cancelSearch)
-                    .foregroundColor(.accentColor)
-                    .transition(.move(edge: .trailing))
-                    .animation(.easeOut)
-            }
+            // show cancel button when the search is editing or there is text
+            Button("Cancel", action: cancelSearch)
+                .foregroundColor(.accentColor)
+                .transition(.move(edge: .trailing))
+                .animation(.easeOut)
+                .hidden(!isEditing && searchField.searchText.isEmpty)
         }
     }
 }
@@ -54,6 +55,11 @@ extension SearchTextField {
     func cancelSearch() {
         searchField.cancel()
         searchField.clear()
+    }
+    
+    func searchTextFieldEditingChanged(_ isEditing: Bool) {
+        self.isEditing = isEditing
+        onEditingChanged?(isEditing)
     }
 }
 
