@@ -61,7 +61,7 @@ struct OrderItemForm: View {
             }
             .hidden(onDelete == nil)
         }
-        .navigationBarItems(leading: leadingNavItem(), trailing: trailingNavItem())
+        .navigationBarItems(leading: leadingNavItem, trailing: trailingNavItem)
         .onAppear(perform: { self.filterSaleItems(searchText: "") })
     }
 }
@@ -233,7 +233,7 @@ extension OrderItemForm {
         Button("Done", action: onDone!)
     }
     
-    func leadingNavItem() -> some View {
+    var leadingNavItem: some View {
         if onCancel != nil {
             return cancelNavItem.eraseToAnyView()
         }
@@ -241,7 +241,7 @@ extension OrderItemForm {
         return AnyView.emptyView
     }
     
-    func trailingNavItem() -> some View {
+    var trailingNavItem: some View {
         if onAdd != nil, onDone == nil {
             return addNavItem.eraseToAnyView()
         }

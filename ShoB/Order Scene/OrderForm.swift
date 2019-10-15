@@ -298,7 +298,7 @@ extension OrderForm {
                 onDone: dismissPresentationSheet,
                 onDelete: deleteEditingOrderItem
             )
-                .navigationBarTitle("Edit Details", displayMode: .inline)
+                .navigationBarTitle("Edit Item", displayMode: .inline)
         }
     }
     
