@@ -23,21 +23,19 @@ struct OrderItemForm: View {
     
     var onDelete: (() -> Void)?
     
-    @State private var incrementValue = 1
+    @State private var quantityIncrementValue = 1
     
     @State private var quantityMode = QuantityMode.unit
     
-    let searchField = SearchField()
-    
-    var incrementRange: ClosedRange<Int> {
-        orderItemModel.name.isEmpty ? 1...1 : 1...999
-    }
+    @State private var quantityDisplayMode = QuantityMode.unit
     
     /// The sale items to display based on the search text.
     @State private var filteredSaleItems = [SaleItem]()
     
     /// A flag used to control how the UI will look.
     @State private var isSearching = false
+    
+    let searchField = SearchField()
   
     
     // MARK: - Body
@@ -95,10 +93,18 @@ extension OrderItemForm {
             }
             
             // Quantity
-            HStack {
-                Text("Quantity")
-                Spacer()
-                quantityText
+            Button(action: changeQuantityDisplayMode) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Quantity")
+                        Text("Tap to toggle the displayed format")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    quantityText
+                }
+                .accentColor(.primary)
             }
             
             HStack {
@@ -110,19 +116,17 @@ extension OrderItemForm {
                 .pickerStyle(SegmentedPickerStyle())
                 
                 // Increment Segment
-                Picker("", selection: $incrementValue) {
+                Picker("", selection: $quantityIncrementValue) {
                     Text("1").tag(1)
-                    Text("6").tag(6)
-                    Text("12").tag(QuantityMode.dozenCount)
+                    Text("5").tag(5)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 
                 // Stepper
                 Stepper(
                     value: $orderItemModel.quantity,
-                    in: incrementRange,
-                    step: incrementValue,
-                    onEditingChanged: updateStepperValue,
+                    in: 1...1200,
+                    step: quantityIncrementValue * quantityMode.count,
                     label: EmptyView.init
                 )
             }
@@ -212,6 +216,11 @@ extension OrderItemForm {
     func searchTextFieldEditingChanged(_ isEditing: Bool) {
         isSearching = isEditing
     }
+    
+    func changeQuantityDisplayMode() {
+        let nextMode = QuantityMode(rawValue: quantityDisplayMode.rawValue + 1) ?? .unit
+        quantityDisplayMode = nextMode
+    }
 }
 
 
@@ -255,33 +264,42 @@ extension OrderItemForm {
     
     /// View that displays quantity based on `quantityMode`.
     var quantityText: Text {
-        switch quantityMode {
+        switch quantityDisplayMode {
         case .unit:
             return Text("\(orderItemModel.quantity)")
         case .dozen:
-            let dozen = orderItemModel.quantity / QuantityMode.dozenCount
-            let remain = orderItemModel.quantity % QuantityMode.dozenCount
+            let mode = QuantityMode.dozen
+            let dozen = orderItemModel.quantity / mode.count
+            let remain = orderItemModel.quantity % mode.count
             let remainString = remain == 0 ? "" : " + \(remain)"
-            return Text("\(dozen) ") + Text(QuantityMode.dozenAbbrev).fontWeight(.light).italic() + Text(remainString)
+            let dozenText = Text("\(dozen) ")
+            let unitText = Text(mode.unitString).fontWeight(.light).italic()
+            let remainText = Text(remainString)
+            return dozenText + unitText + remainText
         }
-    }
-    
-    func updateStepperValue(isChanging: Bool) {
-        // if quantity is less then a dozen, switch back to unit segment
-        guard !isChanging, self.orderItemModel.quantity < QuantityMode.dozenCount else { return }
-        self.quantityMode = .unit
     }
 }
 
 
 extension OrderItemForm {
     
-    enum QuantityMode {
+    enum QuantityMode: Int {
         case unit
         case dozen
         
-        static let dozenCount = 12
-        static let dozenAbbrev = "doz."
+        var count: Int {
+            switch self {
+            case .unit: return 1
+            case .dozen: return 12
+            }
+        }
+        
+        var unitString: String {
+            switch self {
+            case .unit: return ""
+            case .dozen: return "doz."
+            }
+        }
     }
 }
 
