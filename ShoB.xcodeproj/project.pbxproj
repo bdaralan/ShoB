@@ -21,6 +21,7 @@
 		B42114D4234F0B3C00514E8D /* TextViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42114D3234F0B3C00514E8D /* TextViewWrapper.swift */; };
 		B427503D22CDCF3C009FF939 /* SaleItemForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B427503C22CDCF3C009FF939 /* SaleItemForm.swift */; };
 		B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */; };
+		B42FC76823576FEB00B21A62 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42FC76723576FEB00B21A62 /* Color.swift */; };
 		B42FCCAD2305EC730066F587 /* StoreFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42FCCAC2305EC730066F587 /* StoreFormModel.swift */; };
 		B42FCCAF2305ECAE0066F587 /* MultiPurposeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42FCCAE2305ECAE0066F587 /* MultiPurposeForm.swift */; };
 		B42FD55D2304E11C00104AEA /* StoreListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42FD55C2304E11C00104AEA /* StoreListView.swift */; };
@@ -38,6 +39,7 @@
 		B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */; };
 		B451905223551D5000FBE6FB /* NSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451905123551D5000FBE6FB /* NSPredicate.swift */; };
 		B458986F22E8DC5800968659 /* CustomerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458986E22E8DC5800968659 /* CustomerForm.swift */; };
+		B45AF8A623564C7800239F34 /* OrderItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45AF8A523564C7800239F34 /* OrderItemRow.swift */; };
 		B484DF7C2307A06B00EE9589 /* DeleteAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */; };
 		B48919F122EBD50F00778DA3 /* AnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F022EBD50F00778DA3 /* AnyView.swift */; };
 		B48919F422EBFF4100778DA3 /* Constant+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48919F322EBFF4100778DA3 /* Constant+Image.swift */; };
@@ -92,6 +94,7 @@
 		B42114D3234F0B3C00514E8D /* TextViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWrapper.swift; sourceTree = "<group>"; };
 		B427503C22CDCF3C009FF939 /* SaleItemForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemForm.swift; sourceTree = "<group>"; };
 		B42ADB0422E2913B00E91F08 /* SaleItemFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemFormModel.swift; sourceTree = "<group>"; };
+		B42FC76723576FEB00B21A62 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		B42FCCAC2305EC730066F587 /* StoreFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFormModel.swift; sourceTree = "<group>"; };
 		B42FCCAE2305ECAE0066F587 /* MultiPurposeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPurposeForm.swift; sourceTree = "<group>"; };
 		B42FD55C2304E11C00104AEA /* StoreListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreListView.swift; sourceTree = "<group>"; };
@@ -109,6 +112,7 @@
 		B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRowContentView.swift; sourceTree = "<group>"; };
 		B451905123551D5000FBE6FB /* NSPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPredicate.swift; sourceTree = "<group>"; };
 		B458986E22E8DC5800968659 /* CustomerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerForm.swift; sourceTree = "<group>"; };
+		B45AF8A523564C7800239F34 /* OrderItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemRow.swift; sourceTree = "<group>"; };
 		B484DF7B2307A06B00EE9589 /* DeleteAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertModifier.swift; sourceTree = "<group>"; };
 		B48919F022EBD50F00778DA3 /* AnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyView.swift; sourceTree = "<group>"; };
 		B48919F322EBFF4100778DA3 /* Constant+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constant+Image.swift"; sourceTree = "<group>"; };
@@ -193,6 +197,7 @@
 				B4B9D15722B2EC94003FC4E3 /* OrderForm.swift */,
 				B412C70B22F3919300A4DE4D /* OrderItemForm.swift */,
 				B4BE1CFE22E3DC6C00667CAF /* OrderFormModel.swift */,
+				B45AF8A523564C7800239F34 /* OrderItemRow.swift */,
 				B4D5E6CE22C0558800BE7580 /* OrderRow.swift */,
 				B451826022F3D7BA001FA8D5 /* OrderRowContentView.swift */,
 			);
@@ -332,6 +337,7 @@
 				B4A6C89E23474FDC00D76156 /* Alert.swift */,
 				B41A36A3234A42D800F13C19 /* Font.swift */,
 				B451905123551D5000FBE6FB /* NSPredicate.swift */,
+				B42FC76723576FEB00B21A62 /* Color.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -481,6 +487,7 @@
 				B4B9D12022B2DF24003FC4E3 /* AppDelegate.swift in Sources */,
 				B42FD55F2304E3B400104AEA /* StoreForm.swift in Sources */,
 				B451826122F3D7BA001FA8D5 /* OrderRowContentView.swift in Sources */,
+				B45AF8A623564C7800239F34 /* OrderItemRow.swift in Sources */,
 				B449978822CDE61F00126116 /* SaleItemRow.swift in Sources */,
 				B405260222E8FFDC007E2325 /* VerticalTextField.swift in Sources */,
 				B41A36A4234A42D900F13C19 /* Font.swift in Sources */,
@@ -493,6 +500,7 @@
 				B42FCCAD2305EC730066F587 /* StoreFormModel.swift in Sources */,
 				B4932D1122BC53D50010710F /* CustomerListView.swift in Sources */,
 				B4D346B222B6A31B0051AABB /* UserDefaultsValue.swift in Sources */,
+				B42FC76823576FEB00B21A62 /* Color.swift in Sources */,
 				B4B9D14B22B2E4A0003FC4E3 /* OrderItem.swift in Sources */,
 				B44695672310E7100085416D /* CurrencyTextField.swift in Sources */,
 				B42ADB0522E2913B00E91F08 /* SaleItemFormModel.swift in Sources */,

@@ -131,7 +131,7 @@ struct OrderForm: View, MultiPurposeForm {
                 // Order Item List
                 ForEach(model.order?.orderItems.sorted(by: { $0.name < $1.name }) ?? [], id: \.self) { item in
                     Button(action: { self.showEditOrderItemForm(with: item) }) {
-                        self.orderItemRow(for: item)
+                        OrderItemRow(orderItem: item)
                     }
                 }
             }
@@ -184,20 +184,6 @@ extension OrderForm {
         return Button(action: showCustomerSelectionView) {
             rowContent
         }
-    }
-    
-    /// Order's order item row.
-    /// - Parameter item: Order item to display.
-    func orderItemRow(for item: OrderItem) -> some View {
-        HStack {
-            Text("\(item.quantity) x \(item.name)")
-            Spacer()
-            Text(verbatim: "\(Currency(item.subtotal))")
-            Image(systemName: "square.and.pencil")
-                .imageScale(.large)
-                .padding(.init(top: 0, leading: 16, bottom: 6, trailing: 0))
-        }
-        .foregroundColor(.primary)
     }
 }
 
